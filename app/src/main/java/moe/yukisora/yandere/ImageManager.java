@@ -2,7 +2,6 @@ package moe.yukisora.yandere;
 
 import android.app.Activity;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Handler;
 
 import org.json.JSONArray;
@@ -82,10 +81,10 @@ public class ImageManager {
                     imageData.height = jsonObject.getInt("height");
                     imageData.bitmap = imageCache.get(imageData);
 
-                    activity.getImages().add(imageData);
+                    activity.getImageDatas().add(imageData);
                     handler.post(new Runnable() {
                         public void run() {
-                            activity.getAdapter().notifyItemInserted(activity.getImages().size() - 1);
+                            activity.getAdapter().notifyItemInserted(activity.getImageDatas().size() - 1);
                         }
                     });
                 }

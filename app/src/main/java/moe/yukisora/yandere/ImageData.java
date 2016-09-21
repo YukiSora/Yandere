@@ -2,7 +2,9 @@ package moe.yukisora.yandere;
 
 import android.graphics.Bitmap;
 
-public class ImageData {
+import java.io.Serializable;
+
+public class ImageData implements Serializable {
     public int id;
     public String tags;
     public int file_size;
@@ -14,7 +16,7 @@ public class ImageData {
     public String rating;
     public int width;
     public int height;
-    public Bitmap bitmap;
+    transient public Bitmap bitmap;
 
     @Override
     public boolean equals(Object obj) {

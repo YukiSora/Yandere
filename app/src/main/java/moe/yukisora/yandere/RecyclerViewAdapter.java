@@ -2,6 +2,7 @@ package moe.yukisora.yandere;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,27 +23,31 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        holder.imageView.setImageBitmap((activity.getImages()).get(position).bitmap);
+        final ImageData imageData = (activity.getImageDatas()).get(position);
+        holder.imageView.setImageBitmap(imageData.bitmap);
+        holder.imageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(activity, ImageViewActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("imageData", imageData);
+                intent.putExtras(bundle);
+                activity.startActivity(intent);
+            }
+        });
     }
 
     @Override
     public int getItemCount() {
-        return activity.getImages().size();
+        return activity.getImageDatas().size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         ImageView imageView;
 
-        public ViewHolder(View v) {
-            super(v);
-            v.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Intent intent = new Intent(activity, ImageViewActivity.class);
-                    activity.startActivity(intent);
-                }
-            });
-            imageView = (ImageView)((ViewGroup)v).getChildAt(0);
+        public ViewHolder(View view) {
+            super(view);
+            imageView = (ImageView)((ViewGroup)view).getChildAt(0);
         }
     }
 }

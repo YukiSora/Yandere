@@ -11,7 +11,7 @@ import java.util.ArrayList;
 
 public class MainActivity extends Activity {
     private Activity activity;
-    private ArrayList<ImageData> images;
+    private ArrayList<ImageData> imageDatas;
     private RecyclerViewAdapter adapter;
     private static int maxMemory;
 
@@ -21,7 +21,7 @@ public class MainActivity extends Activity {
         setContentView(R.layout.activity_main);
 
         activity = this;
-        images = new ArrayList<>();
+        imageDatas = new ArrayList<>();
         maxMemory = 1024 * 1024 * ((ActivityManager)getSystemService(Context.ACTIVITY_SERVICE)).getMemoryClass();
 
         initRecyclerView();
@@ -42,8 +42,8 @@ public class MainActivity extends Activity {
         });
     }
 
-    public ArrayList<ImageData> getImages() {
-        return images;
+    public ArrayList<ImageData> getImageDatas() {
+        return imageDatas;
     }
 
     public RecyclerViewAdapter getAdapter() {

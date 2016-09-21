@@ -3,6 +3,7 @@ package moe.yukisora.yandere;
 import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.os.Handler;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -17,9 +18,13 @@ public class ImageManager {
     private static ImageManager imageManager;
     private int page;
     private boolean isDownloading;
+    private ImageCache<ImageData, Bitmap> imageCache;
+    private Handler handler;
 
     private ImageManager() {
         page = 1;
+        imageCache = new ImageCache<>(MainActivity.getMaxMemory() / 2);
+        handler = new Handler();
     }
 
     public static ImageManager getInstance() {
@@ -75,27 +80,17 @@ public class ImageManager {
                     imageData.rating = jsonObject.getString("rating");
                     imageData.width = jsonObject.getInt("width");
                     imageData.height = jsonObject.getInt("height");
-                    imageData.bitmap = getBitmap(imageData.preview_url);
+                    imageData.bitmap = imageCache.get(imageData);
 
                     activity.getImages().add(imageData);
-                    activity.getAdapter().notifyItemInserted(activity.getImages().size() - 1);
+                    handler.post(new Runnable() {
+                        public void run() {
+                            activity.getAdapter().notifyItemInserted(activity.getImages().size() - 1);
+                        }
+                    });
                 }
             } catch (JSONException ignored) {
             }
-        }
-
-        private Bitmap getBitmap(String preview_url) {
-            try {
-                URL url = new URL(preview_url);
-                URLConnection connection = url.openConnection();
-                connection.setRequestProperty("User-Agent", "Mozilla/5.0");
-                connection.setConnectTimeout(3000);
-                connection.setReadTimeout(3000);
-                return BitmapFactory.decodeStream(connection.getInputStream());
-            } catch (IOException ignored) {
-            }
-
-            return null;
         }
 
         @Override

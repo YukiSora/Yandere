@@ -1,6 +1,8 @@
 package moe.yukisora.yandere;
 
 import android.app.Activity;
+import android.app.ActivityManager;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
@@ -11,6 +13,7 @@ public class MainActivity extends Activity {
     private Activity activity;
     private ArrayList<ImageData> images;
     private RecyclerViewAdapter adapter;
+    private static int maxMemory;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -19,6 +22,7 @@ public class MainActivity extends Activity {
 
         activity = this;
         images = new ArrayList<>();
+        maxMemory = 1024 * 1024 * ((ActivityManager)getSystemService(Context.ACTIVITY_SERVICE)).getMemoryClass();
 
         initRecyclerView();
         ImageManager.getInstance().loadImage(activity);
@@ -44,5 +48,9 @@ public class MainActivity extends Activity {
 
     public RecyclerViewAdapter getAdapter() {
         return adapter;
+    }
+
+    public static int getMaxMemory() {
+        return maxMemory;
     }
 }

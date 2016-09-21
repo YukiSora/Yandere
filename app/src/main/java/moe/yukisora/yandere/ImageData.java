@@ -15,5 +15,10 @@ public class ImageData {
     public int width;
     public int height;
     public Bitmap bitmap;
+
+    @Override
+    public boolean equals(Object obj) {
+        return id == ((ImageData)obj).id;
+    }
 }
 

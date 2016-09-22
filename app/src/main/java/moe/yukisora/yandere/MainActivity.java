@@ -10,10 +10,14 @@ import android.support.v7.widget.StaggeredGridLayoutManager;
 import java.util.ArrayList;
 
 public class MainActivity extends Activity {
+    private static int maxMemory;
     private Activity activity;
     private ArrayList<ImageData> imageDatas;
     private RecyclerViewAdapter adapter;
-    private static int maxMemory;
+
+    public static int getMaxMemory() {
+        return maxMemory;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,9 +52,5 @@ public class MainActivity extends Activity {
 
     public RecyclerViewAdapter getAdapter() {
         return adapter;
-    }
-
-    public static int getMaxMemory() {
-        return maxMemory;
     }
 }

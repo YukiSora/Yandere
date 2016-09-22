@@ -3,17 +3,9 @@ package moe.yukisora.yandere;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.StrictMode;
-import android.util.Log;
 import android.widget.ImageView;
-import android.widget.TextView;
-
-import java.io.IOException;
-import java.net.URL;
-import java.net.URLConnection;
 
 public class ImageViewActivity extends Activity {
     private ImageData imageData;

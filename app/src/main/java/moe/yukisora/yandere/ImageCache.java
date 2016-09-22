@@ -1,12 +1,7 @@
 package moe.yukisora.yandere;
 
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.util.LruCache;
-
-import java.io.IOException;
-import java.net.URL;
-import java.net.URLConnection;
 
 public class ImageCache<K, V> extends LruCache<K, V> {
 

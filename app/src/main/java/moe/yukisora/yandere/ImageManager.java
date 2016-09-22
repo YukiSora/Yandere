@@ -34,11 +34,6 @@ public class ImageManager {
         return imageManager;
     }
 
-    public void loadImage(Activity activity) {
-        if (!isDownloading)
-            new DownloadImageData(activity).start();
-    }
-
     public static Bitmap downloadImage(String urlStr) {
         try {
             URL url = new URL(urlStr);
@@ -51,6 +46,11 @@ public class ImageManager {
         }
 
         return null;
+    }
+
+    public void loadImage(Activity activity) {
+        if (!isDownloading)
+            new DownloadImageData(activity).start();
     }
 
     private class DownloadImageData extends Thread {

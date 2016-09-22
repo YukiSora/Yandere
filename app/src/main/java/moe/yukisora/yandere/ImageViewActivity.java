@@ -19,7 +19,7 @@ public class ImageViewActivity extends Activity {
         Intent intent = this.getIntent();
         imageData = (ImageData)intent.getSerializableExtra("imageData");
         imageView = (ImageView)findViewById(R.id.fullSizeImageView);
-        imageView.setImageResource(R.mipmap.ic_launcher);
+        imageView.setImageResource(R.drawable.placeholder);
 
         new DownloadImageTask().execute(imageData.file_url);
     }

@@ -2,6 +2,7 @@ package moe.yukisora.yandere;
 
 import android.app.Activity;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Handler;
 
 import org.json.JSONArray;
@@ -36,6 +37,20 @@ public class ImageManager {
     public void loadImage(Activity activity) {
         if (!isDownloading)
             new DownloadImageData(activity).start();
+    }
+
+    public static Bitmap downloadImage(String urlStr) {
+        try {
+            URL url = new URL(urlStr);
+            URLConnection connection = url.openConnection();
+            connection.setRequestProperty("User-Agent", "Mozilla/5.0");
+            connection.setConnectTimeout(3000);
+            connection.setReadTimeout(3000);
+            return BitmapFactory.decodeStream(connection.getInputStream());
+        } catch (IOException ignored) {
+        }
+
+        return null;
     }
 
     private class DownloadImageData extends Thread {

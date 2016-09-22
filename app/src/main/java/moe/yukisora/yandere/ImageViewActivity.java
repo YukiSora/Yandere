@@ -29,23 +29,12 @@ public class ImageViewActivity extends Activity {
         imageView = (ImageView)findViewById(R.id.fullSizeImageView);
         imageView.setImageResource(R.mipmap.ic_launcher);
 
-        new DownloadImage().execute(imageData.file_url);
+        new DownloadImageTask().execute(imageData.file_url);
     }
 
-    private class DownloadImage extends AsyncTask<String, Void, Bitmap> {
+    private class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
         protected Bitmap doInBackground(String... urls) {
-            try {
-                URL url = new URL(urls[0]);
-                URLConnection connection = url.openConnection();
-                connection.setRequestProperty("User-Agent","Mozilla/5.0");
-                connection.setConnectTimeout(3000);
-                connection.setReadTimeout(3000);
-
-                return BitmapFactory.decodeStream(connection.getInputStream());
-            } catch (IOException e) {
-            }
-
-            return null;
+            return ImageManager.downloadImage(urls[0]);
         }
 
         protected void onPostExecute(Bitmap bitmap) {

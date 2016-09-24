@@ -58,7 +58,7 @@ public class MainActivity extends Activity {
                     case 2:
                         return PostFragment.newInstance("https://yande.re/post/popular_recent.json?page=", false);
                     case 3:
-                        return RandomFragment.newInstance();
+                        return SettingFragment.newInstance();
                     default:
                         return null;
                 }

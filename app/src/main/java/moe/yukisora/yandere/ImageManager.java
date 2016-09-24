@@ -1,6 +1,6 @@
 package moe.yukisora.yandere;
 
-import android.app.Activity;
+import android.app.Fragment;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Handler;
@@ -48,16 +48,16 @@ public class ImageManager {
         return null;
     }
 
-    public void loadImage(Activity activity) {
+    public void loadImage(Fragment fragment) {
         if (!isDownloading)
-            new DownloadImageData(activity).start();
+            new DownloadImageData(fragment).start();
     }
 
     private class DownloadImageData extends Thread {
-        private MainActivity activity;
+        private PostFragment fragment;
 
-        DownloadImageData(Activity activity) {
-            this.activity = (MainActivity)activity;
+        DownloadImageData(Fragment fragment) {
+            this.fragment = (PostFragment)fragment;
         }
 
         private String getJSON() {
@@ -96,10 +96,10 @@ public class ImageManager {
                     imageData.height = jsonObject.getInt("height");
                     imageData.bitmap = imageCache.get(imageData);
 
-                    activity.getImageDatas().add(imageData);
+                    fragment.getImageDatas().add(imageData);
                     handler.post(new Runnable() {
                         public void run() {
-                            activity.getAdapter().notifyItemInserted(activity.getImageDatas().size() - 1);
+                            fragment.getAdapter().notifyItemInserted(fragment.getImageDatas().size() - 1);
                         }
                     });
                 }

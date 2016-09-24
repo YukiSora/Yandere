@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">Yandere</string>
+    <string name="post">New</string>
+    <string name="random">Random</string>
+    <string name="popular">Popular</string>
+    <string name="setting">Setting</string>
 </resources>

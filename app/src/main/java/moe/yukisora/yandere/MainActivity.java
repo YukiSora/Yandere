@@ -2,21 +2,25 @@ package moe.yukisora.yandere;
 
 import android.app.Activity;
 import android.app.ActivityManager;
+import android.app.Fragment;
 import android.content.Context;
 import android.os.Bundle;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.StaggeredGridLayoutManager;
-
-import java.util.ArrayList;
+import android.support.v13.app.FragmentPagerAdapter;
+import android.support.v4.view.ViewPager;
+import android.view.View;
 
 public class MainActivity extends Activity {
+    private static final int NUM_ITEMS = 4;
+    private static Activity activity;
     private static int maxMemory;
-    private Activity activity;
-    private ArrayList<ImageData> imageDatas;
-    private RecyclerViewAdapter adapter;
+
 
     public static int getMaxMemory() {
         return maxMemory;
+    }
+
+    public static Activity getActivity() {
+        return activity;
     }
 
     @Override
@@ -24,33 +28,62 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        //initialize variable
         activity = this;
-        imageDatas = new ArrayList<>();
         maxMemory = 1024 * 1024 * ((ActivityManager)getSystemService(Context.ACTIVITY_SERVICE)).getMemoryClass();
 
-        initRecyclerView();
-        ImageManager.getInstance().loadImage(activity);
-    }
-
-    private void initRecyclerView() {
-        adapter = new RecyclerViewAdapter(activity);
-        RecyclerView recyclerView = (RecyclerView)findViewById(R.id.recyclerView);
-        recyclerView.setHasFixedSize(true);
-        recyclerView.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
-        recyclerView.setAdapter(adapter);
-        recyclerView.addOnScrollListener(new RecyclerViewOnScrollListener() {
+        //configure ViewPager
+        final ViewPager viewPager = (ViewPager)findViewById(R.id.viewPager);
+        viewPager.setAdapter(new FragmentPagerAdapter(getFragmentManager()) {
             @Override
-            public void onBottom() {
-                ImageManager.getInstance().loadImage(activity);
+            public int getCount() {
+                return NUM_ITEMS;
+            }
+
+            @Override
+            public Fragment getItem(int position) {
+                switch (position) {
+                    case 0:
+                        return PostFragment.newInstance();
+                    case 1:
+                        return RandomFragment.newInstance();
+                    case 2:
+                        return RandomFragment.newInstance();
+                    case 3:
+                        return RandomFragment.newInstance();
+                    default:
+                        return null;
+                }
             }
         });
-    }
 
-    public ArrayList<ImageData> getImageDatas() {
-        return imageDatas;
-    }
+        //configure Button
+        findViewById(R.id.post).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                viewPager.setCurrentItem(0);
+            }
+        });
 
-    public RecyclerViewAdapter getAdapter() {
-        return adapter;
+        findViewById(R.id.random).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                viewPager.setCurrentItem(1);
+            }
+        });
+
+        findViewById(R.id.popular).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                viewPager.setCurrentItem(2);
+            }
+        });
+
+        findViewById(R.id.setting).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                viewPager.setCurrentItem(3);
+            }
+        });
     }
 }

@@ -14,9 +14,16 @@ public class PostFragment extends Fragment {
     private ArrayList<ImageData> imageDatas;
     private Fragment fragment;
     private RecyclerViewAdapter adapter;
+    private String url;
+    private int page;
 
-    public static PostFragment newInstance() {
-        return new PostFragment();
+    public static PostFragment newInstance(String url) {
+        Bundle args = new Bundle();
+        PostFragment fragment = new PostFragment();
+        args.putString("url", url);
+        fragment.setArguments(args);
+
+        return fragment;
     }
 
     @Override
@@ -24,13 +31,16 @@ public class PostFragment extends Fragment {
         super.onCreate(savedInstanceState);
         imageDatas = new ArrayList<>();
         fragment = this;
+        url = getArguments().getString("url");
+        page = 1;
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_post, container, false);
         initRecyclerView(view);
-        ImageManager.getInstance().loadImage(fragment);
+        ImageManager.getInstance().setDownloading(false);
+        ImageManager.getInstance().loadImage(fragment, url + page++);
 
         return view;
     }
@@ -44,7 +54,7 @@ public class PostFragment extends Fragment {
         recyclerView.addOnScrollListener(new RecyclerViewOnScrollListener() {
             @Override
             public void onBottom() {
-                ImageManager.getInstance().loadImage(fragment);
+                ImageManager.getInstance().loadImage(fragment, url + page++);
             }
         });
     }

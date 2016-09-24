@@ -16,15 +16,13 @@ import java.util.Scanner;
 
 public class ImageManager {
     private static ImageManager imageManager;
-    private int page;
-    private boolean isDownloading;
-    private ImageCache<ImageData, Bitmap> imageCache;
     private Handler handler;
+    private ImageCache<ImageData, Bitmap> imageCache;
+    private boolean isDownloading;
 
     private ImageManager() {
-        page = 1;
-        imageCache = new ImageCache<>(MainActivity.getMaxMemory() / 2);
         handler = new Handler();
+        imageCache = new ImageCache<>(MainActivity.getMaxMemory() / 2);
     }
 
     public static ImageManager getInstance() {
@@ -34,10 +32,9 @@ public class ImageManager {
         return imageManager;
     }
 
-    public static Bitmap downloadImage(String urlStr) {
+    public static Bitmap downloadImage(String url) {
         try {
-            URL url = new URL(urlStr);
-            URLConnection connection = url.openConnection();
+            URLConnection connection = new URL(url).openConnection();
             connection.setRequestProperty("User-Agent", "Mozilla/5.0");
             connection.setConnectTimeout(3000);
             connection.setReadTimeout(3000);
@@ -48,22 +45,27 @@ public class ImageManager {
         return null;
     }
 
-    public void loadImage(Fragment fragment) {
+    public void loadImage(Fragment fragment, String url) {
         if (!isDownloading)
-            new DownloadImageData(fragment).start();
+            new DownloadImageData(fragment, url).start();
+    }
+
+    public void setDownloading(boolean downloading) {
+        isDownloading = downloading;
     }
 
     private class DownloadImageData extends Thread {
         private PostFragment fragment;
+        private String url;
 
-        DownloadImageData(Fragment fragment) {
+        DownloadImageData(Fragment fragment, String url) {
             this.fragment = (PostFragment)fragment;
+            this.url = url;
         }
 
         private String getJSON() {
             try {
-                URL url = new URL("https://yande.re/post.json?page=" + page++);
-                URLConnection connection = url.openConnection();
+                URLConnection connection = new URL(url).openConnection();
                 connection.setRequestProperty("User-Agent", "Mozilla/5.0");
                 connection.setConnectTimeout(3000);
                 connection.setReadTimeout(3000);

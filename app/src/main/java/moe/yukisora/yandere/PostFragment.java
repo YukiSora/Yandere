@@ -15,12 +15,14 @@ public class PostFragment extends Fragment {
     private Fragment fragment;
     private RecyclerViewAdapter adapter;
     private String url;
+    private boolean isScrolled;
     private int page;
 
-    public static PostFragment newInstance(String url) {
+    public static PostFragment newInstance(String url, boolean isScrolled) {
         Bundle args = new Bundle();
         PostFragment fragment = new PostFragment();
         args.putString("url", url);
+        args.putBoolean("isScrolled", isScrolled);
         fragment.setArguments(args);
 
         return fragment;
@@ -32,6 +34,7 @@ public class PostFragment extends Fragment {
         imageDatas = new ArrayList<>();
         fragment = this;
         url = getArguments().getString("url");
+        isScrolled = getArguments().getBoolean("isScrolled");
         page = 1;
     }
 
@@ -51,12 +54,13 @@ public class PostFragment extends Fragment {
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
         recyclerView.setAdapter(adapter);
-        recyclerView.addOnScrollListener(new RecyclerViewOnScrollListener() {
-            @Override
-            public void onBottom() {
-                ImageManager.getInstance().loadImage(fragment, url + page++);
-            }
-        });
+        if (isScrolled)
+            recyclerView.addOnScrollListener(new RecyclerViewOnScrollListener() {
+                @Override
+                public void onBottom() {
+                    ImageManager.getInstance().loadImage(fragment, url + page++);
+                }
+            });
     }
 
     public ArrayList<ImageData> getImageDatas() {

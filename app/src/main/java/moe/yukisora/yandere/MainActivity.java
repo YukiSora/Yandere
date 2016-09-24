@@ -52,11 +52,11 @@ public class MainActivity extends Activity {
             public Fragment getItem(int position) {
                 switch (position) {
                     case 0:
-                        return PostFragment.newInstance("https://yande.re/post.json?page=");
+                        return PostFragment.newInstance("https://yande.re/post.json?page=", true);
                     case 1:
-                        return PostFragment.newInstance("https://yande.re/post.json?tags=order:random&page=");
+                        return PostFragment.newInstance("https://yande.re/post.json?tags=order:random&page=", true);
                     case 2:
-                        return RandomFragment.newInstance();
+                        return PostFragment.newInstance("https://yande.re/post/popular_recent.json?page=", false);
                     case 3:
                         return RandomFragment.newInstance();
                     default:

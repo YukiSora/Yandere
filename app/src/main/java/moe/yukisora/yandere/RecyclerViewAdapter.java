@@ -32,7 +32,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                 Bundle bundle = new Bundle();
                 bundle.putSerializable("imageData", imageData);
                 intent.putExtras(bundle);
-                MainActivity.getActivity().startActivity(intent);
+                fragment.startActivity(intent);
             }
         });
     }

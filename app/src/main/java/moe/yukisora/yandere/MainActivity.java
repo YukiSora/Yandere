@@ -11,16 +11,11 @@ import android.view.View;
 
 public class MainActivity extends Activity {
     private static final int NUM_ITEMS = 4;
-    private static Activity activity;
     private static int maxMemory;
 
 
     public static int getMaxMemory() {
         return maxMemory;
-    }
-
-    public static Activity getActivity() {
-        return activity;
     }
 
     @Override
@@ -29,7 +24,6 @@ public class MainActivity extends Activity {
         setContentView(R.layout.activity_main);
 
         //initialize variable
-        activity = this;
         maxMemory = 1024 * 1024 * ((ActivityManager)getSystemService(Context.ACTIVITY_SERVICE)).getMemoryClass();
 
         //configure ViewPager

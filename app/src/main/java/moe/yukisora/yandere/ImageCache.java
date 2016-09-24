@@ -4,7 +4,6 @@ import android.graphics.Bitmap;
 import android.util.LruCache;
 
 public class ImageCache<K, V> extends LruCache<K, V> {
-
     public ImageCache(int maxSize) {
         super(maxSize);
     }
@@ -14,6 +13,7 @@ public class ImageCache<K, V> extends LruCache<K, V> {
         return ((Bitmap)value).getByteCount();
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     protected V create(K key) {
         return (V)ImageManager.downloadImage(((ImageData)key).preview_url);

@@ -20,7 +20,6 @@ public class ImageData implements Serializable {
 
     @Override
     public boolean equals(Object obj) {
-        return id == ((ImageData)obj).id;
+        return obj instanceof ImageData && id == ((ImageData)obj).id;
     }
 }
-

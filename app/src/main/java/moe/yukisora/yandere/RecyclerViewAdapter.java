@@ -24,7 +24,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         final ImageData imageData = (fragment.getImageDatas()).get(position);
-        holder.imageView.setImageBitmap(imageData.bitmap);
+        holder.imageView.setImageBitmap(imageData.getBitmap());
         holder.imageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

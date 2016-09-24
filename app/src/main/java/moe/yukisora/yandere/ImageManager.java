@@ -15,9 +15,9 @@ import java.net.URLConnection;
 import java.util.Scanner;
 
 public class ImageManager {
+    private  static ImageCache<ImageData, Bitmap> imageCache;
     private static ImageManager imageManager;
     private Handler handler;
-    private ImageCache<ImageData, Bitmap> imageCache;
     private boolean isDownloading;
 
     private ImageManager() {
@@ -30,6 +30,10 @@ public class ImageManager {
             imageManager = new ImageManager();
 
         return imageManager;
+    }
+
+    public static ImageCache<ImageData, Bitmap> getImageCache() {
+        return imageCache;
     }
 
     public static Bitmap downloadImage(String url) {
@@ -96,7 +100,7 @@ public class ImageManager {
                     imageData.rating = jsonObject.getString("rating");
                     imageData.width = jsonObject.getInt("width");
                     imageData.height = jsonObject.getInt("height");
-                    imageData.bitmap = imageCache.get(imageData);
+                    imageCache.get(imageData);
 
                     fragment.getImageDatas().add(imageData);
                     handler.post(new Runnable() {

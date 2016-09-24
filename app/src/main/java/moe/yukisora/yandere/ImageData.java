@@ -16,7 +16,10 @@ public class ImageData implements Serializable {
     public String rating;
     public int width;
     public int height;
-    transient public Bitmap bitmap;
+
+    public Bitmap getBitmap() {
+        return ImageManager.getImageCache().get(this);
+    }
 
     @Override
     public boolean equals(Object obj) {

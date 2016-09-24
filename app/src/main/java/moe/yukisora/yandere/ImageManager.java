@@ -15,7 +15,7 @@ import java.net.URLConnection;
 import java.util.Scanner;
 
 public class ImageManager {
-    private  static ImageCache<ImageData, Bitmap> imageCache;
+    private static ImageCache<ImageData, Bitmap> imageCache;
     private static ImageManager imageManager;
     private Handler handler;
     private boolean isDownloading;
@@ -88,8 +88,9 @@ public class ImageManager {
                 JSONArray jsonArray = new JSONArray(str);
                 for (int i = 0; i < jsonArray.length(); i++) {
                     JSONObject jsonObject = jsonArray.getJSONObject(i);
-                    ImageData imageData = new ImageData();
+                    final ImageData imageData = new ImageData();
                     imageData.id = jsonObject.getInt("id");
+                    imageData.list_id = fragment.getImageDatas().size();
                     imageData.tags = jsonObject.getString("tags");
                     imageData.file_size = jsonObject.getInt("file_size");
                     imageData.file_ext = jsonObject.getString("file_ext");
@@ -100,12 +101,13 @@ public class ImageManager {
                     imageData.rating = jsonObject.getString("rating");
                     imageData.width = jsonObject.getInt("width");
                     imageData.height = jsonObject.getInt("height");
+                    imageData.fragment = fragment;
                     imageCache.get(imageData);
 
                     fragment.getImageDatas().add(imageData);
                     handler.post(new Runnable() {
                         public void run() {
-                            fragment.getAdapter().notifyItemInserted(fragment.getImageDatas().size() - 1);
+                            fragment.getAdapter().notifyItemInserted(imageData.list_id);
                         }
                     });
                 }

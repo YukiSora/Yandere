@@ -1,11 +1,13 @@
 package moe.yukisora.yandere;
 
+import android.app.Fragment;
 import android.graphics.Bitmap;
 
 import java.io.Serializable;
 
 public class ImageData implements Serializable {
     public int id;
+    public int list_id;
     public String tags;
     public int file_size;
     public String file_ext;
@@ -16,6 +18,7 @@ public class ImageData implements Serializable {
     public String rating;
     public int width;
     public int height;
+    transient public Fragment fragment;
 
     public Bitmap getBitmap() {
         return ImageManager.getImageCache().get(this);

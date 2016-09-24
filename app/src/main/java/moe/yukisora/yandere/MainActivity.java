@@ -13,7 +13,6 @@ public class MainActivity extends Activity {
     private static final int NUM_ITEMS = 4;
     private static int maxMemory;
 
-
     public static int getMaxMemory() {
         return maxMemory;
     }

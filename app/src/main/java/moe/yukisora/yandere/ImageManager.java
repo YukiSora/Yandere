@@ -101,6 +101,8 @@ public class ImageManager {
                     imageData.rating = jsonObject.getString("rating");
                     imageData.width = jsonObject.getInt("width");
                     imageData.height = jsonObject.getInt("height");
+                    imageData.layout_height = Math.round((MainActivity.getScreenWidth() / 2 - (8 + 6 + 10) * (MainActivity.getDpi() / 160f)) * imageData.actual_preview_height / imageData.actual_preview_width);
+                    imageData.isPlaceholder = true;
                     imageData.fragment = fragment;
                     imageCache.get(imageData);
 

@@ -44,6 +44,7 @@ public class ImageCache<K, V> extends LruCache<K, V> {
         @SuppressWarnings("unchecked")
         protected void onPostExecute(Bitmap bitmap) {
             imageCache.put(imageData, bitmap);
+            imageData.isPlaceholder = false;
             handler.post(new Runnable() {
                 public void run() {
                     ((PostFragment)imageData.fragment).getAdapter().notifyItemChanged(imageData.list_id);

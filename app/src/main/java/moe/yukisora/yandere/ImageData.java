@@ -18,6 +18,8 @@ public class ImageData implements Serializable {
     public String rating;
     public int width;
     public int height;
+    public int layout_height;
+    public boolean isPlaceholder;
     transient public Fragment fragment;
 
     public Bitmap getBitmap() {

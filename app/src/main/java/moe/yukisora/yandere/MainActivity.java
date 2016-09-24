@@ -7,14 +7,25 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.v13.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.util.DisplayMetrics;
 import android.view.View;
 
 public class MainActivity extends Activity {
     private static final int NUM_ITEMS = 4;
+    private static int dpi;
     private static int maxMemory;
+    private static int screenWidth;
+
+    public static int getDpi() {
+        return dpi;
+    }
 
     public static int getMaxMemory() {
         return maxMemory;
+    }
+
+    public static int getScreenWidth() {
+        return screenWidth;
     }
 
     @Override
@@ -23,6 +34,10 @@ public class MainActivity extends Activity {
         setContentView(R.layout.activity_main);
 
         //initialize variable
+        DisplayMetrics metrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(metrics);
+        dpi = metrics.densityDpi;
+        screenWidth = metrics.widthPixels;
         maxMemory = 1024 * 1024 * ((ActivityManager)getSystemService(Context.ACTIVITY_SERVICE)).getMemoryClass();
 
         //configure ViewPager

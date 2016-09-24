@@ -5,12 +5,20 @@
     android:layout_margin="3dp"
     android:background="#FFFFFF">
 
-    <ImageView
+    <RelativeLayout
+        android:id="@+id/itemLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:adjustViewBounds="true"
-        android:padding="5dp"
-        android:scaleType="fitXY" />
+        android:gravity="center"
+        android:padding="5dp">
+
+        <ImageView
+            android:id="@+id/itemImageView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:adjustViewBounds="true"
+            android:scaleType="fitXY" />
+    </RelativeLayout>
 
 </FrameLayout>

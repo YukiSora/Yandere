@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 
 public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder> {
     private PostFragment fragment;
@@ -24,7 +25,16 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         final ImageData imageData = (fragment.getImageDatas()).get(position);
+        holder.layout.getLayoutParams().height = imageData.layout_height;
+        if (imageData.isPlaceholder) {
+            holder.imageView.getLayoutParams().width = 100;
+        }
+        else {
+            holder.imageView.setLayoutParams(new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT));
+        }
         holder.imageView.setImageBitmap(imageData.getBitmap());
+
+
         holder.imageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -44,10 +54,12 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         ImageView imageView;
+        RelativeLayout layout;
 
         public ViewHolder(View view) {
             super(view);
-            imageView = (ImageView)((ViewGroup)view).getChildAt(0);
+            imageView = (ImageView)view.findViewById(R.id.itemImageView);
+            layout = (RelativeLayout)view.findViewById(R.id.itemLayout);
         }
     }
 }

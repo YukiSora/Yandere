@@ -18,7 +18,7 @@
 
         <Button
             android:id="@+id/post"
-            style="?android:attr/buttonBarButtonStyle"
+            style="?android:attr/borderlessButtonStyle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_margin="0dp"
@@ -29,7 +29,7 @@
 
         <Button
             android:id="@+id/random"
-            style="?android:attr/buttonBarButtonStyle"
+            style="?android:attr/borderlessButtonStyle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_margin="0dp"
@@ -40,7 +40,7 @@
 
         <Button
             android:id="@+id/popular"
-            style="?android:attr/buttonBarButtonStyle"
+            style="?android:attr/borderlessButtonStyle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_margin="0dp"
@@ -51,7 +51,7 @@
 
         <Button
             android:id="@+id/setting"
-            style="?android:attr/buttonBarButtonStyle"
+            style="?android:attr/borderlessButtonStyle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_margin="0dp"

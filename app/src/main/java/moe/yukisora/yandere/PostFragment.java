@@ -31,21 +31,26 @@ public class PostFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        imageDatas = new ArrayList<>();
+
         fragment = this;
         url = getArguments().getString("url");
         isScrolled = getArguments().getBoolean("isScrolled");
-        page = 1;
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_post, container, false);
+        initFragment(view);
+
+        return view;
+    }
+
+    private void initFragment(View view) {
+        imageDatas = new ArrayList<>();
+        page = 1;
         initRecyclerView(view);
         ImageManager.getInstance().setDownloading(false);
         ImageManager.getInstance().loadImage(fragment, url + page++);
-
-        return view;
     }
 
     private void initRecyclerView(View view) {

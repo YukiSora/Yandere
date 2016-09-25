@@ -86,7 +86,10 @@ public class ImageManager {
         private void parseJSON(String str) {
             try {
                 JSONArray jsonArray = new JSONArray(str);
-                for (int i = 0; i < jsonArray.length(); i++) {
+                final int positionStart = fragment.getImageDatas().size();
+                final int itemCount = jsonArray.length();
+
+                for (int i = 0; i < itemCount; i++) {
                     JSONObject jsonObject = jsonArray.getJSONObject(i);
                     final ImageData imageData = new ImageData();
                     imageData.id = jsonObject.getInt("id");
@@ -107,15 +110,15 @@ public class ImageManager {
                     imageData.layout_height = Math.round((MainActivity.getScreenWidth() / 2 - (8 + 6 + 10) * (MainActivity.getDpi() / 160f)) * imageData.actual_preview_height / imageData.actual_preview_width);
                     imageData.isPlaceholder = true;
                     imageData.fragment = fragment;
-                    imageCache.get(imageData);
 
                     fragment.getImageDatas().add(imageData);
-                    handler.post(new Runnable() {
-                        public void run() {
-                            fragment.getAdapter().notifyItemInserted(imageData.list_id);
-                        }
-                    });
                 }
+
+                handler.post(new Runnable() {
+                    public void run() {
+                        fragment.getAdapter().notifyItemRangeInserted(positionStart, itemCount);
+                    }
+                });
             } catch (JSONException ignored) {
             }
         }
@@ -123,7 +126,9 @@ public class ImageManager {
         @Override
         public void run() {
             isDownloading = true;
-            parseJSON(getJSON());
+            String json = getJSON();
+            if (json != null)
+                parseJSON(json);
             isDownloading = false;
         }
     }

@@ -26,7 +26,12 @@ public class ImageCache<K, V> extends LruCache<K, V> {
     protected V create(K key) {
         new DownloadImageTask((ImageData)key).start();
 
-        return (V)BitmapFactory.decodeResource(((ImageData)key).fragment.getResources(), R.drawable.placeholder_small);
+        //java.lang.IllegalStateException: Fragment not attached to Activity
+        try {
+            return (V)BitmapFactory.decodeResource(((ImageData)key).fragment.getResources(), R.drawable.placeholder_small);
+        } catch (IllegalStateException e) {
+            return null;
+        }
     }
 
     @Override
@@ -45,13 +50,16 @@ public class ImageCache<K, V> extends LruCache<K, V> {
         @SuppressWarnings("unchecked")
         @Override
         public void run() {
-            imageCache.put(imageData, ImageManager.downloadImage(imageData.preview_url));
-            imageData.isPlaceholder = false;
-            handler.post(new Runnable() {
-                public void run() {
-                    ((PostFragment)imageData.fragment).getAdapter().notifyItemChanged(imageData.list_id);
-                }
-            });
+            Bitmap bitmap = ImageManager.downloadImage(imageData.preview_url);
+            if (bitmap != null) {
+                imageCache.put(imageData, bitmap);
+                imageData.isPlaceholder = false;
+                handler.post(new Runnable() {
+                    public void run() {
+                        ((PostFragment)imageData.fragment).getAdapter().notifyItemChanged(imageData.list_id);
+                    }
+                });
+            }
         }
     }
 }

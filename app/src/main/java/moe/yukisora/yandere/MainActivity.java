@@ -5,7 +5,7 @@ import android.app.ActivityManager;
 import android.app.Fragment;
 import android.content.Context;
 import android.os.Bundle;
-import android.support.v13.app.FragmentPagerAdapter;
+import android.support.v13.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.DisplayMetrics;
 import android.view.View;
@@ -42,7 +42,7 @@ public class MainActivity extends Activity {
 
         //configure ViewPager
         final ViewPager viewPager = (ViewPager)findViewById(R.id.viewPager);
-        viewPager.setAdapter(new FragmentPagerAdapter(getFragmentManager()) {
+        viewPager.setAdapter(new FragmentStatePagerAdapter(getFragmentManager()) {
             @Override
             public int getCount() {
                 return NUM_ITEMS;

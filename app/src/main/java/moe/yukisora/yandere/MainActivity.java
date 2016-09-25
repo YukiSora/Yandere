@@ -6,18 +6,26 @@ import android.app.Fragment;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.support.v13.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.DisplayMetrics;
 import android.view.View;
 
+import java.io.File;
+
 public class MainActivity extends Activity {
     private static final int NUM_ITEMS = 4;
+    private static File directory;
     private static boolean isSafe;
     private static int dpi;
     private static int maxMemory;
     private static int screenWidth;
+
+    public static File getDirectory() {
+        return directory;
+    }
 
     public static boolean isSafe() {
         return isSafe;
@@ -55,6 +63,11 @@ public class MainActivity extends Activity {
         //Preferences
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
         isSafe = preferences.getBoolean("isSafe", true);
+
+        directory = new File(Environment.getExternalStorageDirectory(), "Yandere");
+        if (!directory.exists())
+            if (!directory.mkdir())
+                directory = null;
 
         //configure ViewPager
         final ViewPager viewPager = (ViewPager)findViewById(R.id.viewPager);

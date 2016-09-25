@@ -3,10 +3,17 @@ package moe.yukisora.yandere;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 
 public class ImageViewActivity extends Activity {
     private Handler handler;
@@ -30,6 +37,13 @@ public class ImageViewActivity extends Activity {
         String fileSizeStr = String.format("File Size: %.2fkb", imageData.file_size / 1024f);
         ((TextView)findViewById(R.id.fileSize)).setText(fileSizeStr);
 
+        findViewById(R.id.download).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new SaveImageTask().start();
+            }
+        });
+
         new DownloadImageTask().start();
     }
 
@@ -43,6 +57,33 @@ public class ImageViewActivity extends Activity {
                     imageView.setImageBitmap(bitmap);
                 }
             });
+        }
+    }
+
+    private class SaveImageTask extends Thread {
+        @Override
+        public void run() {
+            File file = new File(MainActivity.getDirectory(), "yandere_" + imageData.id + "." + imageData.file_ext);
+            if (!file.exists()) {
+                Bitmap bitmap = ImageManager.downloadImage(imageData.file_url);
+                try (FileOutputStream out = new FileOutputStream(file)) {
+                    if (imageData.file_ext.equalsIgnoreCase("png"))
+                        bitmap.compress(Bitmap.CompressFormat.PNG, 100, out);
+                    else if (imageData.file_ext.equalsIgnoreCase("jpg"))
+                        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, out);
+                } catch (IOException ignore) {
+                }
+
+                handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        Toast.makeText(getApplicationContext(), "Image is downloaded.", Toast.LENGTH_SHORT).show();
+                    }
+                });
+
+                //display in photo gallery
+                sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE).setData(Uri.fromFile(file)));
+            }
         }
     }
 }

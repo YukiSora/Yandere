@@ -5,12 +5,29 @@
         android:title="Image Rating">
 
         <CheckBoxPreference
-            android:key="isSafe"
             android:defaultValue="true"
+            android:key="isSafe"
+            android:persistent="true"
             android:summaryOff="R-18 Image"
             android:summaryOn="Safe Image"
-            android:title="Safe"
-            android:persistent="true" />
+            android:title="Safe" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:title="About Application">
+
+        <Preference
+            android:summary="Yuki Sora"
+            android:title="Author" />
+
+        <Preference
+            android:summary="https://github.com/YukiSora/Yandere"
+            android:title="GitHub" />
+
+        <Preference
+            android:summary="1.0"
+            android:title="Version" />
 
     </PreferenceCategory>
 

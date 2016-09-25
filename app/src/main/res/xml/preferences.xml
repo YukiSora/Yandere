@@ -5,11 +5,12 @@
         android:title="Image Rating">
 
         <CheckBoxPreference
+            android:key="isSafe"
             android:defaultValue="true"
             android:summaryOff="R-18 Image"
             android:summaryOn="Safe Image"
-            android:title="Safe (Restart Needed)">
-        </CheckBoxPreference>
+            android:title="Safe"
+            android:persistent="true" />
 
     </PreferenceCategory>
 

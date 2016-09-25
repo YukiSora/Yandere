@@ -87,9 +87,8 @@ public class ImageManager {
             try {
                 JSONArray jsonArray = new JSONArray(str);
                 final int positionStart = fragment.getImageDatas().size();
-                final int itemCount = jsonArray.length();
 
-                for (int i = 0; i < itemCount; i++) {
+                for (int i = 0; i < jsonArray.length(); i++) {
                     JSONObject jsonObject = jsonArray.getJSONObject(i);
                     final ImageData imageData = new ImageData();
                     imageData.id = jsonObject.getInt("id");
@@ -111,8 +110,11 @@ public class ImageManager {
                     imageData.isPlaceholder = true;
                     imageData.fragment = fragment;
 
-                    fragment.getImageDatas().add(imageData);
+                    if (!MainActivity.isSafe() || imageData.rating.equalsIgnoreCase("s")) {
+                        fragment.getImageDatas().add(imageData);
+                    }
                 }
+                final int itemCount = fragment.getImageDatas().size() - positionStart;
 
                 handler.post(new Runnable() {
                     public void run() {

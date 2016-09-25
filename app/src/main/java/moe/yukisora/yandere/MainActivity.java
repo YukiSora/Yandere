@@ -4,7 +4,9 @@ import android.app.Activity;
 import android.app.ActivityManager;
 import android.app.Fragment;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v13.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.DisplayMetrics;
@@ -12,9 +14,18 @@ import android.view.View;
 
 public class MainActivity extends Activity {
     private static final int NUM_ITEMS = 4;
+    private static boolean isSafe;
     private static int dpi;
     private static int maxMemory;
     private static int screenWidth;
+
+    public static boolean isSafe() {
+        return isSafe;
+    }
+
+    public static void setSafe(boolean isSafe) {
+        MainActivity.isSafe = isSafe;
+    }
 
     public static int getDpi() {
         return dpi;
@@ -34,11 +45,16 @@ public class MainActivity extends Activity {
         setContentView(R.layout.activity_main);
 
         //initialize variable
+        //DisplayMetrics
         DisplayMetrics metrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(metrics);
         dpi = metrics.densityDpi;
         screenWidth = metrics.widthPixels;
+        //Memory
         maxMemory = 1024 * 1024 * ((ActivityManager)getSystemService(Context.ACTIVITY_SERVICE)).getMemoryClass();
+        //Preferences
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        isSafe = preferences.getBoolean("isSafe", true);
 
         //configure ViewPager
         final ViewPager viewPager = (ViewPager)findViewById(R.id.viewPager);

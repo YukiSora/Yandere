@@ -1,6 +1,7 @@
 package moe.yukisora.yandere;
 
 import android.os.Bundle;
+import android.preference.Preference;
 import android.preference.PreferenceFragment;
 
 public class SettingFragment extends PreferenceFragment {
@@ -17,5 +18,13 @@ public class SettingFragment extends PreferenceFragment {
         super.onCreate(savedInstanceState);
         addPreferencesFromResource(R.xml.preferences);
 
+        findPreference("isSafe").setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+            @Override
+            public boolean onPreferenceChange(Preference preference, Object newValue) {
+                MainActivity.setSafe((boolean)newValue);
+
+                return true;
+            }
+        });
     }
 }

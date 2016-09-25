@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <PreferenceCategory
+        android:title="Image Rating">
+
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:summaryOff="R-18 Image"
+            android:summaryOn="Safe Image"
+            android:title="Safe (Restart Needed)">
+        </CheckBoxPreference>
+
+    </PreferenceCategory>
+
+</PreferenceScreen>

@@ -30,6 +30,12 @@ public class ImageCache<K, V> extends LruCache<K, V> {
         return (V)BitmapFactory.decodeResource(((ImageData)key).fragment.getResources(), R.drawable.placeholder_small);
     }
 
+    @Override
+    protected void entryRemoved(boolean evicted, K key, V oldValue, V newValue) {
+        if (newValue == null)
+            ((ImageData)key).isPlaceholder = true;
+    }
+
     private class DownloadImageTask extends AsyncTask<Void, Void, Bitmap> {
         private ImageData imageData;
 

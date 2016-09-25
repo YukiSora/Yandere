@@ -2,7 +2,6 @@ package moe.yukisora.yandere;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.os.AsyncTask;
 import android.os.Handler;
 import android.util.LruCache;
 
@@ -25,7 +24,7 @@ public class ImageCache<K, V> extends LruCache<K, V> {
     @SuppressWarnings("unchecked")
     @Override
     protected V create(K key) {
-        new DownloadImageTask((ImageData)key).execute();
+        new DownloadImageTask((ImageData)key).start();
 
         return (V)BitmapFactory.decodeResource(((ImageData)key).fragment.getResources(), R.drawable.placeholder_small);
     }
@@ -36,20 +35,17 @@ public class ImageCache<K, V> extends LruCache<K, V> {
             ((ImageData)key).isPlaceholder = true;
     }
 
-    private class DownloadImageTask extends AsyncTask<Void, Void, Bitmap> {
+    private class DownloadImageTask extends Thread {
         private ImageData imageData;
 
         DownloadImageTask(ImageData imageData) {
             this.imageData = imageData;
         }
 
-        protected Bitmap doInBackground(Void... args) {
-            return ImageManager.downloadImage(imageData.preview_url);
-        }
-
         @SuppressWarnings("unchecked")
-        protected void onPostExecute(Bitmap bitmap) {
-            imageCache.put(imageData, bitmap);
+        @Override
+        public void run() {
+            imageCache.put(imageData, ImageManager.downloadImage(imageData.preview_url));
             imageData.isPlaceholder = false;
             handler.post(new Runnable() {
                 public void run() {

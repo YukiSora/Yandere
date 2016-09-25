@@ -3,12 +3,14 @@ package moe.yukisora.yandere;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 public class ImageViewActivity extends Activity {
+    private Handler handler;
+    private ImageData imageData;
     private ImageView imageView;
 
     @Override
@@ -16,8 +18,10 @@ public class ImageViewActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_image_view);
 
+        handler = new Handler();
+
         Intent intent = this.getIntent();
-        ImageData imageData = (ImageData)intent.getSerializableExtra("imageData");
+        imageData = (ImageData)intent.getSerializableExtra("imageData");
         imageView = (ImageView)findViewById(R.id.fullSizeImageView);
         imageView.setImageResource(R.drawable.placeholder_large);
 
@@ -26,16 +30,19 @@ public class ImageViewActivity extends Activity {
         String fileSizeStr = String.format("File Size: %.2fkb", imageData.file_size / 1024f);
         ((TextView)findViewById(R.id.fileSize)).setText(fileSizeStr);
 
-        new DownloadImageTask().execute(imageData.sample_url);
+        new DownloadImageTask().start();
     }
 
-    private class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
-        protected Bitmap doInBackground(String... urls) {
-            return ImageManager.downloadImage(urls[0]);
-        }
-
-        protected void onPostExecute(Bitmap bitmap) {
-            imageView.setImageBitmap(bitmap);
+    private class DownloadImageTask extends Thread {
+        @Override
+        public void run() {
+            final Bitmap bitmap = ImageManager.downloadImage(imageData.sample_url);
+            handler.post(new Runnable() {
+                @Override
+                public void run() {
+                    imageView.setImageBitmap(bitmap);
+                }
+            });
         }
     }
 }

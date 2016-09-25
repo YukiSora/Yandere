@@ -15,6 +15,9 @@ public class ImageData implements Serializable {
     public String preview_url;
     public int actual_preview_width;
     public int actual_preview_height;
+    public String sample_url;
+    public int sample_width;
+    public int sample_height;
     public String rating;
     public int width;
     public int height;

@@ -98,6 +98,9 @@ public class ImageManager {
                     imageData.preview_url = jsonObject.getString("preview_url");
                     imageData.actual_preview_width = jsonObject.getInt("actual_preview_width");
                     imageData.actual_preview_height = jsonObject.getInt("actual_preview_height");
+                    imageData.sample_url = jsonObject.getString("sample_url");
+                    imageData.sample_width = jsonObject.getInt("sample_width");
+                    imageData.sample_height = jsonObject.getInt("sample_height");
                     imageData.rating = jsonObject.getString("rating");
                     imageData.width = jsonObject.getInt("width");
                     imageData.height = jsonObject.getInt("height");

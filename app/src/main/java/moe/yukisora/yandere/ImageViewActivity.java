@@ -6,9 +6,9 @@ import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 public class ImageViewActivity extends Activity {
-    private ImageData imageData;
     private ImageView imageView;
 
     @Override
@@ -17,11 +17,16 @@ public class ImageViewActivity extends Activity {
         setContentView(R.layout.activity_image_view);
 
         Intent intent = this.getIntent();
-        imageData = (ImageData)intent.getSerializableExtra("imageData");
+        ImageData imageData = (ImageData)intent.getSerializableExtra("imageData");
         imageView = (ImageView)findViewById(R.id.fullSizeImageView);
-        imageView.setImageResource(R.drawable.placeholder_small);
+        imageView.setImageResource(R.drawable.placeholder_large);
 
-        new DownloadImageTask().execute(imageData.file_url);
+        String imageSizeStr = String.format("Image Size: %d x %d", imageData.width, imageData.height);
+        ((TextView)findViewById(R.id.imageSize)).setText(imageSizeStr);
+        String fileSizeStr = String.format("File Size: %.2fkb", imageData.file_size / 1024f);
+        ((TextView)findViewById(R.id.fileSize)).setText(fileSizeStr);
+
+        new DownloadImageTask().execute(imageData.sample_url);
     }
 
     private class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {

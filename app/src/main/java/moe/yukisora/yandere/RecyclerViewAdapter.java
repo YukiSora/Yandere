@@ -2,6 +2,7 @@ package moe.yukisora.yandere;
 
 import android.app.Fragment;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -26,14 +27,13 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     public void onBindViewHolder(ViewHolder holder, int position) {
         final ImageData imageData = (fragment.getImageDatas()).get(position);
         holder.layout.getLayoutParams().height = imageData.layout_height;
-        if (imageData.isPlaceholder) {
-            holder.imageView.getLayoutParams().width = 100;
-        }
-        else {
+        Bitmap bitmap = imageData.getBitmap();
+        //if is placeholder image
+        if (bitmap.getWidth() == MainActivity.getSmallPlaceholderWidth())
+            holder.imageView.getLayoutParams().width = MainActivity.getSmallPlaceholderWidth() / (int)(MainActivity.getDpi() / 160f);
+        else
             holder.imageView.setLayoutParams(new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT));
-        }
-        holder.imageView.setImageBitmap(imageData.getBitmap());
-
+        holder.imageView.setImageBitmap(bitmap);
 
         holder.imageView.setOnClickListener(new View.OnClickListener() {
             @Override

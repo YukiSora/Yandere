@@ -22,15 +22,19 @@ public class ImageData implements Serializable {
     public int width;
     public int height;
     public int layout_height;
-    public boolean isPlaceholder;
     transient public Fragment fragment;
 
     public Bitmap getBitmap() {
-        return ImageManager.getImageCache().get(this);
+        return ImageManager.getImageCache().getByImageData(this);
     }
 
     @Override
     public boolean equals(Object obj) {
         return obj instanceof ImageData && id == ((ImageData)obj).id;
+    }
+
+    @Override
+    public int hashCode() {
+        return id;
     }
 }

@@ -5,6 +5,7 @@ import android.app.ActivityManager;
 import android.app.Fragment;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.Environment;
 import android.preference.PreferenceManager;
@@ -22,6 +23,7 @@ public class MainActivity extends Activity {
     private static boolean isSafe;
     private static int dpi;
     private static int maxMemory;
+    private static int smallPlaceholderWidth;
     private static int screenWidth;
 
     public static File getDirectory() {
@@ -48,6 +50,10 @@ public class MainActivity extends Activity {
         return screenWidth;
     }
 
+    public static int getSmallPlaceholderWidth() {
+        return smallPlaceholderWidth;
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -59,6 +65,8 @@ public class MainActivity extends Activity {
         getWindowManager().getDefaultDisplay().getMetrics(metrics);
         dpi = metrics.densityDpi;
         screenWidth = metrics.widthPixels;
+        //placeholder image size
+        smallPlaceholderWidth = BitmapFactory.decodeResource(getResources(), R.drawable.placeholder_small).getWidth();
         //Memory
         maxMemory = 1024 * 1024 * ((ActivityManager)getSystemService(Context.ACTIVITY_SERVICE)).getMemoryClass();
         //Preferences

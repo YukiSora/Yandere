@@ -15,14 +15,14 @@ import java.net.URLConnection;
 import java.util.Scanner;
 
 public class ImageManager {
-    private static ImageCache<ImageData, Bitmap> imageCache;
+    private static ImageCache imageCache;
     private static ImageManager imageManager;
     private Handler handler;
     private boolean isDownloading;
 
     private ImageManager() {
         handler = new Handler();
-        imageCache = new ImageCache<>(MainActivity.getMaxMemory() / 2);
+        imageCache = new ImageCache(MainActivity.getMaxMemory() / 2);
     }
 
     public static ImageManager getInstance() {
@@ -32,7 +32,7 @@ public class ImageManager {
         return imageManager;
     }
 
-    public static ImageCache<ImageData, Bitmap> getImageCache() {
+    public static ImageCache getImageCache() {
         return imageCache;
     }
 
@@ -108,7 +108,6 @@ public class ImageManager {
                     imageData.height = jsonObject.getInt("height");
                     //calculate ImageView height manually
                     imageData.layout_height = Math.round((MainActivity.getScreenWidth() / 2 - (8 + 6 + 10) * (MainActivity.getDpi() / 160f)) * imageData.actual_preview_height / imageData.actual_preview_width);
-                    imageData.isPlaceholder = true;
                     imageData.fragment = fragment;
 
                     if (!MainActivity.isSafe() || imageData.rating.equalsIgnoreCase("s")) {

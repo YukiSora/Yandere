@@ -29,8 +29,8 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         holder.layout.getLayoutParams().height = imageData.layout_height;
         Bitmap bitmap = imageData.getBitmap();
         //if is placeholder image
-        if (bitmap.getWidth() == MainActivity.getSmallPlaceholderWidth())
-            holder.imageView.getLayoutParams().width = MainActivity.getSmallPlaceholderWidth() / (int)(MainActivity.getDpi() / 160f);
+        if (bitmap.getWidth() == MainActivity.getSmallPlaceholderSize() && bitmap.getHeight() == MainActivity.getSmallPlaceholderSize())
+            holder.imageView.getLayoutParams().width = MainActivity.getSmallPlaceholderSize() / (int)(MainActivity.getDpi() / 160f);
         else
             holder.imageView.setLayoutParams(new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT));
         holder.imageView.setImageBitmap(bitmap);

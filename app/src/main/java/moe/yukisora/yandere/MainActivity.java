@@ -23,7 +23,7 @@ public class MainActivity extends Activity {
     private static boolean isSafe;
     private static int dpi;
     private static int maxMemory;
-    private static int smallPlaceholderWidth;
+    private static int smallPlaceholderSize;
     private static int screenWidth;
 
     public static File getDirectory() {
@@ -50,8 +50,8 @@ public class MainActivity extends Activity {
         return screenWidth;
     }
 
-    public static int getSmallPlaceholderWidth() {
-        return smallPlaceholderWidth;
+    public static int getSmallPlaceholderSize() {
+        return smallPlaceholderSize;
     }
 
     @Override
@@ -66,7 +66,7 @@ public class MainActivity extends Activity {
         dpi = metrics.densityDpi;
         screenWidth = metrics.widthPixels;
         //placeholder image size
-        smallPlaceholderWidth = BitmapFactory.decodeResource(getResources(), R.drawable.placeholder_small).getWidth();
+        smallPlaceholderSize = BitmapFactory.decodeResource(getResources(), R.drawable.placeholder_small).getWidth();
         //Memory
         maxMemory = 1024 * 1024 * ((ActivityManager)getSystemService(Context.ACTIVITY_SERVICE)).getMemoryClass();
         //Preferences

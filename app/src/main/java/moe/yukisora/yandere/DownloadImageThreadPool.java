@@ -17,7 +17,6 @@ public class DownloadImageThreadPool {
     private DownloadImageThreadPool() {
         requests = new ArrayList<>();
         handler = new Handler();
-        active = true;
     }
 
     public static DownloadImageThreadPool getInstance() {
@@ -29,6 +28,11 @@ public class DownloadImageThreadPool {
 
     public void setActive(boolean active) {
         this.active = active;
+        //clear not start request
+        if (!active)
+            synchronized (this) {
+                requests.clear();
+            }
     }
 
     public void setImageCache(ImageCache imageCache) {

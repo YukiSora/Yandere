@@ -1,7 +1,10 @@
 package moe.yukisora.yandere;
 
 import android.app.Fragment;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.LayoutInflater;
@@ -13,6 +16,7 @@ import java.util.ArrayList;
 public class PostFragment extends Fragment {
     private ArrayList<ImageData> imageDatas;
     private Fragment fragment;
+    private Handler handler;
     private RecyclerViewAdapter adapter;
     private String url;
     private boolean isScrolled;
@@ -33,6 +37,7 @@ public class PostFragment extends Fragment {
         super.onCreate(savedInstanceState);
 
         fragment = this;
+        handler = new Handler();
         url = getArguments().getString("url");
         isScrolled = getArguments().getBoolean("isScrolled");
     }
@@ -40,20 +45,22 @@ public class PostFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_post, container, false);
-        initFragment(view);
+        initFragment();
+        initRecyclerView(view);
+        ImageManager.getInstance().loadImage(fragment, url + page++);
 
         return view;
     }
 
-    private void initFragment(View view) {
+    private void initFragment() {
         imageDatas = new ArrayList<>();
         page = 1;
-        initRecyclerView(view);
         ImageManager.getInstance().setDownloading(false);
-        ImageManager.getInstance().loadImage(fragment, url + page++);
+        DownloadImageThreadPool.getInstance().setActive(true);
     }
 
     private void initRecyclerView(View view) {
+        //RecyclerView
         adapter = new RecyclerViewAdapter(fragment);
         RecyclerView recyclerView = (RecyclerView)view.findViewById(R.id.recyclerView);
         recyclerView.setHasFixedSize(true);
@@ -67,6 +74,30 @@ public class PostFragment extends Fragment {
                     ImageManager.getInstance().loadImage(fragment, url + page++);
                 }
             });
+
+        //SwipeRefreshLayout
+        final SwipeRefreshLayout swipeRefreshLayout = (SwipeRefreshLayout)view.findViewById(R.id.swipeRefreshLayout);
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                DownloadImageThreadPool.getInstance().setActive(false);
+                //wait downloading thread
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        while (!DownloadImageThreadPool.getInstance().isEmpty())
+                            ;
+                        initFragment();
+                        adapter.notifyDataSetChanged();
+                        ImageManager.getInstance().loadImage(fragment, url + page++);
+                        swipeRefreshLayout.setRefreshing(false);
+                    }
+                }, 1000);
+            }
+        });
+        swipeRefreshLayout.setColorSchemeColors(Color.RED, Color.GREEN, Color.BLUE, Color.CYAN);
+        swipeRefreshLayout.setProgressBackgroundColorSchemeColor(Color.argb(90, 102, 204, 255));
+        swipeRefreshLayout.setSize(SwipeRefreshLayout.LARGE);
     }
 
     public ArrayList<ImageData> getImageDatas() {

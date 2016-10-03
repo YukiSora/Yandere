@@ -12,6 +12,7 @@ import android.support.v13.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.DisplayMetrics;
 import android.view.View;
+import android.widget.ImageButton;
 
 import java.io.File;
 
@@ -94,32 +95,53 @@ public class MainActivity extends Activity {
             }
         });
 
+        final ImageButton postBtn = ((ImageButton)findViewById(R.id.post));
+        final ImageButton randomBtn = ((ImageButton)findViewById(R.id.random));
+        final ImageButton popularBtn = ((ImageButton)findViewById(R.id.popular));
+        final ImageButton settingBtn = ((ImageButton)findViewById(R.id.setting));
+
         //configure Button
-        findViewById(R.id.post).setOnClickListener(new View.OnClickListener() {
+        postBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 viewPager.setCurrentItem(0);
+                postBtn.setImageResource(R.drawable.list_focused);
+                randomBtn.setImageResource(R.drawable.random);
+                popularBtn.setImageResource(R.drawable.rank);
+                settingBtn.setImageResource(R.drawable.setting);
             }
         });
 
-        findViewById(R.id.random).setOnClickListener(new View.OnClickListener() {
+        randomBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 viewPager.setCurrentItem(1);
+                postBtn.setImageResource(R.drawable.list);
+                randomBtn.setImageResource(R.drawable.random_focused);
+                popularBtn.setImageResource(R.drawable.rank);
+                settingBtn.setImageResource(R.drawable.setting);
             }
         });
 
-        findViewById(R.id.popular).setOnClickListener(new View.OnClickListener() {
+        popularBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 viewPager.setCurrentItem(2);
+                postBtn.setImageResource(R.drawable.list);
+                randomBtn.setImageResource(R.drawable.random);
+                popularBtn.setImageResource(R.drawable.rank_focused);
+                settingBtn.setImageResource(R.drawable.setting);
             }
         });
 
-        findViewById(R.id.setting).setOnClickListener(new View.OnClickListener() {
+        settingBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 viewPager.setCurrentItem(3);
+                postBtn.setImageResource(R.drawable.list);
+                randomBtn.setImageResource(R.drawable.random);
+                popularBtn.setImageResource(R.drawable.rank);
+                settingBtn.setImageResource(R.drawable.setting_focused);
             }
         });
     }

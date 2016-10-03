@@ -72,6 +72,11 @@ public class MainActivity extends Activity {
 
         //configure ViewPager
         final ViewPager viewPager = (ViewPager)findViewById(R.id.viewPager);
+        final ImageButton postBtn = ((ImageButton)findViewById(R.id.post));
+        final ImageButton randomBtn = ((ImageButton)findViewById(R.id.random));
+        final ImageButton popularBtn = ((ImageButton)findViewById(R.id.popular));
+        final ImageButton settingBtn = ((ImageButton)findViewById(R.id.setting));
+
         viewPager.setAdapter(new FragmentStatePagerAdapter(getFragmentManager()) {
             @Override
             public int getCount() {
@@ -95,20 +100,33 @@ public class MainActivity extends Activity {
             }
         });
 
-        final ImageButton postBtn = ((ImageButton)findViewById(R.id.post));
-        final ImageButton randomBtn = ((ImageButton)findViewById(R.id.random));
-        final ImageButton popularBtn = ((ImageButton)findViewById(R.id.popular));
-        final ImageButton settingBtn = ((ImageButton)findViewById(R.id.setting));
+        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            private int lastPosition;
+            private ImageButton[] imageButtons = new ImageButton[]{postBtn, randomBtn, popularBtn, settingBtn};
+            private int[] normalResourceId = new int[]{R.drawable.list, R.drawable.random, R.drawable.rank, R.drawable.setting};
+            private int[] focusedResourceId = new int[]{R.drawable.list_focused, R.drawable.random_focused, R.drawable.rank_focused, R.drawable.setting_focused};
+
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                imageButtons[lastPosition].setImageResource(normalResourceId[lastPosition]);
+                imageButtons[position].setImageResource(focusedResourceId[position]);
+                lastPosition = position;
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+            }
+        });
 
         //configure Button
         postBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 viewPager.setCurrentItem(0);
-                postBtn.setImageResource(R.drawable.list_focused);
-                randomBtn.setImageResource(R.drawable.random);
-                popularBtn.setImageResource(R.drawable.rank);
-                settingBtn.setImageResource(R.drawable.setting);
             }
         });
 
@@ -116,10 +134,6 @@ public class MainActivity extends Activity {
             @Override
             public void onClick(View view) {
                 viewPager.setCurrentItem(1);
-                postBtn.setImageResource(R.drawable.list);
-                randomBtn.setImageResource(R.drawable.random_focused);
-                popularBtn.setImageResource(R.drawable.rank);
-                settingBtn.setImageResource(R.drawable.setting);
             }
         });
 
@@ -127,10 +141,6 @@ public class MainActivity extends Activity {
             @Override
             public void onClick(View view) {
                 viewPager.setCurrentItem(2);
-                postBtn.setImageResource(R.drawable.list);
-                randomBtn.setImageResource(R.drawable.random);
-                popularBtn.setImageResource(R.drawable.rank_focused);
-                settingBtn.setImageResource(R.drawable.setting);
             }
         });
 
@@ -138,10 +148,6 @@ public class MainActivity extends Activity {
             @Override
             public void onClick(View view) {
                 viewPager.setCurrentItem(3);
-                postBtn.setImageResource(R.drawable.list);
-                randomBtn.setImageResource(R.drawable.random);
-                popularBtn.setImageResource(R.drawable.rank);
-                settingBtn.setImageResource(R.drawable.setting_focused);
             }
         });
     }

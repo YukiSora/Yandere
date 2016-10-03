@@ -22,11 +22,11 @@
             android:layout_height="40dp"
             android:layout_margin="0dp"
             android:layout_weight="1"
-            android:padding="5dp"
-            android:src="@drawable/list_focused"
-            android:scaleType="centerInside"
-            android:background="?android:attr/selectableItemBackground"
             android:adjustViewBounds="true"
+            android:background="?android:attr/selectableItemBackground"
+            android:padding="5dp"
+            android:scaleType="centerInside"
+            android:src="@drawable/list_focused"
             android:textAllCaps="false" />
 
         <ImageButton
@@ -35,11 +35,11 @@
             android:layout_height="40dp"
             android:layout_margin="0dp"
             android:layout_weight="1"
-            android:padding="5dp"
-            android:src="@drawable/random"
-            android:scaleType="centerInside"
-            android:background="?android:attr/selectableItemBackground"
             android:adjustViewBounds="true"
+            android:background="?android:attr/selectableItemBackground"
+            android:padding="5dp"
+            android:scaleType="centerInside"
+            android:src="@drawable/random"
             android:textAllCaps="false" />
 
         <ImageButton
@@ -48,11 +48,11 @@
             android:layout_height="40dp"
             android:layout_margin="0dp"
             android:layout_weight="1"
-            android:padding="5dp"
-            android:src="@drawable/rank"
-            android:scaleType="centerInside"
-            android:background="?android:attr/selectableItemBackground"
             android:adjustViewBounds="true"
+            android:background="?android:attr/selectableItemBackground"
+            android:padding="5dp"
+            android:scaleType="centerInside"
+            android:src="@drawable/rank"
             android:textAllCaps="false" />
 
         <ImageButton
@@ -61,11 +61,11 @@
             android:layout_height="40dp"
             android:layout_margin="0dp"
             android:layout_weight="1"
-            android:padding="5dp"
-            android:src="@drawable/setting"
-            android:scaleType="centerInside"
-            android:background="?android:attr/selectableItemBackground"
             android:adjustViewBounds="true"
+            android:background="?android:attr/selectableItemBackground"
+            android:padding="5dp"
+            android:scaleType="centerInside"
+            android:src="@drawable/setting"
             android:textAllCaps="false" />
 
     </LinearLayout>

@@ -9,7 +9,7 @@ import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.Environment;
 import android.preference.PreferenceManager;
-import android.support.v13.app.FragmentStatePagerAdapter;
+import android.support.v13.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.DisplayMetrics;
 import android.view.View;
@@ -86,7 +86,7 @@ public class MainActivity extends Activity {
         final ImageButton popularBtn = ((ImageButton)findViewById(R.id.popular));
         final ImageButton settingBtn = ((ImageButton)findViewById(R.id.setting));
 
-        viewPager.setAdapter(new FragmentStatePagerAdapter(getFragmentManager()) {
+        viewPager.setAdapter(new FragmentPagerAdapter(getFragmentManager()) {
             @Override
             public int getCount() {
                 return NUM_ITEMS;
@@ -108,6 +108,7 @@ public class MainActivity extends Activity {
                 }
             }
         });
+        viewPager.setOffscreenPageLimit(4);
 
         //dynamic change button image
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {

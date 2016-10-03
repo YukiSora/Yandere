@@ -23,6 +23,7 @@ public class ImageManager {
     private ImageManager() {
         handler = new Handler();
         imageCache = new ImageCache(MainActivity.getMaxMemory() / 2);
+        DownloadImageThreadPool.getInstance().setImageCache(imageCache);
     }
 
     public static ImageManager getInstance() {

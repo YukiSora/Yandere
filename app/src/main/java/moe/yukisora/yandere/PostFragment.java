@@ -59,6 +59,7 @@ public class PostFragment extends Fragment {
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
         recyclerView.setAdapter(adapter);
+        //if not only one page
         if (isScrolled)
             recyclerView.addOnScrollListener(new RecyclerViewOnScrollListener() {
                 @Override

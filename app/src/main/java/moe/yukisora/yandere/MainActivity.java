@@ -65,6 +65,7 @@ public class MainActivity extends Activity {
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
         isSafe = preferences.getBoolean("isSafe", true);
 
+        //create folder
         directory = new File(Environment.getExternalStorageDirectory(), "Yandere");
         if (!directory.exists())
             if (!directory.mkdir())
@@ -100,6 +101,7 @@ public class MainActivity extends Activity {
             }
         });
 
+        //dynamic change button image
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             private int lastPosition;
             private ImageButton[] imageButtons = new ImageButton[]{postBtn, randomBtn, popularBtn, settingBtn};

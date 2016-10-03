@@ -24,6 +24,7 @@ public class ImageCache<K, V> extends LruCache<K, V> {
     @SuppressWarnings("unchecked")
     @Override
     protected V create(K key) {
+        //create a thread to download image, return a placeholder image first
         new DownloadImageTask((ImageData)key).start();
 
         //java.lang.IllegalStateException: Fragment not attached to Activity

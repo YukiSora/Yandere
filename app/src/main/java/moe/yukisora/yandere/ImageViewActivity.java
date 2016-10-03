@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -29,9 +30,16 @@ public class ImageViewActivity extends Activity {
 
         Intent intent = this.getIntent();
         imageData = (ImageData)intent.getSerializableExtra("imageData");
+
+        //RelativeLayout
+        findViewById(R.id.fullSizeImageLayout).getLayoutParams().height = Math.round((MainActivity.getScreenWidth() - (16 + 6 + 10) * (MainActivity.getDpi() / 160f)) * imageData.sample_height / imageData.sample_width);
+        //image view
         imageView = (ImageView)findViewById(R.id.fullSizeImageView);
         imageView.setImageResource(R.drawable.placeholder_large);
+        imageView.getLayoutParams().width = 200;
 
+
+        //image data
         String imageIdStr = String.format("yande.re Id: %d", imageData.id);
         ((TextView)findViewById(R.id.imageId)).setText(imageIdStr);
         String imageSizeStr = String.format("Image Size: %d x %d", imageData.width, imageData.height);
@@ -39,6 +47,7 @@ public class ImageViewActivity extends Activity {
         String fileSizeStr = String.format("File Size: %.2fkb", imageData.file_size / 1024f);
         ((TextView)findViewById(R.id.fileSize)).setText(fileSizeStr);
 
+        //download button
         File file = new File(MainActivity.getDirectory(), "yandere_" + imageData.id + "." + imageData.file_ext);
         if (file.exists()) {
             ((ImageView)findViewById(R.id.downloadImage)).setImageResource(R.drawable.done);
@@ -63,6 +72,7 @@ public class ImageViewActivity extends Activity {
             handler.post(new Runnable() {
                 @Override
                 public void run() {
+                    imageView.setLayoutParams(new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT));
                     imageView.setImageBitmap(bitmap);
                 }
             });

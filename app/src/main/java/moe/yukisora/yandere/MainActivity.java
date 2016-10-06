@@ -3,6 +3,7 @@ package moe.yukisora.yandere;
 import android.app.Activity;
 import android.app.ActivityManager;
 import android.app.Fragment;
+import android.app.SearchManager;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.BitmapFactory;
@@ -13,6 +14,7 @@ import android.support.v13.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.DisplayMetrics;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageButton;
 
 import java.io.File;
@@ -20,6 +22,7 @@ import java.io.File;
 public class MainActivity extends Activity {
     private static final int NUM_ITEMS = 5;
     private static File directory;
+    private static SearchManager searchManager;
     private static boolean isSafe;
     private static int dpi;
     private static int maxMemory;
@@ -36,6 +39,10 @@ public class MainActivity extends Activity {
 
     public static void setSafe(boolean isSafe) {
         MainActivity.isSafe = isSafe;
+    }
+
+    public static SearchManager getSearchManager() {
+        return searchManager;
     }
 
     public static int getDpi() {
@@ -60,24 +67,27 @@ public class MainActivity extends Activity {
         setContentView(R.layout.activity_main);
 
         //initialize variable
+        //create folder
+        directory = new File(Environment.getExternalStorageDirectory(), "Yandere");
+        if (!directory.exists())
+            directory.mkdir();
+        File tempDirectory = new File(directory, "temp");
+        if (!tempDirectory.exists())
+            tempDirectory.mkdir();
+        //SearchManager
+        searchManager = (SearchManager)getSystemService(Context.SEARCH_SERVICE);
+        //Preferences
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        isSafe = preferences.getBoolean("isSafe", true);
         //DisplayMetrics
         DisplayMetrics metrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(metrics);
         dpi = metrics.densityDpi;
         screenWidth = metrics.widthPixels;
-        //placeholder image size
-        smallPlaceholderSize = BitmapFactory.decodeResource(getResources(), R.drawable.placeholder_small).getWidth();
         //Memory
         maxMemory = 1024 * 1024 * ((ActivityManager)getSystemService(Context.ACTIVITY_SERVICE)).getMemoryClass();
-        //Preferences
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
-        isSafe = preferences.getBoolean("isSafe", true);
-
-        //create folder
-        directory = new File(Environment.getExternalStorageDirectory(), "Yandere");
-        if (!directory.exists())
-            if (!directory.mkdir())
-                directory = null;
+        //placeholder image size
+        smallPlaceholderSize = BitmapFactory.decodeResource(getResources(), R.drawable.placeholder_small).getWidth();
 
         //configure ViewPager
         final ViewPager viewPager = (ViewPager)findViewById(R.id.viewPager);
@@ -129,6 +139,10 @@ public class MainActivity extends Activity {
                 imageButtons[lastPosition].setImageResource(normalResourceId[lastPosition]);
                 imageButtons[position].setImageResource(focusedResourceId[position]);
                 lastPosition = position;
+
+                //close soft keyboard
+                InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(findViewById(R.id.searchView).getWindowToken(), 0);
             }
 
             @Override

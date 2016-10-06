@@ -5,4 +5,5 @@
     <string name="popular">Popular</string>
     <string name="setting">Setting</string>
     <string name="download">Download</string>
+    <string name="search_hint">Search Tag or Id</string>
 </resources>

@@ -1,18 +1,12 @@
 package moe.yukisora.yandere;
 
 import android.app.Activity;
-import android.app.ActivityManager;
 import android.app.Fragment;
 import android.app.SearchManager;
 import android.content.Context;
-import android.content.SharedPreferences;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
-import android.os.Environment;
-import android.preference.PreferenceManager;
 import android.support.v13.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageButton;
@@ -33,6 +27,10 @@ public class MainActivity extends Activity {
         return directory;
     }
 
+    public static void setDirectory(File directory) {
+        MainActivity.directory = directory;
+    }
+
     public static boolean isSafe() {
         return isSafe;
     }
@@ -45,49 +43,46 @@ public class MainActivity extends Activity {
         return searchManager;
     }
 
+    public static void setSearchManager(SearchManager searchManager) {
+        MainActivity.searchManager = searchManager;
+    }
+
     public static int getDpi() {
         return dpi;
+    }
+
+    public static void setDpi(int dpi) {
+        MainActivity.dpi = dpi;
     }
 
     public static int getMaxMemory() {
         return maxMemory;
     }
 
+    public static void setMaxMemory(int maxMemory) {
+        MainActivity.maxMemory = maxMemory;
+    }
+
     public static int getScreenWidth() {
         return screenWidth;
+    }
+
+    public static void setScreenWidth(int screenWidth) {
+        MainActivity.screenWidth = screenWidth;
     }
 
     public static int getSmallPlaceholderSize() {
         return smallPlaceholderSize;
     }
 
+    public static void setSmallPlaceholderSize(int smallPlaceholderSize) {
+        MainActivity.smallPlaceholderSize = smallPlaceholderSize;
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        //initialize variable
-        //create folder
-        directory = new File(Environment.getExternalStorageDirectory(), "Yandere");
-        if (!directory.exists())
-            directory.mkdir();
-        File tempDirectory = new File(directory, "temp");
-        if (!tempDirectory.exists())
-            tempDirectory.mkdir();
-        //SearchManager
-        searchManager = (SearchManager)getSystemService(Context.SEARCH_SERVICE);
-        //Preferences
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
-        isSafe = preferences.getBoolean("isSafe", true);
-        //DisplayMetrics
-        DisplayMetrics metrics = new DisplayMetrics();
-        getWindowManager().getDefaultDisplay().getMetrics(metrics);
-        dpi = metrics.densityDpi;
-        screenWidth = metrics.widthPixels;
-        //Memory
-        maxMemory = 1024 * 1024 * ((ActivityManager)getSystemService(Context.ACTIVITY_SERVICE)).getMemoryClass();
-        //placeholder image size
-        smallPlaceholderSize = BitmapFactory.decodeResource(getResources(), R.drawable.placeholder_small).getWidth();
 
         //configure ViewPager
         final ViewPager viewPager = (ViewPager)findViewById(R.id.viewPager);

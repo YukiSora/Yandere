@@ -12,9 +12,11 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageButton;
 
 import java.io.File;
+import java.util.ArrayList;
 
 public class MainActivity extends Activity {
     private static final int NUM_ITEMS = 5;
+    private static ArrayList<String> tags;
     private static File directory;
     private static SearchManager searchManager;
     private static boolean isSafe;
@@ -29,6 +31,14 @@ public class MainActivity extends Activity {
 
     public static void setDirectory(File directory) {
         MainActivity.directory = directory;
+    }
+
+    public static ArrayList<String> getTags() {
+        return tags;
+    }
+
+    public static void setTags(ArrayList<String> tags) {
+        MainActivity.tags = tags;
     }
 
     public static boolean isSafe() {

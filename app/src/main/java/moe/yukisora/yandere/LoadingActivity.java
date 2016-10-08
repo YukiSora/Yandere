@@ -7,13 +7,22 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.BitmapFactory;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.util.DisplayMetrics;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.File;
+import java.io.IOException;
+import java.net.URL;
+import java.net.URLConnection;
+import java.util.ArrayList;
+import java.util.Scanner;
 
 public class LoadingActivity extends Activity {
     @Override
@@ -51,13 +60,53 @@ public class LoadingActivity extends Activity {
         //placeholder image size
         MainActivity.setSmallPlaceholderSize(BitmapFactory.decodeResource(getResources(), R.drawable.placeholder_small).getWidth());
 
-        //move to MainActivity
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                LoadingActivity.this.startActivity(new Intent(LoadingActivity.this, MainActivity.class));
-                LoadingActivity.this.finish();
+        //pre download and move to MainActivity
+        new DownloadTagsTask().execute();
+    }
+
+
+    private class DownloadTagsTask extends AsyncTask<Void, Void, Void> {
+        protected Void doInBackground(Void... args) {
+            try {
+                URLConnection connection = new URL("https://yande.re/tag/summary.json").openConnection();
+                connection.setRequestProperty("User-Agent", "Mozilla/5.0");
+                connection.setConnectTimeout(3000);
+                connection.setReadTimeout(3000);
+
+                String str;
+                try (Scanner in = new Scanner(connection.getInputStream())) {
+                    str = in.useDelimiter("\\A").next();
+                }
+
+                ArrayList<String> tags = new ArrayList<>();
+
+                boolean lastIsDigit = false;
+                for (String tag : new JSONObject(str).getString("data").replaceAll("\\s", "").split("`")) {
+                    if (!(tag.length() == 1 && tag.charAt(0) >= '0' && tag.charAt(0) <= '9')) {
+                        if (lastIsDigit)
+                            tags.add(tag);
+                        lastIsDigit = false;
+                    }
+                    else {
+                        lastIsDigit = true;
+                    }
+                }
+
+                MainActivity.setTags(tags);
+            } catch (IOException | JSONException ignored) {
             }
-        }, 1000);
+
+            return null;
+        }
+
+        protected void onPostExecute(Void args) {
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    LoadingActivity.this.startActivity(new Intent(LoadingActivity.this, MainActivity.class));
+                    LoadingActivity.this.finish();
+                }
+            }, 1000);
+        }
     }
 }

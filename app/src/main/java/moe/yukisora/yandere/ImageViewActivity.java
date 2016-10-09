@@ -1,24 +1,28 @@
 package moe.yukisora.yandere;
 
 import android.app.Activity;
+import android.app.DownloadManager;
 import android.app.SearchManager;
+import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
 
 public class ImageViewActivity extends Activity {
+    private Button downloadButton;
+    private DownloadManager downloadManager;
     private Handler handler;
     private ImageData imageData;
     private ImageView imageView;
@@ -28,6 +32,8 @@ public class ImageViewActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_image_view);
 
+        downloadButton = (Button)findViewById(R.id.download);
+        downloadManager = (DownloadManager)getSystemService(Context.DOWNLOAD_SERVICE);
         handler = new Handler();
         imageData = (ImageData)getIntent().getSerializableExtra("imageData");
         imageView = (ImageView)findViewById(R.id.fullSizeImageView);
@@ -79,13 +85,14 @@ public class ImageViewActivity extends Activity {
         }
 
         //download button
-        File file = new File(MainActivity.getDirectory(), "yandere_" + imageData.id + "." + imageData.file_ext);
+        //why have sdcard? shouldn't be
+        File file = new File("/sdcard" + MainActivity.getDirectory(), "yandere_" + imageData.id + "." + imageData.file_ext);
         if (file.exists()) {
             ((ImageView)findViewById(R.id.downloadImage)).setImageResource(R.drawable.done);
-            findViewById(R.id.download).setEnabled(false);
+            downloadButton.setEnabled(false);
         }
         else {
-            findViewById(R.id.download).setOnClickListener(new View.OnClickListener() {
+            downloadButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     new SaveImageTask().start();
@@ -113,28 +120,58 @@ public class ImageViewActivity extends Activity {
     private class SaveImageTask extends Thread {
         @Override
         public void run() {
-            File file = new File(MainActivity.getDirectory(), "yandere_" + imageData.id + "." + imageData.file_ext);
-            Bitmap bitmap = ImageManager.downloadImage(imageData.file_url);
-            if (bitmap != null) {
-                try (FileOutputStream out = new FileOutputStream(file)) {
-                    if (imageData.file_ext.equalsIgnoreCase("png"))
-                        bitmap.compress(Bitmap.CompressFormat.PNG, 100, out);
-                    else if (imageData.file_ext.equalsIgnoreCase("jpg"))
-                        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, out);
-                } catch (IOException ignore) {
-                }
+            String directory = MainActivity.getDirectory().toString();
+            String filename = "yandere_" + imageData.id + "." + imageData.file_ext;
 
+            //start a request
+            DownloadManager.Request request = new DownloadManager.Request(Uri.parse(imageData.file_url));
+            request.setDestinationInExternalPublicDir(directory, filename);
+            long id = downloadManager.enqueue(request);
+
+            //processing
+            DownloadManager.Query query = new DownloadManager.Query().setFilterById(id);
+            boolean successful = true;
+            while (true) {
+                try (Cursor cursor = downloadManager.query(query)) {
+                    cursor.moveToFirst();
+
+                    //download status
+                    int status = cursor.getInt(cursor.getColumnIndexOrThrow(DownloadManager.COLUMN_STATUS));
+                    if (status == DownloadManager.STATUS_SUCCESSFUL) {
+                        break;
+                    }
+                    if (status == DownloadManager.STATUS_FAILED) {
+                        successful = false;
+                        break;
+                    }
+
+                    //download process
+                    int bytes_downloaded = cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_BYTES_DOWNLOADED_SO_FAR));
+                    int bytes_total = cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_TOTAL_SIZE_BYTES));
+                    double progress = Math.abs(100.0 * bytes_downloaded / bytes_total);
+                    final String buttonTextStr = String.format("%.2f%%", progress);
+                    handler.postAtFrontOfQueue(new Runnable() {
+                        @Override
+                        public void run() {
+                            downloadButton.setText(buttonTextStr);
+                        }
+                    });
+                }
+            }
+
+            if (successful) {
                 handler.post(new Runnable() {
                     @Override
                     public void run() {
                         ((ImageView)findViewById(R.id.downloadImage)).setImageResource(R.drawable.done);
-                        findViewById(R.id.download).setEnabled(false);
+                        downloadButton.setText(R.string.download);
+                        downloadButton.setEnabled(false);
                         Toast.makeText(getApplicationContext(), "Image is downloaded.", Toast.LENGTH_SHORT).show();
                     }
                 });
 
                 //display in photo gallery
-                sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE).setData(Uri.fromFile(file)));
+                sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE).setData(Uri.fromFile(new File(directory, filename))));
             }
             else {
                 handler.post(new Runnable() {

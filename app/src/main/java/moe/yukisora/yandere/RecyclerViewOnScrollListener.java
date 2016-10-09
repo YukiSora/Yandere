@@ -26,6 +26,9 @@ public abstract class RecyclerViewOnScrollListener extends RecyclerView.OnScroll
         StaggeredGridLayoutManager layoutManager = (StaggeredGridLayoutManager)recyclerView.getLayoutManager();
         int[] lastPositions = new int[layoutManager.getSpanCount()];
         layoutManager.findLastVisibleItemPositions(lastPositions);
-        lastPosition = lastPositions[0] > lastPositions[1] ? lastPositions[0] : lastPositions[1];
+        lastPosition = lastPositions[0];
+        for (int i : lastPositions)
+            if (i > lastPosition)
+                lastPosition = i;
     }
 }

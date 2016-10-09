@@ -28,7 +28,7 @@ public class DownloadImageThreadPool {
 
     public void setActive(boolean active) {
         this.active = active;
-        //clear not start request
+        //clear haven't started request
         if (!active)
             synchronized (this) {
                 requests.clear();

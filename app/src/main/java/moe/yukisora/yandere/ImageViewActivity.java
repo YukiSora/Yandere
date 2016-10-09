@@ -27,14 +27,12 @@ public class ImageViewActivity extends Activity {
         setContentView(R.layout.activity_image_view);
 
         handler = new Handler();
-
-        Intent intent = this.getIntent();
-        imageData = (ImageData)intent.getSerializableExtra("imageData");
+        imageData = (ImageData)getIntent().getSerializableExtra("imageData");
+        imageView = (ImageView)findViewById(R.id.fullSizeImageView);
 
         //RelativeLayout
         findViewById(R.id.fullSizeImageLayout).getLayoutParams().height = Math.round((MainActivity.getScreenWidth() - (16 + 6 + 10) * (MainActivity.getDpi() / 160f)) * imageData.sample_height / imageData.sample_width);
         //image view
-        imageView = (ImageView)findViewById(R.id.fullSizeImageView);
         imageView.setImageResource(R.drawable.placeholder_large);
         imageView.getLayoutParams().width = 200;
 
@@ -84,25 +82,35 @@ public class ImageViewActivity extends Activity {
         public void run() {
             File file = new File(MainActivity.getDirectory(), "yandere_" + imageData.id + "." + imageData.file_ext);
             Bitmap bitmap = ImageManager.downloadImage(imageData.file_url);
-            try (FileOutputStream out = new FileOutputStream(file)) {
-                if (imageData.file_ext.equalsIgnoreCase("png"))
-                    bitmap.compress(Bitmap.CompressFormat.PNG, 100, out);
-                else if (imageData.file_ext.equalsIgnoreCase("jpg"))
-                    bitmap.compress(Bitmap.CompressFormat.JPEG, 100, out);
-            } catch (IOException ignore) {
-            }
-
-            handler.post(new Runnable() {
-                @Override
-                public void run() {
-                    ((ImageView)findViewById(R.id.downloadImage)).setImageResource(R.drawable.done);
-                    findViewById(R.id.download).setEnabled(false);
-                    Toast.makeText(getApplicationContext(), "Image is downloaded.", Toast.LENGTH_SHORT).show();
+            if (bitmap != null) {
+                try (FileOutputStream out = new FileOutputStream(file)) {
+                    if (imageData.file_ext.equalsIgnoreCase("png"))
+                        bitmap.compress(Bitmap.CompressFormat.PNG, 100, out);
+                    else if (imageData.file_ext.equalsIgnoreCase("jpg"))
+                        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, out);
+                } catch (IOException ignore) {
                 }
-            });
 
-            //display in photo gallery
-            sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE).setData(Uri.fromFile(file)));
+                handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        ((ImageView)findViewById(R.id.downloadImage)).setImageResource(R.drawable.done);
+                        findViewById(R.id.download).setEnabled(false);
+                        Toast.makeText(getApplicationContext(), "Image is downloaded.", Toast.LENGTH_SHORT).show();
+                    }
+                });
+
+                //display in photo gallery
+                sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE).setData(Uri.fromFile(file)));
+            }
+            else {
+                handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        Toast.makeText(getApplicationContext(), "Image download failed.", Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }
         }
     }
 }

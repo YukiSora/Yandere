@@ -43,6 +43,7 @@ public class ImageManager {
             connection.setRequestProperty("User-Agent", "Mozilla/5.0");
             connection.setConnectTimeout(3000);
             connection.setReadTimeout(3000);
+
             return BitmapFactory.decodeStream(connection.getInputStream());
         } catch (IOException ignored) {
         }

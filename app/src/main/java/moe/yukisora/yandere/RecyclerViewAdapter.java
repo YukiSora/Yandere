@@ -26,8 +26,9 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         final ImageData imageData = (fragment.getImageDatas()).get(position);
-        holder.layout.getLayoutParams().height = imageData.layout_height;
         Bitmap bitmap = imageData.getBitmap();
+
+        holder.layout.getLayoutParams().height = imageData.layout_height;
         //if is placeholder image
         if (bitmap.getWidth() == MainActivity.getSmallPlaceholderSize() && bitmap.getHeight() == MainActivity.getSmallPlaceholderSize())
             holder.imageView.getLayoutParams().width = MainActivity.getSmallPlaceholderSize() / (int)(MainActivity.getDpi() / 160f);
@@ -58,6 +59,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
         public ViewHolder(View view) {
             super(view);
+
             imageView = (ImageView)view.findViewById(R.id.itemImageView);
             layout = (RelativeLayout)view.findViewById(R.id.itemLayout);
         }

@@ -15,7 +15,6 @@ import java.util.ArrayList;
 
 public class PostFragment extends Fragment {
     private ArrayList<ImageData> imageDatas;
-    private Fragment fragment;
     private Handler handler;
     private RecyclerViewAdapter adapter;
     private String url;
@@ -36,7 +35,6 @@ public class PostFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        fragment = this;
         handler = new Handler();
         url = getArguments().getString("url");
         isScrolled = getArguments().getBoolean("isScrolled");
@@ -47,7 +45,7 @@ public class PostFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_post, container, false);
         initFragment();
         initRecyclerView(view);
-        ImageManager.getInstance().loadImage(fragment, url + page++);
+        ImageManager.getInstance().loadImage(this, url + page++);
 
         return view;
     }
@@ -61,17 +59,17 @@ public class PostFragment extends Fragment {
 
     private void initRecyclerView(View view) {
         //RecyclerView
-        adapter = new RecyclerViewAdapter(fragment);
+        adapter = new RecyclerViewAdapter(this);
         RecyclerView recyclerView = (RecyclerView)view.findViewById(R.id.recyclerView);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
         recyclerView.setAdapter(adapter);
-        //if not only one page
+        //if not only one page, do load more
         if (isScrolled)
             recyclerView.addOnScrollListener(new RecyclerViewOnScrollListener() {
                 @Override
                 public void onBottom() {
-                    ImageManager.getInstance().loadImage(fragment, url + page++);
+                    ImageManager.getInstance().loadImage(PostFragment.this, url + page++);
                 }
             });
 
@@ -89,7 +87,7 @@ public class PostFragment extends Fragment {
                             ;
                         initFragment();
                         adapter.notifyDataSetChanged();
-                        ImageManager.getInstance().loadImage(fragment, url + page++);
+                        ImageManager.getInstance().loadImage(PostFragment.this, url + page++);
                         swipeRefreshLayout.setRefreshing(false);
                     }
                 }, 1000);

@@ -39,8 +39,6 @@ public class SearchFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_search, container, false);
 
         final SearchView searchView = (SearchView)view.findViewById(R.id.searchView);
-        final ListView listView = (ListView)view.findViewById(R.id.listView);
-
         searchView.onActionViewExpanded();
         searchView.setFocusable(false);
         searchView.clearFocus();
@@ -70,6 +68,7 @@ public class SearchFragment extends Fragment {
             }
         });
 
+        final ListView listView = (ListView)view.findViewById(R.id.listView);
         listView.setAdapter(adapter);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override

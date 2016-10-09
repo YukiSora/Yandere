@@ -38,6 +38,11 @@
             android:gravity="bottom"
             android:orientation="vertical">
 
+            <moe.yukisora.yandere.FlowLayout
+                android:id="@+id/flowLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
             <TextView
                 android:id="@+id/imageId"
                 android:layout_width="match_parent"

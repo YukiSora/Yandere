@@ -29,6 +29,7 @@ public class ImageViewActivity extends Activity {
         handler = new Handler();
         imageData = (ImageData)getIntent().getSerializableExtra("imageData");
         imageView = (ImageView)findViewById(R.id.fullSizeImageView);
+        FlowLayout flowLayout = (FlowLayout)findViewById(R.id.flowLayout);
 
         //RelativeLayout
         findViewById(R.id.fullSizeImageLayout).getLayoutParams().height = Math.round((MainActivity.getScreenWidth() - (16 + 6 + 10) * (MainActivity.getDpi() / 160f)) * imageData.sample_height / imageData.sample_width);
@@ -44,6 +45,16 @@ public class ImageViewActivity extends Activity {
         ((TextView)findViewById(R.id.imageSize)).setText(imageSizeStr);
         String fileSizeStr = String.format("File Size: %.2fkb", imageData.file_size / 1024f);
         ((TextView)findViewById(R.id.fileSize)).setText(fileSizeStr);
+
+        for (String tag : imageData.tags.split(" ")) {
+            TextView textView = new TextView(this);
+            textView.setText(tag);
+            FlowLayout.LayoutParams layoutParams = new FlowLayout.LayoutParams(FlowLayout.LayoutParams.WRAP_CONTENT, FlowLayout.LayoutParams.WRAP_CONTENT);
+            layoutParams.setMargins(5, 5, 5, 5);
+            textView.setLayoutParams(layoutParams);
+            textView.setPadding(5, 5, 5, 5);
+            flowLayout.addView(textView);
+        }
 
         //download button
         File file = new File(MainActivity.getDirectory(), "yandere_" + imageData.id + "." + imageData.file_ext);

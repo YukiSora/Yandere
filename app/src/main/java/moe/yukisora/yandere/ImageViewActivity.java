@@ -1,6 +1,7 @@
 package moe.yukisora.yandere;
 
 import android.app.Activity;
+import android.app.SearchManager;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -64,7 +65,9 @@ public class ImageViewActivity extends Activity {
             textView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Log.i("poi", ((TextView)v).getText().toString());
+                    Intent intent = new Intent(ImageViewActivity.this, SearchActivity.class);
+                    intent.putExtra(SearchManager.QUERY, ((TextView)v).getText().toString().replace(" ", "_"));
+                    ImageViewActivity.this.startActivity(intent);
                 }
             });
 

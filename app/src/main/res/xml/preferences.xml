@@ -18,6 +18,10 @@
         android:title="About Application">
 
         <Preference
+            android:summary="https://yande.re"
+            android:title="Source" />
+
+        <Preference
             android:summary="Yuki Sora"
             android:title="Author" />
 

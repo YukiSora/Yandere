@@ -3,12 +3,22 @@ package moe.yukisora.yandere;
 import android.app.Fragment;
 import android.content.ComponentName;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 import android.widget.SearchView;
+import android.widget.TextView;
+
+import java.util.ArrayList;
 
 public class SearchFragment extends Fragment {
+    private ArrayList<String> suggestion;
+    private ArrayAdapter adapter;
+
     public static SearchFragment newInstance() {
         Bundle args = new Bundle();
         SearchFragment fragment = new SearchFragment();
@@ -20,6 +30,15 @@ public class SearchFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        suggestion = new ArrayList<>();
+        adapter = new ArrayAdapter<String>(getActivity(), R.layout.suggestion_item_view, suggestion) {
+            @NonNull
+            @Override
+            public View getView(int position, View convertView, @NonNull ViewGroup parent) {
+                return super.getView(position, convertView, parent);
+            }
+        };
     }
 
     @Override
@@ -27,6 +46,8 @@ public class SearchFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_search, container, false);
 
         final SearchView searchView = (SearchView)view.findViewById(R.id.searchView);
+        final ListView listView = (ListView)view.findViewById(R.id.listView);
+
         searchView.onActionViewExpanded();
         searchView.setFocusable(false);
         searchView.clearFocus();
@@ -39,7 +60,28 @@ public class SearchFragment extends Fragment {
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                return false;
+                if (newText.contains(" ")) {
+                    searchView.setQuery(newText.replace(' ', '_'), false);
+                }
+                else {
+                    suggestion.clear();
+                    if (!newText.equals(""))
+                        for (String tag : MainActivity.getTags())
+                            if (tag.startsWith(newText))
+                                suggestion.add(tag);
+
+                    adapter.notifyDataSetChanged();
+                }
+
+                return true;
+            }
+        });
+
+        listView.setAdapter(adapter);
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                searchView.setQuery(((TextView)view).getText().toString(), true);
             }
         });
 

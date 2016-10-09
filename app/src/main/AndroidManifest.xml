@@ -12,7 +12,9 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
-        <activity android:name=".LoadingActivity">
+        <activity
+            android:name=".LoadingActivity"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -21,16 +23,20 @@
         </activity>
 
 
-        <activity android:name=".MainActivity"
+        <activity
+            android:name=".MainActivity"
+            android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustUnspecified">
             <intent-filter>
-                <action android:name="moe.yukisora.yandere.MainActivity" />
+                <action android:name="android.intent.action.VIEW" />
 
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
 
-        <activity android:name=".ImageViewActivity">
+        <activity
+            android:name=".ImageViewActivity"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="moe.yukisora.yandere.ImageViewActivity" />
 
@@ -38,11 +44,15 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".SearchActivity" >
+        <activity
+            android:name=".SearchActivity"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.SEARCH" />
             </intent-filter>
-            <meta-data android:name="android.app.searchable" android:resource="@xml/searchable"/>
+            <meta-data
+                android:name="android.app.searchable"
+                android:resource="@xml/searchable" />
         </activity>
 
     </application>

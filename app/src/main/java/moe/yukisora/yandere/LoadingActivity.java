@@ -21,7 +21,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.net.URLConnection;
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Scanner;
 
 public class LoadingActivity extends Activity {
@@ -78,17 +78,18 @@ public class LoadingActivity extends Activity {
                     str = in.useDelimiter("\\A").next();
                 }
 
-                ArrayList<String> tags = new ArrayList<>();
+                //ArrayList<String> tags = new ArrayList<>();
+                HashMap<String, Integer> tags = new HashMap<>();
 
-                boolean lastIsDigit = false;
+                int lastDigit = -1;
                 for (String tag : new JSONObject(str).getString("data").replaceAll("\\s", "").split("`")) {
                     if (!(tag.length() == 1 && tag.charAt(0) >= '0' && tag.charAt(0) <= '9')) {
-                        if (lastIsDigit)
-                            tags.add(tag);
-                        lastIsDigit = false;
+                        if (lastDigit != -1)
+                            tags.put(tag, lastDigit);
+                        lastDigit = -1;
                     }
                     else {
-                        lastIsDigit = true;
+                        lastDigit = tag.charAt(0) - '0';
                     }
                 }
 

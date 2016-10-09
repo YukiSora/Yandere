@@ -2,7 +2,9 @@ package moe.yukisora.yandere;
 
 import android.app.Fragment;
 import android.content.ComponentName;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,7 +33,17 @@ public class SearchFragment extends Fragment {
         super.onCreate(savedInstanceState);
 
         suggestion = new ArrayList<>();
-        adapter = new ArrayAdapter<>(getActivity(), R.layout.suggestion_item_view, suggestion);
+        adapter = new ArrayAdapter<String>(getActivity(), R.layout.suggestion_item_view, suggestion) {
+            @NonNull
+            @Override
+            public View getView(int position, View convertView, ViewGroup parent) {
+                TextView textView = (TextView)super.getView(position, convertView, parent);
+
+                textView.setTextColor(Color.parseColor(getResources().getStringArray(R.array.tagColor)[MainActivity.getTags().get(textView.getText().toString())]));
+
+                return textView;
+            }
+        };
     }
 
     @Override
@@ -57,7 +69,7 @@ public class SearchFragment extends Fragment {
                 else {
                     suggestion.clear();
                     if (!newText.equals(""))
-                        for (String tag : MainActivity.getTags())
+                        for (String tag : MainActivity.getTags().keySet())
                             if (tag.startsWith(newText))
                                 suggestion.add(tag);
 

@@ -4,10 +4,10 @@ import android.app.Activity;
 import android.app.SearchManager;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -58,6 +58,10 @@ public class ImageViewActivity extends Activity {
             FlowLayout.LayoutParams layoutParams = new FlowLayout.LayoutParams(FlowLayout.LayoutParams.WRAP_CONTENT, FlowLayout.LayoutParams.WRAP_CONTENT);
             layoutParams.setMargins(10, 5, 10, 5);
             textView.setLayoutParams(layoutParams);
+
+
+            //color
+            textView.setTextColor(Color.parseColor(getResources().getStringArray(R.array.tagColor)[MainActivity.getTags().get(tag)]));
             textView.setBackgroundResource(R.drawable.tag_selector);
 
             //click

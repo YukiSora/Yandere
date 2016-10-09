@@ -12,11 +12,11 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageButton;
 
 import java.io.File;
-import java.util.ArrayList;
+import java.util.HashMap;
 
 public class MainActivity extends Activity {
     private static final int NUM_ITEMS = 5;
-    private static ArrayList<String> tags;
+    private static HashMap<String, Integer> tags;
     private static File directory;
     private static SearchManager searchManager;
     private static boolean isSafe;
@@ -33,11 +33,11 @@ public class MainActivity extends Activity {
         MainActivity.directory = directory;
     }
 
-    public static ArrayList<String> getTags() {
+    public static HashMap<String, Integer> getTags() {
         return tags;
     }
 
-    public static void setTags(ArrayList<String> tags) {
+    public static void setTags(HashMap<String, Integer> tags) {
         MainActivity.tags = tags;
     }
 

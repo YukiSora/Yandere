@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="tagColor">
+        <item>#000000</item>
+        <item>#CCCC00</item>
+        <item>#000000</item>
+        <item>#DD00DD</item>
+        <item>#00AA00</item>
+        <item>#00BBBB</item>
+        <item>#FF2020</item>
+    </string-array>
+</resources>

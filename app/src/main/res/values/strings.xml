@@ -6,4 +6,5 @@
     <string name="setting">Setting</string>
     <string name="download">Download</string>
     <string name="search_hint">Search Tag</string>
+    <string name="tags">Tags:</string>
 </resources>

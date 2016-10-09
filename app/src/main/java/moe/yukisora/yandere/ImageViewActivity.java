@@ -6,6 +6,7 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -46,13 +47,27 @@ public class ImageViewActivity extends Activity {
         String fileSizeStr = String.format("File Size: %.2fkb", imageData.file_size / 1024f);
         ((TextView)findViewById(R.id.fileSize)).setText(fileSizeStr);
 
+        //tag
         for (String tag : imageData.tags.split(" ")) {
             TextView textView = new TextView(this);
-            textView.setText(tag);
+
+            textView.setText(tag.replace("_", " "));
+
+            //layout
             FlowLayout.LayoutParams layoutParams = new FlowLayout.LayoutParams(FlowLayout.LayoutParams.WRAP_CONTENT, FlowLayout.LayoutParams.WRAP_CONTENT);
-            layoutParams.setMargins(5, 5, 5, 5);
+            layoutParams.setMargins(10, 5, 10, 5);
             textView.setLayoutParams(layoutParams);
-            textView.setPadding(5, 5, 5, 5);
+            textView.setBackgroundResource(R.drawable.tag_selector);
+
+            //click
+            textView.setClickable(true);
+            textView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Log.i("poi", ((TextView)v).getText().toString());
+                }
+            });
+
             flowLayout.addView(textView);
         }
 

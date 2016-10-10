@@ -37,11 +37,8 @@ public class LoadingActivity extends Activity {
 
         //create folder
         File directory = new File(Environment.getExternalStorageDirectory(), "Yandere");
-        File tempDirectory = new File(directory, "temp");
         if (!directory.exists())
             directory.mkdir();
-        if (directory.exists() && !tempDirectory.exists())
-            tempDirectory.mkdir();
         MainActivity.setDirectory(directory);
 
         //SearchManager

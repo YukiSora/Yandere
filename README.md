@@ -7,11 +7,9 @@ An Android app use to browse image on yande.re website.
 
 ## Preview Image
 
-<img src="images/preview1.png" alt="preview1" style="width: 200px;"/>
-
-<img src="images/preview2.png" alt="preview2" style="width: 200px;"/>
-
-<img src="images/preview3.png" alt="preview3" style="width: 200px;"/>
+<img src="images/preview1.png" alt="preview1" width="200px;"/>
+<img src="images/preview2.png" alt="preview2" width="200px;"/>
+<img src="images/preview3.png" alt="preview3" width="200px;"/>
 
 ## Google Play
 

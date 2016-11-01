@@ -32,36 +32,13 @@ proguard/
 # Android Studio captures folder
 captures/
 
-# Signing files
-.signing/
-
-# Crashlytics configuations
-com_crashlytics_export_strings.xml
-
 # Intellij
-.idea/libraries/
-.idea/dictionaries/
-.idea/inspectionProfiles/
-.idea/workspace.xml
-.idea/tasks.xml
-.idea/.name
-.idea/compiler.xml
-.idea/copyright/profiles_settings.xml
-.idea/encodings.xml
-.idea/misc.xml
-.idea/modules.xml
-.idea/scopes/scope_settings.xml
-.idea/vcs.xml
 *.iml
+.idea/workspace.xml
+.idea/libraries
 
 # Keystore files
 *.jks
 
-# OS-specific files
-.DS_Store
-.DS_Store?
-._*
-.Spotlight-V100
-.Trashes
-ehthumbs.db
-Thumbs.db
+# External native build folder generated in Android Studio 2.2 and later
+.externalNativeBuild

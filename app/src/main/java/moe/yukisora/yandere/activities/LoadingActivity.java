@@ -33,35 +33,38 @@ public class LoadingActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_loading);
 
-        //initialize variable
+        // initialize variable
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
         DisplayMetrics metrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(metrics);
 
-        //create folder
+        // create folder
         File directory = new File(Environment.getExternalStorageDirectory(), "Yandere");
         if (!directory.exists())
             directory.mkdir();
         YandereApplication.setDirectory(directory);
 
-        //SearchManager
+        // search manager
         YandereApplication.setSearchManager((SearchManager)getSystemService(Context.SEARCH_SERVICE));
 
-        //safe option
+        // safe option
         YandereApplication.setSafe(preferences.getBoolean("isSafe", true));
 
-        //display attribute
+        // display attribute
         YandereApplication.setDpi(metrics.densityDpi);
         YandereApplication.setScreenWidth(metrics.widthPixels);
 
-        //max memory
+        // max memory
         YandereApplication.setMaxMemory(1024 * 1024 * ((ActivityManager)getSystemService(Context.ACTIVITY_SERVICE)).getMemoryClass());
 
-        //placeholder image size
+        // placeholder image size
         YandereApplication.setSmallPlaceholderSize(BitmapFactory.decodeResource(getResources(), R.drawable.placeholder_small).getWidth());
 
-        //pre download and move to MainActivity
-        new DownloadTagsTask().execute();
+        startActivity(new Intent(LoadingActivity.this, MainActivity.class));
+        finish();
+
+        // pre download and move to MainActivity
+        // new DownloadTagsTask().execute();
     }
 
 

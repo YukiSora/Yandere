@@ -45,14 +45,14 @@ public class ImageViewActivity extends Activity {
         imageView = findViewById(R.id.fullSizeImageView);
         FlowLayout flowLayout = findViewById(R.id.flowLayout);
 
-        //RelativeLayout
+        // RelativeLayout
         findViewById(R.id.fullSizeImageLayout).getLayoutParams().height = Math.round((YandereApplication.getScreenWidth() - (16 + 6 + 10) * (YandereApplication.getDpi() / 160f)) * imageData.sample_height / imageData.sample_width);
-        //image view
+        // image view
         imageView.setImageResource(R.drawable.placeholder_large);
         imageView.getLayoutParams().width = 200;
 
 
-        //image data
+        // image data
         String imageIdStr = String.format("yande.re Id: %d", imageData.id);
         ((TextView)findViewById(R.id.imageId)).setText(imageIdStr);
         String imageSizeStr = String.format("Image Size: %d x %d", imageData.width, imageData.height);
@@ -60,23 +60,23 @@ public class ImageViewActivity extends Activity {
         String fileSizeStr = String.format("File Size: %.2fkb", imageData.file_size / 1024f);
         ((TextView)findViewById(R.id.fileSize)).setText(fileSizeStr);
 
-        //tag
+        // tag
         for (String tag : imageData.tags.split(" ")) {
             TextView textView = new TextView(this);
 
             textView.setText(tag.replace("_", " "));
 
-            //layout
+            // layout
             FlowLayout.LayoutParams layoutParams = new FlowLayout.LayoutParams(FlowLayout.LayoutParams.WRAP_CONTENT, FlowLayout.LayoutParams.WRAP_CONTENT);
             layoutParams.setMargins(10, 5, 10, 5);
             textView.setLayoutParams(layoutParams);
 
 
-            //color
+            // color
             textView.setTextColor(Color.parseColor(getResources().getStringArray(R.array.tagColor)[YandereApplication.getTags().get(tag)]));
             textView.setBackgroundResource(R.drawable.tag_selector);
 
-            //click
+            // click
             textView.setClickable(true);
             textView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -90,8 +90,8 @@ public class ImageViewActivity extends Activity {
             flowLayout.addView(textView);
         }
 
-        //download button
-        //why have sdcard? shouldn't be
+        // download button
+        // why have sdcard? shouldn't be
         File file = new File("/sdcard" + YandereApplication.getDirectory(), "yandere_" + imageData.id + "." + imageData.file_ext);
         if (file.exists()) {
             ((ImageView)findViewById(R.id.downloadImage)).setImageResource(R.drawable.done);
@@ -129,19 +129,19 @@ public class ImageViewActivity extends Activity {
             String directory = YandereApplication.getDirectory().toString();
             String filename = "yandere_" + imageData.id + "." + imageData.file_ext;
 
-            //start a request
+            // start a request
             DownloadManager.Request request = new DownloadManager.Request(Uri.parse(imageData.file_url));
             request.setDestinationInExternalPublicDir(directory, filename);
             long id = downloadManager.enqueue(request);
 
-            //processing
+            // processing
             DownloadManager.Query query = new DownloadManager.Query().setFilterById(id);
             boolean successful = true;
             while (true) {
                 try (Cursor cursor = downloadManager.query(query)) {
                     cursor.moveToFirst();
 
-                    //download status
+                    // download status
                     int status = cursor.getInt(cursor.getColumnIndexOrThrow(DownloadManager.COLUMN_STATUS));
                     if (status == DownloadManager.STATUS_SUCCESSFUL) {
                         break;
@@ -151,7 +151,7 @@ public class ImageViewActivity extends Activity {
                         break;
                     }
 
-                    //download process
+                    // download process
                     int bytes_downloaded = cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_BYTES_DOWNLOADED_SO_FAR));
                     int bytes_total = cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_TOTAL_SIZE_BYTES));
                     double progress = Math.abs(100.0 * bytes_downloaded / bytes_total);
@@ -176,7 +176,7 @@ public class ImageViewActivity extends Activity {
                     }
                 });
 
-                //display in photo gallery
+                // display in photo gallery
                 sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE).setData(Uri.fromFile(new File(directory, filename))));
             }
             else {

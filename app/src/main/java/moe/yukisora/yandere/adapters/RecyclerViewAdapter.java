@@ -34,7 +34,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         Bitmap bitmap = imageData.getBitmap();
 
         holder.layout.getLayoutParams().height = imageData.layout_height;
-        //if is placeholder image
+        // if is placeholder image
         if (bitmap.getWidth() == YandereApplication.getSmallPlaceholderSize() && bitmap.getHeight() == YandereApplication.getSmallPlaceholderSize())
             holder.imageView.getLayoutParams().width = YandereApplication.getSmallPlaceholderSize() / (int)(YandereApplication.getDpi() / 160f);
         else

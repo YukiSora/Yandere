@@ -16,7 +16,7 @@ public class FlowLayout extends ViewGroup {
         int lines = 0;
         int lineHeight = getLineHeight();
 
-        //setup layout
+        // setup layout
         for (int i = 0; i < getChildCount(); ) {
             int lineWidth = 0;
 
@@ -29,7 +29,7 @@ public class FlowLayout extends ViewGroup {
                 if (childWidth + lineWidth > width)
                     break;
 
-                //calculate left, top, right, bottom
+                // calculate left, top, right, bottom
                 int lc = lineWidth + layoutParams.leftMargin;
                 int tc = lines * lineHeight + layoutParams.topMargin;
                 int rc = lc + child.getMeasuredWidth();
@@ -51,11 +51,11 @@ public class FlowLayout extends ViewGroup {
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        //only work for width:match_parent, height:wrap_content
+        // only work for width:match_parent, height:wrap_content
         int width = MeasureSpec.getSize(widthMeasureSpec);
         int lines = 0;
 
-        //calculate how many lines
+        // calculate how many lines
         for (int i = 0; i < getChildCount(); ) {
             int lineWidth = 0;
 

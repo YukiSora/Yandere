@@ -112,7 +112,7 @@ public class ImageManager {
                     imageData.rating = jsonObject.getString("rating");
                     imageData.width = jsonObject.getInt("width");
                     imageData.height = jsonObject.getInt("height");
-                    //calculate ImageView height manually
+                    // calculate ImageView height manually
                     imageData.layout_height = Math.round((YandereApplication.getScreenWidth() / 2 - (8 + 6 + 10) * (YandereApplication.getDpi() / 160f)) * imageData.actual_preview_height / imageData.actual_preview_width);
                     imageData.fragment = fragment;
 

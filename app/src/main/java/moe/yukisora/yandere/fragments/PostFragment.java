@@ -65,13 +65,13 @@ public class PostFragment extends Fragment {
     }
 
     private void initRecyclerView(View view) {
-        //RecyclerView
+        // RecyclerView
         adapter = new RecyclerViewAdapter(this);
         RecyclerView recyclerView = view.findViewById(R.id.recyclerView);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
         recyclerView.setAdapter(adapter);
-        //if not only one page, do load more
+        // if not only one page, do load more
         if (isScrolled)
             recyclerView.addOnScrollListener(new RecyclerViewOnScrollListener() {
                 @Override
@@ -80,13 +80,13 @@ public class PostFragment extends Fragment {
                 }
             });
 
-        //SwipeRefreshLayout
+        // SwipeRefreshLayout
         final SwipeRefreshLayout swipeRefreshLayout = view.findViewById(R.id.swipeRefreshLayout);
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
                 DownloadImageThreadPool.getInstance().setActive(false);
-                //wait downloading thread
+                // wait downloading thread
                 handler.postDelayed(new Runnable() {
                     @Override
                     public void run() {

@@ -16,7 +16,7 @@ public class SearchActivity extends Activity {
 
         String query = getIntent().getStringExtra(SearchManager.QUERY);
 
-        //create fragment
+        // create fragment
         FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
         PostFragment fragment = PostFragment.newInstance("https://yande.re/post.json?limit=20&tags=" + query + "&page=", true);
         fragmentTransaction.add(R.id.searchFragment, fragment);

@@ -26,7 +26,7 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        //configure ViewPager
+        // configure ViewPager
         final ViewPager viewPager = findViewById(R.id.viewPager);
         final ImageButton imageButtonPost = findViewById(R.id.post);
         final ImageButton imageButtonRandom = findViewById(R.id.random);
@@ -60,7 +60,7 @@ public class MainActivity extends Activity {
         });
         viewPager.setOffscreenPageLimit(5);
 
-        //dynamic change button image
+        // dynamic change button image
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             private int lastPosition;
             private ImageButton[] imageButtons = new ImageButton[]{
@@ -95,7 +95,7 @@ public class MainActivity extends Activity {
                 imageButtons[position].setImageResource(focusedImages[position]);
                 lastPosition = position;
 
-                //close soft keyboard
+                // close soft keyboard
                 InputMethodManager manager = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
                 manager.hideSoftInputFromWindow(findViewById(R.id.searchView).getWindowToken(), 0);
             }
@@ -105,7 +105,7 @@ public class MainActivity extends Activity {
             }
         });
 
-        //configure Button
+        // configure Button
         imageButtonPost.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

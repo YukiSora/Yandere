@@ -20,11 +20,11 @@ import android.widget.Toast;
 
 import java.io.File;
 
-import moe.yukisora.yandere.ui.FlowLayout;
-import moe.yukisora.yandere.modles.ImageData;
-import moe.yukisora.yandere.core.ImageManager;
-import moe.yukisora.yandere.MainActivity;
 import moe.yukisora.yandere.R;
+import moe.yukisora.yandere.YandereApplication;
+import moe.yukisora.yandere.core.ImageManager;
+import moe.yukisora.yandere.modles.ImageData;
+import moe.yukisora.yandere.ui.FlowLayout;
 
 public class ImageViewActivity extends Activity {
     private Button downloadButton;
@@ -38,15 +38,15 @@ public class ImageViewActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_image_view);
 
-        downloadButton = (Button)findViewById(R.id.download);
+        downloadButton = findViewById(R.id.download);
         downloadManager = (DownloadManager)getSystemService(Context.DOWNLOAD_SERVICE);
         handler = new Handler();
         imageData = (ImageData)getIntent().getSerializableExtra("imageData");
-        imageView = (ImageView)findViewById(R.id.fullSizeImageView);
-        FlowLayout flowLayout = (FlowLayout)findViewById(R.id.flowLayout);
+        imageView = findViewById(R.id.fullSizeImageView);
+        FlowLayout flowLayout = findViewById(R.id.flowLayout);
 
         //RelativeLayout
-        findViewById(R.id.fullSizeImageLayout).getLayoutParams().height = Math.round((MainActivity.getScreenWidth() - (16 + 6 + 10) * (MainActivity.getDpi() / 160f)) * imageData.sample_height / imageData.sample_width);
+        findViewById(R.id.fullSizeImageLayout).getLayoutParams().height = Math.round((YandereApplication.getScreenWidth() - (16 + 6 + 10) * (YandereApplication.getDpi() / 160f)) * imageData.sample_height / imageData.sample_width);
         //image view
         imageView.setImageResource(R.drawable.placeholder_large);
         imageView.getLayoutParams().width = 200;
@@ -73,7 +73,7 @@ public class ImageViewActivity extends Activity {
 
 
             //color
-            textView.setTextColor(Color.parseColor(getResources().getStringArray(R.array.tagColor)[MainActivity.getTags().get(tag)]));
+            textView.setTextColor(Color.parseColor(getResources().getStringArray(R.array.tagColor)[YandereApplication.getTags().get(tag)]));
             textView.setBackgroundResource(R.drawable.tag_selector);
 
             //click
@@ -92,7 +92,7 @@ public class ImageViewActivity extends Activity {
 
         //download button
         //why have sdcard? shouldn't be
-        File file = new File("/sdcard" + MainActivity.getDirectory(), "yandere_" + imageData.id + "." + imageData.file_ext);
+        File file = new File("/sdcard" + YandereApplication.getDirectory(), "yandere_" + imageData.id + "." + imageData.file_ext);
         if (file.exists()) {
             ((ImageView)findViewById(R.id.downloadImage)).setImageResource(R.drawable.done);
             downloadButton.setEnabled(false);
@@ -126,7 +126,7 @@ public class ImageViewActivity extends Activity {
     private class SaveImageTask extends Thread {
         @Override
         public void run() {
-            String directory = MainActivity.getDirectory().toString();
+            String directory = YandereApplication.getDirectory().toString();
             String filename = "yandere_" + imageData.id + "." + imageData.file_ext;
 
             //start a request

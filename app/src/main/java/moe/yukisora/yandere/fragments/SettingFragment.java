@@ -4,8 +4,8 @@ import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
 
-import moe.yukisora.yandere.MainActivity;
 import moe.yukisora.yandere.R;
+import moe.yukisora.yandere.YandereApplication;
 
 public class SettingFragment extends PreferenceFragment {
     public static SettingFragment newInstance() {
@@ -24,7 +24,7 @@ public class SettingFragment extends PreferenceFragment {
         findPreference("isSafe").setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
             @Override
             public boolean onPreferenceChange(Preference preference, Object newValue) {
-                MainActivity.setSafe((boolean)newValue);
+                YandereApplication.setSafe((boolean)newValue);
 
                 return true;
             }

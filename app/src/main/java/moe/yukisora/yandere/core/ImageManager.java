@@ -14,7 +14,7 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.util.Scanner;
 
-import moe.yukisora.yandere.MainActivity;
+import moe.yukisora.yandere.YandereApplication;
 import moe.yukisora.yandere.fragments.PostFragment;
 import moe.yukisora.yandere.modles.ImageData;
 
@@ -26,7 +26,7 @@ public class ImageManager {
 
     private ImageManager() {
         handler = new Handler();
-        imageCache = new ImageCache(MainActivity.getMaxMemory() / 2);
+        imageCache = new ImageCache(YandereApplication.getMaxMemory() / 2);
         DownloadImageThreadPool.getInstance().setImageCache(imageCache);
     }
 
@@ -113,10 +113,10 @@ public class ImageManager {
                     imageData.width = jsonObject.getInt("width");
                     imageData.height = jsonObject.getInt("height");
                     //calculate ImageView height manually
-                    imageData.layout_height = Math.round((MainActivity.getScreenWidth() / 2 - (8 + 6 + 10) * (MainActivity.getDpi() / 160f)) * imageData.actual_preview_height / imageData.actual_preview_width);
+                    imageData.layout_height = Math.round((YandereApplication.getScreenWidth() / 2 - (8 + 6 + 10) * (YandereApplication.getDpi() / 160f)) * imageData.actual_preview_height / imageData.actual_preview_width);
                     imageData.fragment = fragment;
 
-                    if (!MainActivity.isSafe() || imageData.rating.equalsIgnoreCase("s")) {
+                    if (!YandereApplication.isSafe() || imageData.rating.equalsIgnoreCase("s")) {
                         fragment.getImageDatas().add(imageData);
                     }
                 }

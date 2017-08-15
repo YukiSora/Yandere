@@ -67,7 +67,7 @@ public class PostFragment extends Fragment {
     private void initRecyclerView(View view) {
         //RecyclerView
         adapter = new RecyclerViewAdapter(this);
-        RecyclerView recyclerView = (RecyclerView)view.findViewById(R.id.recyclerView);
+        RecyclerView recyclerView = view.findViewById(R.id.recyclerView);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
         recyclerView.setAdapter(adapter);
@@ -81,7 +81,7 @@ public class PostFragment extends Fragment {
             });
 
         //SwipeRefreshLayout
-        final SwipeRefreshLayout swipeRefreshLayout = (SwipeRefreshLayout)view.findViewById(R.id.swipeRefreshLayout);
+        final SwipeRefreshLayout swipeRefreshLayout = view.findViewById(R.id.swipeRefreshLayout);
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {

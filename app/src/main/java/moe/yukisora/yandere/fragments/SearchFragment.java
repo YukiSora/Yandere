@@ -16,8 +16,8 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
-import moe.yukisora.yandere.MainActivity;
 import moe.yukisora.yandere.R;
+import moe.yukisora.yandere.YandereApplication;
 
 public class SearchFragment extends Fragment {
     private ArrayList<String> suggestion;
@@ -42,7 +42,7 @@ public class SearchFragment extends Fragment {
             public View getView(int position, View convertView, ViewGroup parent) {
                 TextView textView = (TextView)super.getView(position, convertView, parent);
 
-                textView.setTextColor(Color.parseColor(getResources().getStringArray(R.array.tagColor)[MainActivity.getTags().get(textView.getText().toString())]));
+                textView.setTextColor(Color.parseColor(getResources().getStringArray(R.array.tagColor)[YandereApplication.getTags().get(textView.getText().toString())]));
 
                 return textView;
             }
@@ -53,11 +53,11 @@ public class SearchFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_search, container, false);
 
-        final SearchView searchView = (SearchView)view.findViewById(R.id.searchView);
+        final SearchView searchView = view.findViewById(R.id.searchView);
         searchView.onActionViewExpanded();
         searchView.setFocusable(false);
         searchView.clearFocus();
-        searchView.setSearchableInfo(MainActivity.getSearchManager().getSearchableInfo(new ComponentName("moe.yukisora.yandere", "moe.yukisora.yandere.activities.SearchActivity")));
+        searchView.setSearchableInfo(YandereApplication.getSearchManager().getSearchableInfo(new ComponentName("moe.yukisora.yandere", "moe.yukisora.yandere.activities.SearchActivity")));
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
@@ -72,7 +72,7 @@ public class SearchFragment extends Fragment {
                 else {
                     suggestion.clear();
                     if (!newText.equals(""))
-                        for (String tag : MainActivity.getTags().keySet())
+                        for (String tag : YandereApplication.getTags().keySet())
                             if (tag.startsWith(newText))
                                 suggestion.add(tag);
 
@@ -83,7 +83,7 @@ public class SearchFragment extends Fragment {
             }
         });
 
-        final ListView listView = (ListView)view.findViewById(R.id.listView);
+        final ListView listView = view.findViewById(R.id.listView);
         listView.setAdapter(adapter);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override

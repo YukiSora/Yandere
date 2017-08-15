@@ -24,8 +24,8 @@ import java.net.URLConnection;
 import java.util.HashMap;
 import java.util.Scanner;
 
-import moe.yukisora.yandere.MainActivity;
 import moe.yukisora.yandere.R;
+import moe.yukisora.yandere.YandereApplication;
 
 public class LoadingActivity extends Activity {
     @Override
@@ -42,23 +42,23 @@ public class LoadingActivity extends Activity {
         File directory = new File(Environment.getExternalStorageDirectory(), "Yandere");
         if (!directory.exists())
             directory.mkdir();
-        MainActivity.setDirectory(directory);
+        YandereApplication.setDirectory(directory);
 
         //SearchManager
-        MainActivity.setSearchManager((SearchManager)getSystemService(Context.SEARCH_SERVICE));
+        YandereApplication.setSearchManager((SearchManager)getSystemService(Context.SEARCH_SERVICE));
 
         //safe option
-        MainActivity.setSafe(preferences.getBoolean("isSafe", true));
+        YandereApplication.setSafe(preferences.getBoolean("isSafe", true));
 
         //display attribute
-        MainActivity.setDpi(metrics.densityDpi);
-        MainActivity.setScreenWidth(metrics.widthPixels);
+        YandereApplication.setDpi(metrics.densityDpi);
+        YandereApplication.setScreenWidth(metrics.widthPixels);
 
         //max memory
-        MainActivity.setMaxMemory(1024 * 1024 * ((ActivityManager)getSystemService(Context.ACTIVITY_SERVICE)).getMemoryClass());
+        YandereApplication.setMaxMemory(1024 * 1024 * ((ActivityManager)getSystemService(Context.ACTIVITY_SERVICE)).getMemoryClass());
 
         //placeholder image size
-        MainActivity.setSmallPlaceholderSize(BitmapFactory.decodeResource(getResources(), R.drawable.placeholder_small).getWidth());
+        YandereApplication.setSmallPlaceholderSize(BitmapFactory.decodeResource(getResources(), R.drawable.placeholder_small).getWidth());
 
         //pre download and move to MainActivity
         new DownloadTagsTask().execute();
@@ -93,7 +93,7 @@ public class LoadingActivity extends Activity {
                     }
                 }
 
-                MainActivity.setTags(tags);
+                YandereApplication.setTags(tags);
             } catch (IOException | JSONException ignored) {
             }
 

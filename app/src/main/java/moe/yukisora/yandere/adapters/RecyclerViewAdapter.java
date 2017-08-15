@@ -11,10 +11,10 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
-import moe.yukisora.yandere.modles.ImageData;
-import moe.yukisora.yandere.MainActivity;
 import moe.yukisora.yandere.R;
+import moe.yukisora.yandere.YandereApplication;
 import moe.yukisora.yandere.fragments.PostFragment;
+import moe.yukisora.yandere.modles.ImageData;
 
 public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder> {
     private PostFragment fragment;
@@ -35,8 +35,8 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
         holder.layout.getLayoutParams().height = imageData.layout_height;
         //if is placeholder image
-        if (bitmap.getWidth() == MainActivity.getSmallPlaceholderSize() && bitmap.getHeight() == MainActivity.getSmallPlaceholderSize())
-            holder.imageView.getLayoutParams().width = MainActivity.getSmallPlaceholderSize() / (int)(MainActivity.getDpi() / 160f);
+        if (bitmap.getWidth() == YandereApplication.getSmallPlaceholderSize() && bitmap.getHeight() == YandereApplication.getSmallPlaceholderSize())
+            holder.imageView.getLayoutParams().width = YandereApplication.getSmallPlaceholderSize() / (int)(YandereApplication.getDpi() / 160f);
         else
             holder.imageView.setLayoutParams(new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT));
         holder.imageView.setImageBitmap(bitmap);
@@ -65,8 +65,8 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         public ViewHolder(View view) {
             super(view);
 
-            imageView = (ImageView)view.findViewById(R.id.itemImageView);
-            layout = (RelativeLayout)view.findViewById(R.id.itemLayout);
+            imageView = view.findViewById(R.id.itemImageView);
+            layout = view.findViewById(R.id.itemLayout);
         }
     }
 }

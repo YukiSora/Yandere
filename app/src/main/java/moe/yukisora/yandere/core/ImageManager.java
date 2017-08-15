@@ -1,4 +1,4 @@
-package moe.yukisora.yandere;
+package moe.yukisora.yandere.core;
 
 import android.app.Fragment;
 import android.graphics.Bitmap;
@@ -13,6 +13,10 @@ import java.io.IOException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.Scanner;
+
+import moe.yukisora.yandere.MainActivity;
+import moe.yukisora.yandere.fragments.PostFragment;
+import moe.yukisora.yandere.modles.ImageData;
 
 public class ImageManager {
     private static ImageCache imageCache;

@@ -1,4 +1,4 @@
-package moe.yukisora.yandere;
+package moe.yukisora.yandere.ui;
 
 import android.content.Context;
 import android.util.AttributeSet;

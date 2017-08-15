@@ -1,9 +1,12 @@
-package moe.yukisora.yandere;
+package moe.yukisora.yandere.activities;
 
 import android.app.Activity;
 import android.app.FragmentTransaction;
 import android.app.SearchManager;
 import android.os.Bundle;
+
+import moe.yukisora.yandere.R;
+import moe.yukisora.yandere.fragments.PostFragment;
 
 public class SearchActivity extends Activity {
     @Override

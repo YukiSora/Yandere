@@ -1,9 +1,12 @@
-package moe.yukisora.yandere;
+package moe.yukisora.yandere.core;
 
 import android.graphics.Bitmap;
 import android.os.Handler;
 
 import java.util.ArrayList;
+
+import moe.yukisora.yandere.fragments.PostFragment;
+import moe.yukisora.yandere.modles.ImageData;
 
 public class DownloadImageThreadPool {
     private final static int MAX_CURRENT_REQUEST = 20;

@@ -1,4 +1,4 @@
-package moe.yukisora.yandere;
+package moe.yukisora.yandere.fragments;
 
 import android.app.Fragment;
 import android.graphics.Color;
@@ -12,6 +12,13 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import java.util.ArrayList;
+
+import moe.yukisora.yandere.core.DownloadImageThreadPool;
+import moe.yukisora.yandere.modles.ImageData;
+import moe.yukisora.yandere.core.ImageManager;
+import moe.yukisora.yandere.R;
+import moe.yukisora.yandere.adapters.RecyclerViewAdapter;
+import moe.yukisora.yandere.interfaces.RecyclerViewOnScrollListener;
 
 public class PostFragment extends Fragment {
     private ArrayList<ImageData> imageDatas;

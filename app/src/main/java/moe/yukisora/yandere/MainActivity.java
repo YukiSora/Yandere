@@ -14,6 +14,10 @@ import android.widget.ImageButton;
 import java.io.File;
 import java.util.HashMap;
 
+import moe.yukisora.yandere.fragments.PostFragment;
+import moe.yukisora.yandere.fragments.SearchFragment;
+import moe.yukisora.yandere.fragments.SettingFragment;
+
 public class MainActivity extends Activity {
     private static final int NUM_ITEMS = 5;
     private static HashMap<String, Integer> tags;

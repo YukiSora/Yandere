@@ -1,4 +1,4 @@
-package moe.yukisora.yandere;
+package moe.yukisora.yandere.fragments;
 
 import android.app.Fragment;
 import android.content.ComponentName;
@@ -15,6 +15,9 @@ import android.widget.SearchView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+
+import moe.yukisora.yandere.MainActivity;
+import moe.yukisora.yandere.R;
 
 public class SearchFragment extends Fragment {
     private ArrayList<String> suggestion;
@@ -54,7 +57,7 @@ public class SearchFragment extends Fragment {
         searchView.onActionViewExpanded();
         searchView.setFocusable(false);
         searchView.clearFocus();
-        searchView.setSearchableInfo(MainActivity.getSearchManager().getSearchableInfo(new ComponentName("moe.yukisora.yandere", "moe.yukisora.yandere.SearchActivity")));
+        searchView.setSearchableInfo(MainActivity.getSearchManager().getSearchableInfo(new ComponentName("moe.yukisora.yandere", "moe.yukisora.yandere.activities.SearchActivity")));
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {

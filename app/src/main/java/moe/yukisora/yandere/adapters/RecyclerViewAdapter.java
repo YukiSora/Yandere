@@ -1,4 +1,4 @@
-package moe.yukisora.yandere;
+package moe.yukisora.yandere.adapters;
 
 import android.app.Fragment;
 import android.content.Intent;
@@ -10,6 +10,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+
+import moe.yukisora.yandere.modles.ImageData;
+import moe.yukisora.yandere.MainActivity;
+import moe.yukisora.yandere.R;
+import moe.yukisora.yandere.fragments.PostFragment;
 
 public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder> {
     private PostFragment fragment;
@@ -39,7 +44,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         holder.imageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent("moe.yukisora.yandere.ImageViewActivity");
+                Intent intent = new Intent("moe.yukisora.yandere.activities.ImageViewActivity");
                 Bundle bundle = new Bundle();
                 bundle.putSerializable("imageData", imageData);
                 intent.putExtras(bundle);

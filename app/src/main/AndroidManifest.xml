@@ -13,7 +13,7 @@
         android:theme="@style/AppTheme">
 
         <activity
-            android:name=".LoadingActivity"
+            android:name=".activities.LoadingActivity"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -35,7 +35,7 @@
         </activity>
 
         <activity
-            android:name=".ImageViewActivity"
+            android:name=".activities.ImageViewActivity"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="moe.yukisora.yandere.ImageViewActivity" />
@@ -45,7 +45,7 @@
         </activity>
 
         <activity
-            android:name=".SearchActivity"
+            android:name=".activities.SearchActivity"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.SEARCH" />

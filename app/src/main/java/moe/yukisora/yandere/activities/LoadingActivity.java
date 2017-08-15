@@ -1,4 +1,4 @@
-package moe.yukisora.yandere;
+package moe.yukisora.yandere.activities;
 
 import android.app.Activity;
 import android.app.ActivityManager;
@@ -23,6 +23,9 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.util.HashMap;
 import java.util.Scanner;
+
+import moe.yukisora.yandere.MainActivity;
+import moe.yukisora.yandere.R;
 
 public class LoadingActivity extends Activity {
     @Override

@@ -1,8 +1,12 @@
-package moe.yukisora.yandere;
+package moe.yukisora.yandere.core;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.util.LruCache;
+
+import moe.yukisora.yandere.R;
+import moe.yukisora.yandere.core.DownloadImageThreadPool;
+import moe.yukisora.yandere.modles.ImageData;
 
 public class ImageCache extends LruCache<Integer, Bitmap> {
     private ImageData currentImageData;

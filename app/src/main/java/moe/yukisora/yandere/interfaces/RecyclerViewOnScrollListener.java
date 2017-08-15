@@ -1,7 +1,9 @@
-package moe.yukisora.yandere;
+package moe.yukisora.yandere.interfaces;
 
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
+
+import moe.yukisora.yandere.interfaces.OnBottomListener;
 
 public abstract class RecyclerViewOnScrollListener extends RecyclerView.OnScrollListener implements OnBottomListener {
     private int lastPosition;

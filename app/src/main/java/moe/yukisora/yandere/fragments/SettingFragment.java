@@ -1,8 +1,11 @@
-package moe.yukisora.yandere;
+package moe.yukisora.yandere.fragments;
 
 import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
+
+import moe.yukisora.yandere.MainActivity;
+import moe.yukisora.yandere.R;
 
 public class SettingFragment extends PreferenceFragment {
     public static SettingFragment newInstance() {

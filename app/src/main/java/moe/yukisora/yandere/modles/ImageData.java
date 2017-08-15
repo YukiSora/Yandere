@@ -1,9 +1,11 @@
-package moe.yukisora.yandere;
+package moe.yukisora.yandere.modles;
 
 import android.app.Fragment;
 import android.graphics.Bitmap;
 
 import java.io.Serializable;
+
+import moe.yukisora.yandere.core.ImageManager;
 
 public class ImageData implements Serializable {
     public int id;

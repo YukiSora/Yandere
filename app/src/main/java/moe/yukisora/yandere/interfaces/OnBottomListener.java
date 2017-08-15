@@ -1,4 +1,4 @@
-package moe.yukisora.yandere;
+package moe.yukisora.yandere.interfaces;
 
 public interface OnBottomListener {
     void onBottom();

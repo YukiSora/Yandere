@@ -1,4 +1,4 @@
-package moe.yukisora.yandere;
+package moe.yukisora.yandere.activities;
 
 import android.app.Activity;
 import android.app.DownloadManager;
@@ -19,6 +19,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.File;
+
+import moe.yukisora.yandere.ui.FlowLayout;
+import moe.yukisora.yandere.modles.ImageData;
+import moe.yukisora.yandere.core.ImageManager;
+import moe.yukisora.yandere.MainActivity;
+import moe.yukisora.yandere.R;
 
 public class ImageViewActivity extends Activity {
     private Button downloadButton;

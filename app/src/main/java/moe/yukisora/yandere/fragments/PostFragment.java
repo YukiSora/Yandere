@@ -52,7 +52,7 @@ public class PostFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_post, container, false);
         initFragment();
         initRecyclerView(view);
-        ImageManager.getInstance().loadImage(this, url + page++);
+        ImageManager.getInstance().loadImage(this, page++, null);
 
         return view;
     }
@@ -76,7 +76,7 @@ public class PostFragment extends Fragment {
             recyclerView.addOnScrollListener(new RecyclerViewOnScrollListener() {
                 @Override
                 public void onBottom() {
-                    ImageManager.getInstance().loadImage(PostFragment.this, url + page++);
+                    ImageManager.getInstance().loadImage(PostFragment.this, page++, null);
                 }
             });
 
@@ -94,7 +94,7 @@ public class PostFragment extends Fragment {
                             ;
                         initFragment();
                         adapter.notifyDataSetChanged();
-                        ImageManager.getInstance().loadImage(PostFragment.this, url + page++);
+                        ImageManager.getInstance().loadImage(PostFragment.this, page++, null);
                         swipeRefreshLayout.setRefreshing(false);
                     }
                 }, 1000);

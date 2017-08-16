@@ -17,9 +17,9 @@ import moe.yukisora.yandere.fragments.SettingFragment;
 
 public class MainActivity extends Activity {
     private static final int NUM_ITEMS = 5;
-    private static final String POST_URL = "https://yande.re/post.json?limit=20&page=";
-    private static final String RANDOM_URL = "https://yande.re/post.json?limit=20&tags=order:random&page=";
-    private static final String POPULAR_URL = "https://yande.re/post/popular_recent.json?page=";
+    private static final String POST_URL = "https://yande.re/post.json/?limit=20&page=";
+    private static final String RANDOM_URL = "https://yande.re/post.json/?limit=20&tags=order:random&page=";
+    private static final String POPULAR_URL = "https://yande.re/post/popular_recent.json/?page=";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

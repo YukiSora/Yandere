@@ -11,6 +11,8 @@ public class ImageData implements Serializable {
     public int id;
     public int list_id;
     public String tags;
+    public String author;
+    public String source;
     public int file_size;
     public String file_ext;
     public String file_url;

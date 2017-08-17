@@ -61,7 +61,7 @@ public class LoadingActivity extends Activity {
         YandereApplication.setMaxMemory(1024 * 1024 * ((ActivityManager)getSystemService(Context.ACTIVITY_SERVICE)).getMemoryClass());
 
         // placeholder image size
-        YandereApplication.setSmallPlaceholderSize(BitmapFactory.decodeResource(getResources(), R.drawable.placeholder_small).getWidth());
+        YandereApplication.setSmallPlaceholderSize(BitmapFactory.decodeResource(getResources(), R.drawable.loading).getWidth());
 
         // set picasso
         Picasso picasso = new Picasso.Builder(this)

@@ -31,42 +31,53 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     }
 
     @Override
-    public void onBindViewHolder(final ViewHolder holder, int position) {
-        final ImageData imageData = (fragment.getImageDatas()).get(position);
+    public void onBindViewHolder(ViewHolder holder, int position) {
+        ImageData imageData = (fragment.getImageDatas()).get(position);
 
         holder.layout.getLayoutParams().height = imageData.layout_height;
         holder.imageView.getLayoutParams().width = YandereApplication.getSmallPlaceholderSize() / (int)(YandereApplication.getDpi() / 160f);
-        Picasso.with(fragment.getActivity())
-                .load(imageData.preview_url)
-                .tag(imageData.id)
-                .placeholder(R.drawable.progress_animation)
-                .into(holder.imageView, new Callback() {
-                    @Override
-                    public void onSuccess() {
-                        holder.imageView.setLayoutParams(new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT));
-                    }
-
-                    @Override
-                    public void onError() {
-
-                    }
-                });
-
-        holder.imageView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent("moe.yukisora.yandere.activities.ImageViewActivity");
-                Bundle bundle = new Bundle();
-                bundle.putSerializable("imageData", imageData);
-                intent.putExtras(bundle);
-                fragment.startActivity(intent);
-            }
-        });
+        loadImage(holder, imageData);
     }
 
     @Override
     public int getItemCount() {
         return fragment.getImageDatas().size();
+    }
+
+    private void loadImage(final ViewHolder holder, final ImageData imageData) {
+        Picasso.with(fragment.getActivity())
+                .load(imageData.preview_url)
+                .tag(imageData.id)
+                .placeholder(R.drawable.progress_animation)
+                .error(R.drawable.reload)
+                .noFade()
+                .into(holder.imageView, new Callback() {
+                    @Override
+                    public void onSuccess() {
+                        holder.imageView.setLayoutParams(new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT));
+                        holder.imageView.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                Intent intent = new Intent("moe.yukisora.yandere.activities.ImageViewActivity");
+                                Bundle bundle = new Bundle();
+                                bundle.putSerializable("imageData", imageData);
+                                intent.putExtras(bundle);
+
+                                fragment.startActivity(intent);
+                            }
+                        });
+                    }
+
+                    @Override
+                    public void onError() {
+                        holder.imageView.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                loadImage(holder, imageData);
+                            }
+                        });
+                    }
+                });
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {

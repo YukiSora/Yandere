@@ -1,7 +1,5 @@
 package moe.yukisora.yandere.modles;
 
-import android.app.Fragment;
-
 import java.io.Serializable;
 
 public class ImageData implements Serializable {
@@ -23,7 +21,6 @@ public class ImageData implements Serializable {
     public int width;
     public int height;
     public int layout_height;
-    transient public Fragment fragment;
 
     @Override
     public boolean equals(Object obj) {

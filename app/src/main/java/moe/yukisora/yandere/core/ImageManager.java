@@ -12,7 +12,6 @@ import java.util.List;
 
 import moe.yukisora.yandere.YandereApplication;
 import moe.yukisora.yandere.fragments.PostFragment;
-import moe.yukisora.yandere.interfaces.YandereService;
 import moe.yukisora.yandere.modles.ImageData;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -34,6 +33,51 @@ public class ImageManager {
         return imageManager;
     }
 
+    public void loadImage(Fragment fragment, Call<List<ImageData>> call) {
+        if (!isDownloading)
+            downloadImageData((PostFragment)fragment, call);
+    }
+
+    private void downloadImageData(final PostFragment fragment, Call<List<ImageData>> call) {
+        isDownloading = true;
+
+        call.enqueue(new Callback<List<ImageData>>() {
+            @Override
+            public void onResponse(Call<List<ImageData>> call, Response<List<ImageData>> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    final int positionStart = fragment.getImageDatas().size();
+                    int positionEnd = positionStart;
+
+                    for (ImageData imageData : response.body()) {
+                        // calculate ImageView height manually
+                        imageData.layout_height = Math.round((YandereApplication.getScreenWidth() / 2 - (8 + 6 + 10) * (YandereApplication.getDpi() / 160f)) * imageData.actual_preview_height / imageData.actual_preview_width);
+
+                        if (!YandereApplication.isSafe() || imageData.rating.equalsIgnoreCase("s")) {
+                            imageData.list_id = positionEnd++;
+                            fragment.getImageDatas().add(imageData);
+                        }
+                    }
+                    final int count = positionEnd - positionStart;
+
+                    handler.post(new Runnable() {
+                        public void run() {
+                            fragment.getAdapter().notifyItemRangeInserted(positionStart, count);
+                        }
+                    });
+                    isDownloading = false;
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<ImageData>> call, Throwable t) {
+            }
+        });
+    }
+
+    public void setDownloading(boolean downloading) {
+        isDownloading = downloading;
+    }
+
     public static Bitmap downloadImage(String url) {
         try {
             URLConnection connection = new URL(url).openConnection();
@@ -46,51 +90,5 @@ public class ImageManager {
         }
 
         return null;
-    }
-
-    public void loadImage(Fragment fragment, int page, String tag) {
-        if (!isDownloading)
-            downloadImageData((PostFragment)fragment, page, tag);
-    }
-
-    public void setDownloading(boolean downloading) {
-        isDownloading = downloading;
-    }
-
-    private void downloadImageData(final PostFragment fragment, int page, String tag) {
-        isDownloading = true;
-
-        YandereService service = ServiceGenerator.generate(YandereService.class);
-        Call<List<ImageData>> call = service.getPosts(page, tag);
-        call.enqueue(new Callback<List<ImageData>>() {
-            @Override
-            public void onResponse(Call<List<ImageData>> call, Response<List<ImageData>> response) {
-                if (response.isSuccessful()) {
-                    final int positionStart = fragment.getImageDatas().size();
-                    for (ImageData imageData : response.body()) {
-                        imageData.list_id = fragment.getImageDatas().size();
-                        // calculate ImageView height manually
-                        imageData.layout_height = Math.round((YandereApplication.getScreenWidth() / 2 - (8 + 6 + 10) * (YandereApplication.getDpi() / 160f)) * imageData.actual_preview_height / imageData.actual_preview_width);
-                        imageData.fragment = fragment;
-
-                        if (!YandereApplication.isSafe() || imageData.rating.equalsIgnoreCase("s")) {
-                            fragment.getImageDatas().add(imageData);
-                        }
-                    }
-                    final int itemCount = fragment.getImageDatas().size() - positionStart;
-
-                    handler.post(new Runnable() {
-                        public void run() {
-                            fragment.getAdapter().notifyItemRangeInserted(positionStart, itemCount);
-                        }
-                    });
-                    isDownloading = false;
-                }
-            }
-
-            @Override
-            public void onFailure(Call<List<ImageData>> call, Throwable t) {
-            }
-        });
     }
 }

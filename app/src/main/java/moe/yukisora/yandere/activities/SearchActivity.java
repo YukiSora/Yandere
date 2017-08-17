@@ -5,8 +5,15 @@ import android.app.FragmentTransaction;
 import android.app.SearchManager;
 import android.os.Bundle;
 
+import java.util.List;
+
 import moe.yukisora.yandere.R;
+import moe.yukisora.yandere.core.ServiceGenerator;
 import moe.yukisora.yandere.fragments.PostFragment;
+import moe.yukisora.yandere.interfaces.GetCallGenerator;
+import moe.yukisora.yandere.interfaces.YandereService;
+import moe.yukisora.yandere.modles.ImageData;
+import retrofit2.Call;
 
 public class SearchActivity extends Activity {
     @Override
@@ -14,11 +21,21 @@ public class SearchActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
 
-        String query = getIntent().getStringExtra(SearchManager.QUERY);
+        final String query = getIntent().getStringExtra(SearchManager.QUERY);
 
         // create fragment
         FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
-        PostFragment fragment = PostFragment.newInstance("https://yande.re/post.json?limit=20&tags=" + query + "&page=", true);
+        PostFragment fragment = PostFragment.newInstance(new GetCallGenerator() {
+            private String tags = query;
+
+            @Override
+            public Call<List<ImageData>> getCall(int page) {
+                YandereService service = ServiceGenerator.generate(YandereService.class);
+                Call<List<ImageData>> call = service.getPosts(page, tags);
+
+                return call;
+            }
+        }, true);
         fragmentTransaction.add(R.id.searchFragment, fragment);
         fragmentTransaction.commit();
     }

@@ -10,16 +10,20 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageButton;
 
+import java.util.List;
+
 import moe.yukisora.yandere.R;
+import moe.yukisora.yandere.core.ServiceGenerator;
 import moe.yukisora.yandere.fragments.PostFragment;
 import moe.yukisora.yandere.fragments.SearchFragment;
 import moe.yukisora.yandere.fragments.SettingFragment;
+import moe.yukisora.yandere.interfaces.GetCallGenerator;
+import moe.yukisora.yandere.interfaces.YandereService;
+import moe.yukisora.yandere.modles.ImageData;
+import retrofit2.Call;
 
 public class MainActivity extends Activity {
     private static final int NUM_ITEMS = 5;
-    private static final String POST_URL = "https://yande.re/post.json/?limit=20&page=";
-    private static final String RANDOM_URL = "https://yande.re/post.json/?limit=20&tags=order:random&page=";
-    private static final String POPULAR_URL = "https://yande.re/post/popular_recent.json/?page=";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,11 +48,37 @@ public class MainActivity extends Activity {
             public Fragment getItem(int position) {
                 switch (position) {
                     case 0:
-                        return PostFragment.newInstance(POST_URL, true);
+                        return PostFragment.newInstance(new GetCallGenerator() {
+                            @Override
+                            public Call<List<ImageData>> getCall(int page) {
+                                YandereService service = ServiceGenerator.generate(YandereService.class);
+                                Call<List<ImageData>> call = service.getPosts(page, null);
+
+                                return call;
+                            }
+                        }, true);
                     case 1:
-                        return PostFragment.newInstance(RANDOM_URL, true);
+                        return PostFragment.newInstance(new GetCallGenerator() {
+                            private String tags = "order:random";
+
+                            @Override
+                            public Call<List<ImageData>> getCall(int page) {
+                                YandereService service = ServiceGenerator.generate(YandereService.class);
+                                Call<List<ImageData>> call = service.getPosts(page, tags);
+
+                                return call;
+                            }
+                        }, true);
                     case 2:
-                        return PostFragment.newInstance(POPULAR_URL, false);
+                        return PostFragment.newInstance(new GetCallGenerator() {
+                            @Override
+                            public Call<List<ImageData>> getCall(int page) {
+                                YandereService service = ServiceGenerator.generate(YandereService.class);
+                                Call<List<ImageData>> call = service.getPopulars(page);
+
+                                return call;
+                            }
+                        }, false);
                     case 3:
                         return SearchFragment.newInstance();
                     case 4:

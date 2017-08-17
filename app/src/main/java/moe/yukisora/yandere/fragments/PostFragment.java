@@ -17,20 +17,21 @@ import moe.yukisora.yandere.R;
 import moe.yukisora.yandere.adapters.RecyclerViewAdapter;
 import moe.yukisora.yandere.core.ImageManager;
 import moe.yukisora.yandere.interfaces.RecyclerViewOnScrollListener;
+import moe.yukisora.yandere.interfaces.GetCallGenerator;
 import moe.yukisora.yandere.modles.ImageData;
 
 public class PostFragment extends Fragment {
     private ArrayList<ImageData> imageDatas;
     private Handler handler;
     private RecyclerViewAdapter adapter;
-    private String url;
+    private GetCallGenerator generator;
     private boolean isScrolled;
     private int page;
 
-    public static PostFragment newInstance(String url, boolean isScrolled) {
+    public static PostFragment newInstance(GetCallGenerator generator, boolean isScrolled) {
         Bundle args = new Bundle();
         PostFragment fragment = new PostFragment();
-        args.putString("url", url);
+        args.putSerializable("generator", generator);
         args.putBoolean("isScrolled", isScrolled);
         fragment.setArguments(args);
 
@@ -42,7 +43,7 @@ public class PostFragment extends Fragment {
         super.onCreate(savedInstanceState);
 
         handler = new Handler();
-        url = getArguments().getString("url");
+        generator = (GetCallGenerator)getArguments().getSerializable("generator");
         isScrolled = getArguments().getBoolean("isScrolled");
     }
 
@@ -51,7 +52,7 @@ public class PostFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_post, container, false);
         initFragment();
         initRecyclerView(view);
-        ImageManager.getInstance().loadImage(this, page++, null);
+        ImageManager.getInstance().loadImage(this, generator.getCall(page++));
 
         return view;
     }
@@ -74,7 +75,7 @@ public class PostFragment extends Fragment {
             recyclerView.addOnScrollListener(new RecyclerViewOnScrollListener() {
                 @Override
                 public void onBottom() {
-                    ImageManager.getInstance().loadImage(PostFragment.this, page++, null);
+                    ImageManager.getInstance().loadImage(PostFragment.this, generator.getCall(page++));
                 }
             });
 
@@ -89,7 +90,7 @@ public class PostFragment extends Fragment {
                     public void run() {
                         initFragment();
                         adapter.notifyDataSetChanged();
-                        ImageManager.getInstance().loadImage(PostFragment.this, page++, null);
+                        ImageManager.getInstance().loadImage(PostFragment.this, generator.getCall(page++));
                         swipeRefreshLayout.setRefreshing(false);
                     }
                 }, 1000);

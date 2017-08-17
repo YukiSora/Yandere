@@ -24,11 +24,14 @@ import retrofit2.Call;
 
 public class MainActivity extends Activity {
     private static final int NUM_ITEMS = 5;
+    private PostFragment[] postFragments;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        postFragments = new PostFragment[3];
 
         // configure ViewPager
         final ViewPager viewPager = findViewById(R.id.viewPager);
@@ -48,37 +51,37 @@ public class MainActivity extends Activity {
             public Fragment getItem(int position) {
                 switch (position) {
                     case 0:
-                        return PostFragment.newInstance(new GetCallGenerator() {
+                        postFragments[0] = PostFragment.newInstance(new GetCallGenerator() {
                             @Override
                             public Call<List<ImageData>> getCall(int page) {
                                 YandereService service = ServiceGenerator.generate(YandereService.class);
-                                Call<List<ImageData>> call = service.getPosts(page, null);
 
-                                return call;
+                                return service.getPosts(page, null);
                             }
                         }, true);
+                        return postFragments[0];
                     case 1:
-                        return PostFragment.newInstance(new GetCallGenerator() {
+                        postFragments[1] = PostFragment.newInstance(new GetCallGenerator() {
                             private String tags = "order:random";
 
                             @Override
                             public Call<List<ImageData>> getCall(int page) {
                                 YandereService service = ServiceGenerator.generate(YandereService.class);
-                                Call<List<ImageData>> call = service.getPosts(page, tags);
 
-                                return call;
+                                return service.getPosts(page, tags);
                             }
                         }, true);
+                        return postFragments[1];
                     case 2:
-                        return PostFragment.newInstance(new GetCallGenerator() {
+                        postFragments[2] = PostFragment.newInstance(new GetCallGenerator() {
                             @Override
                             public Call<List<ImageData>> getCall(int page) {
                                 YandereService service = ServiceGenerator.generate(YandereService.class);
-                                Call<List<ImageData>> call = service.getPopulars(page);
 
-                                return call;
+                                return service.getPopulars(page);
                             }
                         }, false);
+                        return postFragments[2];
                     case 3:
                         return SearchFragment.newInstance();
                     case 4:
@@ -139,21 +142,33 @@ public class MainActivity extends Activity {
         imageButtonPost.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                viewPager.setCurrentItem(0);
+                if (viewPager.getCurrentItem() == 0) {
+                    postFragments[0].goToTop();
+                } else {
+                    viewPager.setCurrentItem(0);
+                }
             }
         });
 
         imageButtonRandom.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                viewPager.setCurrentItem(1);
+                if (viewPager.getCurrentItem() == 1) {
+                    postFragments[1].goToTop();
+                } else {
+                    viewPager.setCurrentItem(1);
+                }
             }
         });
 
         imageButtonPopular.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                viewPager.setCurrentItem(2);
+                if (viewPager.getCurrentItem() == 2) {
+                    postFragments[2].goToTop();
+                } else {
+                    viewPager.setCurrentItem(2);
+                }
             }
         });
 

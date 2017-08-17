@@ -21,6 +21,7 @@ import moe.yukisora.yandere.interfaces.GetCallGenerator;
 import moe.yukisora.yandere.modles.ImageData;
 
 public class PostFragment extends Fragment {
+    private RecyclerView recyclerView;
     private ArrayList<ImageData> imageDatas;
     private Handler handler;
     private RecyclerViewAdapter adapter;
@@ -66,7 +67,7 @@ public class PostFragment extends Fragment {
     private void initRecyclerView(View view) {
         // RecyclerView
         adapter = new RecyclerViewAdapter(this);
-        RecyclerView recyclerView = view.findViewById(R.id.recyclerView);
+        recyclerView = view.findViewById(R.id.recyclerView);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
         recyclerView.setAdapter(adapter);
@@ -107,5 +108,9 @@ public class PostFragment extends Fragment {
 
     public RecyclerViewAdapter getAdapter() {
         return adapter;
+    }
+
+    public void goToTop() {
+        recyclerView.smoothScrollToPosition(0);
     }
 }

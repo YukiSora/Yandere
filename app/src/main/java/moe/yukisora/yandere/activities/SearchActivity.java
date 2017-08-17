@@ -25,17 +25,17 @@ public class SearchActivity extends Activity {
 
         // create fragment
         FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
-        PostFragment fragment = PostFragment.newInstance(new GetCallGenerator() {
+        PostFragment fragment = PostFragment.newInstance(true);
+        fragment.setGenerator(new GetCallGenerator() {
             private String tags = query;
 
             @Override
             public Call<List<ImageData>> getCall(int page) {
                 YandereService service = ServiceGenerator.generate(YandereService.class);
-                Call<List<ImageData>> call = service.getPosts(page, tags);
 
-                return call;
+                return service.getPosts(page, tags);
             }
-        }, true);
+        });
         fragmentTransaction.add(R.id.searchFragment, fragment);
         fragmentTransaction.commit();
     }

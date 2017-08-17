@@ -3,7 +3,6 @@ package moe.yukisora.yandere.fragments;
 import android.app.Fragment;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
@@ -17,8 +16,8 @@ import java.util.List;
 import moe.yukisora.yandere.R;
 import moe.yukisora.yandere.adapters.RecyclerViewAdapter;
 import moe.yukisora.yandere.core.ImageManager;
-import moe.yukisora.yandere.interfaces.RecyclerViewOnScrollListener;
 import moe.yukisora.yandere.interfaces.GetCallGenerator;
+import moe.yukisora.yandere.interfaces.RecyclerViewOnScrollListener;
 import moe.yukisora.yandere.modles.ImageData;
 import retrofit2.Call;
 
@@ -27,16 +26,14 @@ public class PostFragment extends Fragment {
 
     private ArrayList<ImageData> imageDatas;
     private Call<List<ImageData>> call;
-    private Handler handler;
     private RecyclerViewAdapter adapter;
     private GetCallGenerator generator;
     private boolean isScrollable;
     private int page;
 
-    public static PostFragment newInstance(GetCallGenerator generator, boolean isScrollable) {
+    public static PostFragment newInstance(boolean isScrollable) {
         Bundle args = new Bundle();
         PostFragment fragment = new PostFragment();
-        args.putSerializable("generator", generator);
         args.putBoolean("isScrollable", isScrollable);
         fragment.setArguments(args);
 
@@ -47,8 +44,6 @@ public class PostFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        handler = new Handler();
-        generator = (GetCallGenerator)getArguments().getSerializable("generator");
         isScrollable = getArguments().getBoolean("isScrollable");
     }
 
@@ -115,6 +110,10 @@ public class PostFragment extends Fragment {
 
     public RecyclerViewAdapter getAdapter() {
         return adapter;
+    }
+
+    public void setGenerator(GetCallGenerator generator) {
+        this.generator = generator;
     }
 
     public void goToTop() {

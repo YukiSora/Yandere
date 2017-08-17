@@ -51,17 +51,19 @@ public class MainActivity extends Activity {
             public Fragment getItem(int position) {
                 switch (position) {
                     case 0:
-                        postFragments[0] = PostFragment.newInstance(new GetCallGenerator() {
+                        postFragments[0] = PostFragment.newInstance(true);
+                        postFragments[0].setGenerator(new GetCallGenerator() {
                             @Override
                             public Call<List<ImageData>> getCall(int page) {
                                 YandereService service = ServiceGenerator.generate(YandereService.class);
 
                                 return service.getPosts(page, null);
                             }
-                        }, true);
+                        });
                         return postFragments[0];
                     case 1:
-                        postFragments[1] = PostFragment.newInstance(new GetCallGenerator() {
+                        postFragments[1] = PostFragment.newInstance(true);
+                        postFragments[1].setGenerator(new GetCallGenerator() {
                             private String tags = "order:random";
 
                             @Override
@@ -70,17 +72,18 @@ public class MainActivity extends Activity {
 
                                 return service.getPosts(page, tags);
                             }
-                        }, true);
+                        });
                         return postFragments[1];
                     case 2:
-                        postFragments[2] = PostFragment.newInstance(new GetCallGenerator() {
+                        postFragments[2] = PostFragment.newInstance(false);
+                        postFragments[2].setGenerator(new GetCallGenerator() {
                             @Override
                             public Call<List<ImageData>> getCall(int page) {
                                 YandereService service = ServiceGenerator.generate(YandereService.class);
 
                                 return service.getPopulars(page);
                             }
-                        }, false);
+                        });
                         return postFragments[2];
                     case 3:
                         return SearchFragment.newInstance();

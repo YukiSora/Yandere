@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import moe.yukisora.yandere.R;
 import moe.yukisora.yandere.adapters.RecyclerViewAdapter;
@@ -19,21 +20,24 @@ import moe.yukisora.yandere.core.ImageManager;
 import moe.yukisora.yandere.interfaces.RecyclerViewOnScrollListener;
 import moe.yukisora.yandere.interfaces.GetCallGenerator;
 import moe.yukisora.yandere.modles.ImageData;
+import retrofit2.Call;
 
 public class PostFragment extends Fragment {
     private RecyclerView recyclerView;
+
     private ArrayList<ImageData> imageDatas;
+    private Call<List<ImageData>> call;
     private Handler handler;
     private RecyclerViewAdapter adapter;
     private GetCallGenerator generator;
-    private boolean isScrolled;
+    private boolean isScrollable;
     private int page;
 
-    public static PostFragment newInstance(GetCallGenerator generator, boolean isScrolled) {
+    public static PostFragment newInstance(GetCallGenerator generator, boolean isScrollable) {
         Bundle args = new Bundle();
         PostFragment fragment = new PostFragment();
         args.putSerializable("generator", generator);
-        args.putBoolean("isScrolled", isScrolled);
+        args.putBoolean("isScrollable", isScrollable);
         fragment.setArguments(args);
 
         return fragment;
@@ -45,15 +49,16 @@ public class PostFragment extends Fragment {
 
         handler = new Handler();
         generator = (GetCallGenerator)getArguments().getSerializable("generator");
-        isScrolled = getArguments().getBoolean("isScrolled");
+        isScrollable = getArguments().getBoolean("isScrollable");
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_post, container, false);
+
         initFragment();
         initRecyclerView(view);
-        ImageManager.getInstance().loadImage(this, generator.getCall(page++));
+        loadImage();
 
         return view;
     }
@@ -71,35 +76,37 @@ public class PostFragment extends Fragment {
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
         recyclerView.setAdapter(adapter);
+
         // if not only one page, do load more
-        if (isScrolled)
+        if (isScrollable) {
             recyclerView.addOnScrollListener(new RecyclerViewOnScrollListener() {
                 @Override
                 public void onBottom() {
-                    ImageManager.getInstance().loadImage(PostFragment.this, generator.getCall(page++));
+                    loadImage();
                 }
             });
+        }
 
         // SwipeRefreshLayout
         final SwipeRefreshLayout swipeRefreshLayout = view.findViewById(R.id.swipeRefreshLayout);
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                // wait downloading thread
-                handler.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        initFragment();
-                        adapter.notifyDataSetChanged();
-                        ImageManager.getInstance().loadImage(PostFragment.this, generator.getCall(page++));
-                        swipeRefreshLayout.setRefreshing(false);
-                    }
-                }, 1000);
+                call.cancel();
+                initFragment();
+                adapter.notifyDataSetChanged();
+                loadImage();
+                swipeRefreshLayout.setRefreshing(false);
             }
         });
         swipeRefreshLayout.setColorSchemeColors(Color.RED, Color.GREEN, Color.BLUE, Color.CYAN);
         swipeRefreshLayout.setProgressBackgroundColorSchemeColor(Color.argb(90, 102, 204, 255));
         swipeRefreshLayout.setSize(SwipeRefreshLayout.LARGE);
+    }
+
+    public void loadImage() {
+        call = generator.getCall(page++);
+        ImageManager.getInstance().loadImage(this, call);
     }
 
     public ArrayList<ImageData> getImageDatas() {

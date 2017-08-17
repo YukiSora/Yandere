@@ -38,7 +38,7 @@
             android:name=".activities.ImageViewActivity"
             android:screenOrientation="portrait">
             <intent-filter>
-                <action android:name="moe.yukisora.yandere.ImageViewActivity" />
+                <action android:name="moe.yukisora.yandere.activities.ImageViewActivity" />
 
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>

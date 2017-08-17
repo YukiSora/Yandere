@@ -34,6 +34,7 @@ public class YandereApplication extends Application {
     public static void setTags(HashMap<String, Integer> tags) {
         YandereApplication.tags = tags;
     }
+
     public static SearchManager getSearchManager() {
         return searchManager;
     }
@@ -41,6 +42,7 @@ public class YandereApplication extends Application {
     public static void setSearchManager(SearchManager searchManager) {
         YandereApplication.searchManager = searchManager;
     }
+
     public static boolean isSafe() {
         return isSafe;
     }
@@ -48,6 +50,7 @@ public class YandereApplication extends Application {
     public static void setSafe(boolean isSafe) {
         YandereApplication.isSafe = isSafe;
     }
+
     public static int getDpi() {
         return dpi;
     }
@@ -55,6 +58,7 @@ public class YandereApplication extends Application {
     public static void setDpi(int dpi) {
         YandereApplication.dpi = dpi;
     }
+
     public static int getMaxMemory() {
         return maxMemory;
     }

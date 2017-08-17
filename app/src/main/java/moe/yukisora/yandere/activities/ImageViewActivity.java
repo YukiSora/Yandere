@@ -6,8 +6,6 @@ import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
-import android.graphics.Bitmap;
-import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -18,11 +16,13 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.squareup.picasso.Callback;
+import com.squareup.picasso.Picasso;
+
 import java.io.File;
 
 import moe.yukisora.yandere.R;
 import moe.yukisora.yandere.YandereApplication;
-import moe.yukisora.yandere.core.ImageManager;
 import moe.yukisora.yandere.modles.ImageData;
 import moe.yukisora.yandere.ui.FlowLayout;
 
@@ -47,18 +47,18 @@ public class ImageViewActivity extends Activity {
 
         // RelativeLayout
         findViewById(R.id.fullSizeImageLayout).getLayoutParams().height = Math.round((YandereApplication.getScreenWidth() - (16 + 6 + 10) * (YandereApplication.getDpi() / 160f)) * imageData.sample_height / imageData.sample_width);
-        // image view
-        imageView.setImageResource(R.drawable.placeholder_large);
-        imageView.getLayoutParams().width = 200;
-
 
         // image data
         String imageIdStr = String.format("yande.re Id: %d", imageData.id);
         ((TextView)findViewById(R.id.imageId)).setText(imageIdStr);
+        String authorStr = String.format("Author: %s", imageData.author);
+        ((TextView)findViewById(R.id.author)).setText(authorStr);
         String imageSizeStr = String.format("Image Size: %d x %d", imageData.width, imageData.height);
         ((TextView)findViewById(R.id.imageSize)).setText(imageSizeStr);
         String fileSizeStr = String.format("File Size: %.2fkb", imageData.file_size / 1024f);
         ((TextView)findViewById(R.id.fileSize)).setText(fileSizeStr);
+        String sourceStr = String.format("Source: %s", imageData.source);
+        ((TextView)findViewById(R.id.source)).setText(sourceStr);
 
         // tag
         for (String tag : imageData.tags.split(" ")) {
@@ -73,7 +73,7 @@ public class ImageViewActivity extends Activity {
 
 
             // color
-            textView.setTextColor(Color.parseColor(getResources().getStringArray(R.array.tagColor)[YandereApplication.getTags().get(tag)]));
+            // textView.setTextColor(Color.parseColor(getResources().getStringArray(R.array.tagColor)[YandereApplication.getTags().get(tag)]));
             textView.setBackgroundResource(R.drawable.tag_selector);
 
             // click
@@ -106,21 +106,34 @@ public class ImageViewActivity extends Activity {
             });
         }
 
-        new DownloadImageTask().start();
+        loadImage(imageData);
     }
 
-    private class DownloadImageTask extends Thread {
-        @Override
-        public void run() {
-            final Bitmap bitmap = ImageManager.downloadImage(imageData.sample_url);
-            handler.post(new Runnable() {
-                @Override
-                public void run() {
-                    imageView.setLayoutParams(new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT));
-                    imageView.setImageBitmap(bitmap);
-                }
-            });
-        }
+    private void loadImage(final ImageData imageData) {
+        imageView.getLayoutParams().width = YandereApplication.getSmallPlaceholderSize() / (int)(YandereApplication.getDpi() / 160f);
+
+        Picasso.with(this)
+                .load(imageData.sample_url)
+                .placeholder(R.drawable.progress_animation)
+                .error(R.drawable.reload)
+                .noFade()
+                .into(imageView, new Callback() {
+                    @Override
+                    public void onSuccess() {
+                        imageView.setLayoutParams(new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT));
+                        imageView.setOnClickListener(null);
+                    }
+
+                    @Override
+                    public void onError() {
+                        imageView.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                loadImage(imageData);
+                            }
+                        });
+                    }
+                });
     }
 
     private class SaveImageTask extends Thread {

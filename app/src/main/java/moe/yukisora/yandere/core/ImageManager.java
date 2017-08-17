@@ -19,15 +19,12 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class ImageManager {
-    private static ImageCache imageCache;
     private static ImageManager imageManager;
     private Handler handler;
     private boolean isDownloading;
 
     private ImageManager() {
         handler = new Handler();
-        imageCache = new ImageCache(YandereApplication.getMaxMemory() / 2);
-        DownloadImageThreadPool.getInstance().setImageCache(imageCache);
     }
 
     public static ImageManager getInstance() {
@@ -35,10 +32,6 @@ public class ImageManager {
             imageManager = new ImageManager();
 
         return imageManager;
-    }
-
-    public static ImageCache getImageCache() {
-        return imageCache;
     }
 
     public static Bitmap downloadImage(String url) {

@@ -1,11 +1,8 @@
 package moe.yukisora.yandere.modles;
 
 import android.app.Fragment;
-import android.graphics.Bitmap;
 
 import java.io.Serializable;
-
-import moe.yukisora.yandere.core.ImageManager;
 
 public class ImageData implements Serializable {
     public int id;
@@ -27,10 +24,6 @@ public class ImageData implements Serializable {
     public int height;
     public int layout_height;
     transient public Fragment fragment;
-
-    public Bitmap getBitmap() {
-        return ImageManager.getImageCache().getByImageData(this);
-    }
 
     @Override
     public boolean equals(Object obj) {

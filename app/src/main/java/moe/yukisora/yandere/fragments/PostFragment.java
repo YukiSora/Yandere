@@ -13,12 +13,11 @@ import android.view.ViewGroup;
 
 import java.util.ArrayList;
 
-import moe.yukisora.yandere.core.DownloadImageThreadPool;
-import moe.yukisora.yandere.modles.ImageData;
-import moe.yukisora.yandere.core.ImageManager;
 import moe.yukisora.yandere.R;
 import moe.yukisora.yandere.adapters.RecyclerViewAdapter;
+import moe.yukisora.yandere.core.ImageManager;
 import moe.yukisora.yandere.interfaces.RecyclerViewOnScrollListener;
+import moe.yukisora.yandere.modles.ImageData;
 
 public class PostFragment extends Fragment {
     private ArrayList<ImageData> imageDatas;
@@ -61,7 +60,6 @@ public class PostFragment extends Fragment {
         imageDatas = new ArrayList<>();
         page = 1;
         ImageManager.getInstance().setDownloading(false);
-        DownloadImageThreadPool.getInstance().setActive(true);
     }
 
     private void initRecyclerView(View view) {
@@ -85,13 +83,10 @@ public class PostFragment extends Fragment {
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                DownloadImageThreadPool.getInstance().setActive(false);
                 // wait downloading thread
                 handler.postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        while (!DownloadImageThreadPool.getInstance().isEmpty())
-                            ;
                         initFragment();
                         adapter.notifyDataSetChanged();
                         ImageManager.getInstance().loadImage(PostFragment.this, page++, null);

@@ -14,6 +14,9 @@ import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.util.DisplayMetrics;
 
+import com.jakewharton.picasso.OkHttp3Downloader;
+import com.squareup.picasso.Picasso;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -59,6 +62,15 @@ public class LoadingActivity extends Activity {
 
         // placeholder image size
         YandereApplication.setSmallPlaceholderSize(BitmapFactory.decodeResource(getResources(), R.drawable.placeholder_small).getWidth());
+
+        // set picasso
+        Picasso picasso = new Picasso.Builder(this)
+                .downloader(new OkHttp3Downloader(YandereApplication.okHttpClient))
+                .build();
+        try {
+            Picasso.setSingletonInstance(picasso);
+        } catch (IllegalStateException ignored) {
+        }
 
         startActivity(new Intent(LoadingActivity.this, MainActivity.class));
         finish();

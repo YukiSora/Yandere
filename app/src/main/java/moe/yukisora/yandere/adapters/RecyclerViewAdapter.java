@@ -2,7 +2,6 @@ package moe.yukisora.yandere.adapters;
 
 import android.app.Fragment;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -10,6 +9,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+
+import com.squareup.picasso.Callback;
+import com.squareup.picasso.Picasso;
 
 import moe.yukisora.yandere.R;
 import moe.yukisora.yandere.YandereApplication;
@@ -29,17 +31,26 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
+    public void onBindViewHolder(final ViewHolder holder, int position) {
         final ImageData imageData = (fragment.getImageDatas()).get(position);
-        Bitmap bitmap = imageData.getBitmap();
 
         holder.layout.getLayoutParams().height = imageData.layout_height;
-        // if is placeholder image
-        if (bitmap.getWidth() == YandereApplication.getSmallPlaceholderSize() && bitmap.getHeight() == YandereApplication.getSmallPlaceholderSize())
-            holder.imageView.getLayoutParams().width = YandereApplication.getSmallPlaceholderSize() / (int)(YandereApplication.getDpi() / 160f);
-        else
-            holder.imageView.setLayoutParams(new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT));
-        holder.imageView.setImageBitmap(bitmap);
+        holder.imageView.getLayoutParams().width = YandereApplication.getSmallPlaceholderSize() / (int)(YandereApplication.getDpi() / 160f);
+        Picasso.with(fragment.getActivity())
+                .load(imageData.preview_url)
+                .tag(imageData.id)
+                .placeholder(R.drawable.progress_animation)
+                .into(holder.imageView, new Callback() {
+                    @Override
+                    public void onSuccess() {
+                        holder.imageView.setLayoutParams(new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT));
+                    }
+
+                    @Override
+                    public void onError() {
+
+                    }
+                });
 
         holder.imageView.setOnClickListener(new View.OnClickListener() {
             @Override

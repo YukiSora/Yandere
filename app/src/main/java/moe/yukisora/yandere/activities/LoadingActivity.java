@@ -29,6 +29,10 @@ import java.util.Scanner;
 
 import moe.yukisora.yandere.R;
 import moe.yukisora.yandere.YandereApplication;
+import okhttp3.Interceptor;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 
 public class LoadingActivity extends Activity {
     @Override
@@ -43,8 +47,9 @@ public class LoadingActivity extends Activity {
 
         // create folder
         File directory = new File(Environment.getExternalStorageDirectory(), "Yandere");
-        if (!directory.exists())
+        if (!directory.exists()) {
             directory.mkdir();
+        }
         YandereApplication.setDirectory(directory);
 
         // search manager
@@ -63,9 +68,24 @@ public class LoadingActivity extends Activity {
         // placeholder image size
         YandereApplication.setSmallPlaceholderSize(BitmapFactory.decodeResource(getResources(), R.drawable.loading).getWidth());
 
+        // http client
+        OkHttpClient okHttpClient = new OkHttpClient.Builder()
+                .addInterceptor(new Interceptor() {
+                    @Override
+                    public Response intercept(Chain chain) throws IOException {
+                        Request originalRequest = chain.request();
+                        Request requestWithUserAgent = originalRequest.newBuilder()
+                                .header("User-Agent", "Mozilla/5.0")
+                                .build();
+                        return chain.proceed(requestWithUserAgent);
+                    }
+                })
+                .build();
+        YandereApplication.setOkHttpClient(okHttpClient);
+
         // set picasso
         Picasso picasso = new Picasso.Builder(this)
-                .downloader(new OkHttp3Downloader(YandereApplication.okHttpClient))
+                .downloader(new OkHttp3Downloader(okHttpClient))
                 .build();
         try {
             Picasso.setSingletonInstance(picasso);

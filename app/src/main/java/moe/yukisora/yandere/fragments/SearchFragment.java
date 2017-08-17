@@ -39,7 +39,7 @@ public class SearchFragment extends Fragment {
         adapter = new ArrayAdapter<String>(getActivity(), R.layout.suggestion_item_view, suggestion) {
             @NonNull
             @Override
-            public View getView(int position, View convertView, ViewGroup parent) {
+            public View getView(int position, View convertView, @NonNull ViewGroup parent) {
                 TextView textView = (TextView)super.getView(position, convertView, parent);
 
                 textView.setTextColor(Color.parseColor(getResources().getStringArray(R.array.tagColor)[YandereApplication.getTags().get(textView.getText().toString())]));

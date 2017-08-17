@@ -27,8 +27,10 @@ public abstract class RecyclerViewOnScrollListener extends RecyclerView.OnScroll
         int[] lastPositions = new int[layoutManager.getSpanCount()];
         layoutManager.findLastVisibleItemPositions(lastPositions);
         lastPosition = lastPositions[0];
-        for (int i : lastPositions)
-            if (i > lastPosition)
+        for (int i : lastPositions) {
+            if (i > lastPosition) {
                 lastPosition = i;
+            }
+        }
     }
 }

@@ -26,8 +26,9 @@ public class FlowLayout extends ViewGroup {
                         .getLayoutParams();
                 int childWidth = child.getMeasuredWidth() + layoutParams.leftMargin + layoutParams.rightMargin;
 
-                if (childWidth + lineWidth > width)
+                if (childWidth + lineWidth > width) {
                     break;
+                }
 
                 // calculate left, top, right, bottom
                 int lc = lineWidth + layoutParams.leftMargin;
@@ -67,8 +68,9 @@ public class FlowLayout extends ViewGroup {
                 int childWidth = child.getMeasuredWidth() + layoutParams.leftMargin
                         + layoutParams.rightMargin;
 
-                if (childWidth + lineWidth > width)
+                if (childWidth + lineWidth > width) {
                     break;
+                }
 
                 lineWidth += childWidth;
                 i++;

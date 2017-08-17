@@ -9,7 +9,7 @@ import java.util.HashMap;
 import okhttp3.OkHttpClient;
 
 public class YandereApplication extends Application {
-    public final static OkHttpClient okHttpClient = new OkHttpClient();
+    private static OkHttpClient okHttpClient;
     private static File directory;
     private static HashMap<String, Integer> tags;
     private static SearchManager searchManager;
@@ -77,5 +77,13 @@ public class YandereApplication extends Application {
 
     public static void setSmallPlaceholderSize(int smallPlaceholderSize) {
         YandereApplication.smallPlaceholderSize = smallPlaceholderSize;
+    }
+
+    public static OkHttpClient getOkHttpClient() {
+        return okHttpClient;
+    }
+
+    public static void setOkHttpClient(OkHttpClient okHttpClient) {
+        YandereApplication.okHttpClient = okHttpClient;
     }
 }

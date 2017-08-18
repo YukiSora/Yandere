@@ -147,7 +147,8 @@ public class MainActivity extends Activity {
             public void onClick(View view) {
                 if (viewPager.getCurrentItem() == 0) {
                     postFragments[0].goToTop();
-                } else {
+                }
+                else {
                     viewPager.setCurrentItem(0);
                 }
             }
@@ -158,7 +159,8 @@ public class MainActivity extends Activity {
             public void onClick(View view) {
                 if (viewPager.getCurrentItem() == 1) {
                     postFragments[1].goToTop();
-                } else {
+                }
+                else {
                     viewPager.setCurrentItem(1);
                 }
             }
@@ -169,7 +171,8 @@ public class MainActivity extends Activity {
             public void onClick(View view) {
                 if (viewPager.getCurrentItem() == 2) {
                     postFragments[2].goToTop();
-                } else {
+                }
+                else {
                     viewPager.setCurrentItem(2);
                 }
             }

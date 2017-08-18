@@ -7,32 +7,29 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.BitmapFactory;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
-import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.util.DisplayMetrics;
 
 import com.jakewharton.picasso.OkHttp3Downloader;
 import com.squareup.picasso.Picasso;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.io.File;
 import java.io.IOException;
-import java.net.URL;
-import java.net.URLConnection;
 import java.util.HashMap;
-import java.util.Scanner;
 
 import moe.yukisora.yandere.R;
 import moe.yukisora.yandere.YandereApplication;
+import moe.yukisora.yandere.core.ServiceGenerator;
+import moe.yukisora.yandere.interfaces.YandereService;
+import moe.yukisora.yandere.modles.TagData;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
+import retrofit2.Call;
+import retrofit2.Callback;
 
 public class LoadingActivity extends Activity {
     @Override
@@ -92,57 +89,43 @@ public class LoadingActivity extends Activity {
         } catch (IllegalStateException ignored) {
         }
 
-        startActivity(new Intent(LoadingActivity.this, MainActivity.class));
-        finish();
-
         // pre download and move to MainActivity
-        // new DownloadTagsTask().execute();
+        downloadTags();
     }
 
+    private void downloadTags() {
+        YandereService service = ServiceGenerator.generate(YandereService.class);
 
-    private class DownloadTagsTask extends AsyncTask<Void, Void, Void> {
-        protected Void doInBackground(Void... args) {
-            try {
-                URLConnection connection = new URL("https://yande.re/tag/summary.json").openConnection();
-                connection.setRequestProperty("User-Agent", "Mozilla/5.0");
-                connection.setConnectTimeout(3000);
-                connection.setReadTimeout(3000);
+        Call<TagData> call = service.getTags();
+        call.enqueue(new Callback<TagData>() {
+            @Override
+            public void onResponse(Call<TagData> call, retrofit2.Response<TagData> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    //ArrayList<String> tags = new ArrayList<>();
+                    HashMap<String, Integer> tags = new HashMap<>();
 
-                String str;
-                try (Scanner in = new Scanner(connection.getInputStream())) {
-                    str = in.useDelimiter("\\A").next();
-                }
-
-                //ArrayList<String> tags = new ArrayList<>();
-                HashMap<String, Integer> tags = new HashMap<>();
-
-                int lastDigit = -1;
-                for (String tag : new JSONObject(str).getString("data").replaceAll("\\s", "").split("`")) {
-                    if (!(tag.length() == 1 && tag.charAt(0) >= '0' && tag.charAt(0) <= '9')) {
-                        if (lastDigit != -1)
-                            tags.put(tag, lastDigit);
-                        lastDigit = -1;
+                    int lastDigit = -1;
+                    for (String tag : response.body().data.replaceAll("\\s", "").split("`")) {
+                        if (!(tag.length() == 1 && tag.charAt(0) >= '0' && tag.charAt(0) <= '9')) {
+                            if (lastDigit != -1)
+                                tags.put(tag, lastDigit);
+                            lastDigit = -1;
+                        }
+                        else {
+                            lastDigit = tag.charAt(0) - '0';
+                        }
                     }
-                    else {
-                        lastDigit = tag.charAt(0) - '0';
-                    }
-                }
 
-                YandereApplication.setTags(tags);
-            } catch (IOException | JSONException ignored) {
-            }
+                    YandereApplication.setTags(tags);
 
-            return null;
-        }
-
-        protected void onPostExecute(Void args) {
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
                     LoadingActivity.this.startActivity(new Intent(LoadingActivity.this, MainActivity.class));
                     LoadingActivity.this.finish();
                 }
-            }, 1000);
-        }
+            }
+
+            @Override
+            public void onFailure(Call<TagData> call, Throwable t) {
+            }
+        });
     }
 }

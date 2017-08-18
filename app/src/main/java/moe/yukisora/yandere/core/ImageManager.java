@@ -1,13 +1,8 @@
 package moe.yukisora.yandere.core;
 
 import android.app.Fragment;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Handler;
 
-import java.io.IOException;
-import java.net.URL;
-import java.net.URLConnection;
 import java.util.List;
 
 import moe.yukisora.yandere.YandereApplication;
@@ -76,19 +71,5 @@ public class ImageManager {
 
     public void setDownloading(boolean downloading) {
         isDownloading = downloading;
-    }
-
-    public static Bitmap downloadImage(String url) {
-        try {
-            URLConnection connection = new URL(url).openConnection();
-            connection.setRequestProperty("User-Agent", "Mozilla/5.0");
-            connection.setConnectTimeout(3000);
-            connection.setReadTimeout(3000);
-
-            return BitmapFactory.decodeStream(connection.getInputStream());
-        } catch (IOException ignored) {
-        }
-
-        return null;
     }
 }

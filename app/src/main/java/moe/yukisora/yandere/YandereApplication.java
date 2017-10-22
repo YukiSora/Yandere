@@ -1,21 +1,21 @@
 package moe.yukisora.yandere;
 
 import android.app.Application;
-import android.app.SearchManager;
+import android.content.SharedPreferences;
+import android.graphics.BitmapFactory;
+import android.os.Environment;
+import android.preference.PreferenceManager;
+import android.util.DisplayMetrics;
 
 import java.io.File;
 import java.util.HashMap;
-
-import okhttp3.OkHttpClient;
+import java.util.Scanner;
 
 public class YandereApplication extends Application {
-    private static OkHttpClient okHttpClient;
     private static File directory;
     private static HashMap<String, Integer> tags;
-    private static SearchManager searchManager;
     private static boolean isSafe;
     private static int dpi;
-    private static int maxMemory;
     private static int screenWidth;
     private static int smallPlaceholderSize;
 
@@ -23,24 +23,8 @@ public class YandereApplication extends Application {
         return directory;
     }
 
-    public static void setDirectory(File directory) {
-        YandereApplication.directory = directory;
-    }
-
     public static HashMap<String, Integer> getTags() {
         return tags;
-    }
-
-    public static void setTags(HashMap<String, Integer> tags) {
-        YandereApplication.tags = tags;
-    }
-
-    public static SearchManager getSearchManager() {
-        return searchManager;
-    }
-
-    public static void setSearchManager(SearchManager searchManager) {
-        YandereApplication.searchManager = searchManager;
     }
 
     public static boolean isSafe() {
@@ -55,39 +39,47 @@ public class YandereApplication extends Application {
         return dpi;
     }
 
-    public static void setDpi(int dpi) {
-        YandereApplication.dpi = dpi;
-    }
-
-    public static int getMaxMemory() {
-        return maxMemory;
-    }
-
-    public static void setMaxMemory(int maxMemory) {
-        YandereApplication.maxMemory = maxMemory;
-    }
-
     public static int getScreenWidth() {
         return screenWidth;
-    }
-
-    public static void setScreenWidth(int screenWidth) {
-        YandereApplication.screenWidth = screenWidth;
     }
 
     public static int getSmallPlaceholderSize() {
         return smallPlaceholderSize;
     }
 
-    public static void setSmallPlaceholderSize(int smallPlaceholderSize) {
-        YandereApplication.smallPlaceholderSize = smallPlaceholderSize;
-    }
+    @Override
+    public void onCreate() {
+        super.onCreate();
 
-    public static OkHttpClient getOkHttpClient() {
-        return okHttpClient;
-    }
+        directory = new File(Environment.getExternalStorageDirectory(), "Yandere");
+        if (!directory.exists()) {
+            directory.mkdir();
+        }
 
-    public static void setOkHttpClient(OkHttpClient okHttpClient) {
-        YandereApplication.okHttpClient = okHttpClient;
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        isSafe = preferences.getBoolean("isSafe", true);
+
+        DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
+        dpi = displayMetrics.densityDpi;
+        screenWidth = displayMetrics.widthPixels;
+
+        smallPlaceholderSize = BitmapFactory.decodeResource(getResources(), R.drawable.loading).getWidth();
+
+        try (Scanner in = new Scanner(getResources().openRawResource(R.raw.tags))) {
+            tags = new HashMap<>();
+            String s = in.nextLine();
+
+            int lastDigit = -1;
+            for (String tag : s.replaceAll("\\s", "").split("`")) {
+                if (!(tag.length() == 1 && tag.charAt(0) >= '0' && tag.charAt(0) <= '9')) {
+                    if (lastDigit != -1)
+                        tags.put(tag, lastDigit);
+                    lastDigit = -1;
+                }
+                else {
+                    lastDigit = tag.charAt(0) - '0';
+                }
+            }
+        }
     }
 }

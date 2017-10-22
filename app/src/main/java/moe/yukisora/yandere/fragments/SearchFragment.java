@@ -1,7 +1,9 @@
 package moe.yukisora.yandere.fragments;
 
 import android.app.Fragment;
+import android.app.SearchManager;
 import android.content.ComponentName;
+import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -57,7 +59,8 @@ public class SearchFragment extends Fragment {
         searchView.onActionViewExpanded();
         searchView.setFocusable(false);
         searchView.clearFocus();
-        searchView.setSearchableInfo(YandereApplication.getSearchManager().getSearchableInfo(new ComponentName("moe.yukisora.yandere", "moe.yukisora.yandere.activities.SearchActivity")));
+        SearchManager searchManager = (SearchManager)getActivity().getSystemService(Context.SEARCH_SERVICE);
+        searchView.setSearchableInfo(searchManager.getSearchableInfo(new ComponentName("moe.yukisora.yandere", "moe.yukisora.yandere.activities.SearchActivity")));
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {

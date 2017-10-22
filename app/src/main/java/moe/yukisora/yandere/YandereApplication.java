@@ -7,7 +7,11 @@ import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.util.DisplayMetrics;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
 import java.io.File;
+import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.Scanner;
 
@@ -66,20 +70,8 @@ public class YandereApplication extends Application {
         smallPlaceholderSize = BitmapFactory.decodeResource(getResources(), R.drawable.loading).getWidth();
 
         try (Scanner in = new Scanner(getResources().openRawResource(R.raw.tags))) {
-            tags = new HashMap<>();
-            String s = in.nextLine();
-
-            int lastDigit = -1;
-            for (String tag : s.replaceAll("\\s", "").split("`")) {
-                if (!(tag.length() == 1 && tag.charAt(0) >= '0' && tag.charAt(0) <= '9')) {
-                    if (lastDigit != -1)
-                        tags.put(tag, lastDigit);
-                    lastDigit = -1;
-                }
-                else {
-                    lastDigit = tag.charAt(0) - '0';
-                }
-            }
+            Type type = new TypeToken<HashMap<String, Integer>>(){}.getType();
+            tags = new Gson().fromJson(in.useDelimiter("\\A").next(), type);
         }
     }
 }

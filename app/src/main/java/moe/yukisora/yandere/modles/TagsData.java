@@ -1,6 +1,6 @@
 package moe.yukisora.yandere.modles;
 
-public class TagData {
+public class TagsData<T> {
     public int version;
-    public String data;
+    public T data;
 }

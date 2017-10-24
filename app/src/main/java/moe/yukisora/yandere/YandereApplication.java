@@ -11,13 +11,19 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import java.io.File;
-import java.lang.reflect.Type;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.Reader;
 import java.util.HashMap;
-import java.util.Scanner;
+
+import moe.yukisora.yandere.modles.TagsData;
 
 public class YandereApplication extends Application {
+    public static final String TAGS_FILENAME = "tags.json";
+
     private static File directory;
-    private static HashMap<String, Integer> tags;
+    private static TagsData<HashMap<String, Integer>> tagsData;
     private static boolean isSafe;
     private static int dpi;
     private static int screenWidth;
@@ -28,7 +34,11 @@ public class YandereApplication extends Application {
     }
 
     public static HashMap<String, Integer> getTags() {
-        return tags;
+        return tagsData.data;
+    }
+
+    public static void setTagsData(TagsData<HashMap<String, Integer>> tagsData) {
+        YandereApplication.tagsData = tagsData;
     }
 
     public static boolean isSafe() {
@@ -51,6 +61,10 @@ public class YandereApplication extends Application {
         return smallPlaceholderSize;
     }
 
+    public static int getTagsVersion() {
+        return tagsData.version;
+    }
+
     @Override
     public void onCreate() {
         super.onCreate();
@@ -69,9 +83,12 @@ public class YandereApplication extends Application {
 
         smallPlaceholderSize = BitmapFactory.decodeResource(getResources(), R.drawable.loading).getWidth();
 
-        try (Scanner in = new Scanner(getResources().openRawResource(R.raw.tags))) {
-            Type type = new TypeToken<HashMap<String, Integer>>(){}.getType();
-            tags = new Gson().fromJson(in.useDelimiter("\\A").next(), type);
+        // init tags
+        tagsData = new TagsData<>();
+        File file = new File(getFilesDir(), TAGS_FILENAME);
+        try (Reader in = file.exists() ? new FileReader(file) : new InputStreamReader(getResources().openRawResource(R.raw.tags))) {
+            tagsData = new Gson().fromJson(in, new TypeToken<TagsData<HashMap<String, Integer>>>() {}.getType());
+        } catch (IOException ignore) {
         }
     }
 }

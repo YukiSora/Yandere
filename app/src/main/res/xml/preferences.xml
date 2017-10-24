@@ -1,37 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <PreferenceCategory
-        android:title="Image Rating">
+    <PreferenceCategory android:title="Setting">
 
         <CheckBoxPreference
             android:defaultValue="true"
             android:key="isSafe"
             android:persistent="true"
+            android:title="Image Rating"
             android:summaryOff="R-18 Image"
-            android:summaryOn="Safe Image"
-            android:title="Safe" />
+            android:summaryOn="Safe Image" />
+
+        <Preference
+            android:key="update"
+            android:title="Update tags"
+            android:summary="Last update: -" />
 
     </PreferenceCategory>
 
-    <PreferenceCategory
-        android:title="About Application">
+    <PreferenceCategory android:title="About Application">
 
         <Preference
-            android:summary="https://yande.re"
-            android:title="Source" />
+            android:title="Source"
+            android:summary="https://yande.re" />
 
         <Preference
-            android:summary="Yuki Sora"
-            android:title="Author" />
+            android:title="Author"
+            android:summary="Yuki Sora" />
 
         <Preference
-            android:summary="https://github.com/YukiSora/Yandere"
-            android:title="GitHub" />
+            android:title="GitHub"
+            android:summary="https://github.com/YukiSora/Yandere" />
 
         <Preference
-            android:summary="1.0"
-            android:title="Version" />
+            android:title="Version"
+            android:summary="1.0" />
 
     </PreferenceCategory>
 

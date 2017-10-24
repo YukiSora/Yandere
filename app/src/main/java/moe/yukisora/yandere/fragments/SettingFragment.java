@@ -100,7 +100,8 @@ public class SettingFragment extends PreferenceFragment {
                 Response<TagsData<String>> response = call.execute();
                 if (response.isSuccessful() && response.body() != null) {
                     newTagsData = response.body();
-                } else {
+                }
+                else {
                     publishProgress(DOWNLOAD_FAILED);
                 }
             } catch (IOException e) {
@@ -119,7 +120,8 @@ public class SettingFragment extends PreferenceFragment {
                         if (!(tag.length() == 1 && tag.charAt(0) >= '0' && tag.charAt(0) <= '9')) {
                             if (lastDigit != -1) {
                                 data.put(tag, lastDigit);
-                            } else {
+                            }
+                            else {
                                 lastDigit = -1;
                             }
                         }
@@ -134,7 +136,8 @@ public class SettingFragment extends PreferenceFragment {
                     } catch (IOException e) {
                         publishProgress(SAVE_FAILED);
                     }
-                } else {
+                }
+                else {
                     publishProgress(UP_TO_DATE);
                 }
             }

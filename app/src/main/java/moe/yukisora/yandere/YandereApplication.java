@@ -9,6 +9,8 @@ import android.util.DisplayMetrics;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.jakewharton.picasso.OkHttp3Downloader;
+import com.squareup.picasso.Picasso;
 
 import java.io.File;
 import java.io.FileReader;
@@ -18,6 +20,11 @@ import java.io.Reader;
 import java.util.HashMap;
 
 import moe.yukisora.yandere.modles.TagsData;
+import okhttp3.Cache;
+import okhttp3.Interceptor;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 
 public class YandereApplication extends Application {
     public static final String TAGS_FILENAME = "tags.json";
@@ -89,6 +96,30 @@ public class YandereApplication extends Application {
         try (Reader in = file.exists() ? new FileReader(file) : new InputStreamReader(getResources().openRawResource(R.raw.tags))) {
             tagsData = new Gson().fromJson(in, new TypeToken<TagsData<HashMap<String, Integer>>>() {}.getType());
         } catch (IOException ignore) {
+        }
+
+        // init picasso
+        OkHttpClient okHttpClient = new OkHttpClient.Builder()
+                .addNetworkInterceptor(new Interceptor() {
+                    @Override
+                    public Response intercept(Chain chain) throws IOException {
+                        Request request = chain.request();
+                        Response response = chain.proceed(request);
+                        return response.newBuilder()
+                                .header("Cache-Control", "max-age=604800")
+                                .removeHeader("Pragma")
+                                .build();
+                    }
+                })
+                .cache(new Cache(getCacheDir(), 32 * 1024 * 1024))
+                .build();
+
+        Picasso picasso = new Picasso.Builder(this)
+                .downloader(new OkHttp3Downloader(okHttpClient))
+                .build();
+        try {
+            Picasso.setSingletonInstance(picasso);
+        } catch (IllegalStateException ignored) {
         }
     }
 }

@@ -92,8 +92,7 @@ public class ImageViewActivity extends Activity {
         }
 
         // download button
-        // why have sdcard? shouldn't be
-        File file = new File("/sdcard" + YandereApplication.getDirectory(), "yandere_" + imageData.id + "." + imageData.file_ext);
+        File file = new File(YandereApplication.getDirectory(), String.format("yandere_%s.%s", imageData.id, imageData.file_ext));
         if (file.exists()) {
             ((ImageView)findViewById(R.id.downloadImage)).setImageResource(R.drawable.done);
             downloadButton.setEnabled(false);
@@ -140,12 +139,11 @@ public class ImageViewActivity extends Activity {
     private class SaveImageTask extends Thread {
         @Override
         public void run() {
-            String directory = YandereApplication.getDirectory().toString();
-            String filename = "yandere_" + imageData.id + "." + imageData.file_ext;
+            String filename = String.format("yandere_%s.%s", imageData.id, imageData.file_ext);
 
             // start a request
             DownloadManager.Request request = new DownloadManager.Request(Uri.parse(imageData.file_url));
-            request.setDestinationInExternalPublicDir(directory, filename);
+            request.setDestinationInExternalPublicDir(YandereApplication.APPLICATION_FOLDER, filename);
             long id = downloadManager.enqueue(request);
 
             // processing
@@ -191,7 +189,7 @@ public class ImageViewActivity extends Activity {
                 });
 
                 // display in photo gallery
-                sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE).setData(Uri.fromFile(new File(directory, filename))));
+                sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE).setData(Uri.fromFile(new File(YandereApplication.getDirectory(), filename))));
             }
             else {
                 handler.post(new Runnable() {

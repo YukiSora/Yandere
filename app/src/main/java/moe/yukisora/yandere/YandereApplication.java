@@ -28,6 +28,7 @@ import okhttp3.Response;
 
 public class YandereApplication extends Application {
     public static final String TAGS_FILENAME = "tags.json";
+    public static final String APPLICATION_FOLDER= "Yandere";
 
     private static File directory;
     private static TagsData<HashMap<String, Integer>> tagsData;
@@ -76,7 +77,8 @@ public class YandereApplication extends Application {
     public void onCreate() {
         super.onCreate();
 
-        directory = new File(Environment.getExternalStorageDirectory(), "Yandere");
+        // init application directory
+        directory = new File(Environment.getExternalStorageDirectory(), APPLICATION_FOLDER);
         if (!directory.exists()) {
             directory.mkdir();
         }

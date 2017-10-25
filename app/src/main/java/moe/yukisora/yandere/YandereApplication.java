@@ -27,11 +27,13 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 public class YandereApplication extends Application {
-    public static final String TAGS_FILENAME = "tags.json";
     public static final String APPLICATION_FOLDER= "Yandere";
+    public static final String TAGS_FILENAME = "tags.json";
+    public static final String HARMONY_FLAG_FILENAME = "yandere_386449.png";
 
     private static File directory;
     private static TagsData<HashMap<String, Integer>> tagsData;
+    private static boolean enableRating;
     private static boolean isSafe;
     private static int dpi;
     private static int screenWidth;
@@ -47,6 +49,10 @@ public class YandereApplication extends Application {
 
     public static void setTagsData(TagsData<HashMap<String, Integer>> tagsData) {
         YandereApplication.tagsData = tagsData;
+    }
+
+    public static boolean isEnableRating() {
+        return enableRating;
     }
 
     public static boolean isSafe() {
@@ -77,16 +83,21 @@ public class YandereApplication extends Application {
     public void onCreate() {
         super.onCreate();
 
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
+        Gson gson = new Gson();
+
         // init application directory
         directory = new File(Environment.getExternalStorageDirectory(), APPLICATION_FOLDER);
         if (!directory.exists()) {
             directory.mkdir();
         }
 
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        // init variables
+        enableRating = new File(directory, HARMONY_FLAG_FILENAME).exists();
+
         isSafe = preferences.getBoolean("isSafe", true);
 
-        DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
         dpi = displayMetrics.densityDpi;
         screenWidth = displayMetrics.widthPixels;
 
@@ -96,7 +107,7 @@ public class YandereApplication extends Application {
         tagsData = new TagsData<>();
         File file = new File(getFilesDir(), TAGS_FILENAME);
         try (Reader in = file.exists() ? new FileReader(file) : new InputStreamReader(getResources().openRawResource(R.raw.tags))) {
-            tagsData = new Gson().fromJson(in, new TypeToken<TagsData<HashMap<String, Integer>>>() {}.getType());
+            tagsData = gson.fromJson(in, new TypeToken<TagsData<HashMap<String, Integer>>>() {}.getType());
         } catch (IOException ignore) {
         }
 

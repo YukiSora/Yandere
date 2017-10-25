@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.Preference;
+import android.preference.PreferenceCategory;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 import android.widget.Toast;
@@ -46,9 +47,12 @@ public class SettingFragment extends PreferenceFragment {
 
         preferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
 
+        PreferenceCategory settingCategory = (PreferenceCategory)findPreference("setting");
+        Preference isSafePreference = findPreference("isSafe");
         updatePreference = findPreference("update");
 
-        findPreference("isSafe").setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+        // is safe
+        isSafePreference.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
             @Override
             public boolean onPreferenceChange(Preference preference, Object newValue) {
                 YandereApplication.setSafe((boolean)newValue);
@@ -56,8 +60,11 @@ public class SettingFragment extends PreferenceFragment {
                 return true;
             }
         });
+        if (!YandereApplication.isEnableRating()) {
+            settingCategory.removePreference(isSafePreference);
+        }
 
-
+        // update
         String lastUpdate = preferences.getString("lastUpdate", "Last update: -");
         updatePreference.setSummary(lastUpdate);
         updatePreference.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
@@ -94,6 +101,7 @@ public class SettingFragment extends PreferenceFragment {
         protected TagsData<HashMap<String, Integer>> doInBackground(Void... params) {
             TagsData<HashMap<String, Integer>> tagsData = null;
 
+            // download
             Call<TagsData<String>> call = ServiceGenerator.generate(YandereService.class).getTags();
             TagsData<String> newTagsData = null;
             try {
@@ -110,6 +118,7 @@ public class SettingFragment extends PreferenceFragment {
 
             if (newTagsData != null) {
                 if (newTagsData.version > YandereApplication.getTagsVersion()) {
+                    // parse
                     publishProgress(START_PARSING);
                     tagsData = new TagsData<>();
                     tagsData.version = newTagsData.version;
@@ -130,6 +139,7 @@ public class SettingFragment extends PreferenceFragment {
                         }
                     }
 
+                    // save
                     publishProgress(START_SAVING);
                     try (OutputStreamWriter out = new OutputStreamWriter(getActivity().openFileOutput(YandereApplication.TAGS_FILENAME, Context.MODE_PRIVATE))) {
                         new Gson().toJson(tagsData, out);
@@ -170,6 +180,7 @@ public class SettingFragment extends PreferenceFragment {
         protected void onPostExecute(TagsData<HashMap<String, Integer>> tagsData) {
             if (tagsData != null) {
                 YandereApplication.setTagsData(tagsData);
+
                 String date = SimpleDateFormat.getDateTimeInstance().format(Calendar.getInstance().getTime());
                 SharedPreferences.Editor editor = preferences.edit();
                 editor.putString("lastUpdate", "Last update: " + date);

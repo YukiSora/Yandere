@@ -9,34 +9,34 @@
             android:defaultValue="true"
             android:key="isSafe"
             android:persistent="true"
-            android:title="Image Rating"
             android:summaryOff="R-18 Image"
-            android:summaryOn="Safe Image" />
+            android:summaryOn="Safe Image"
+            android:title="Image Rating" />
 
         <Preference
             android:key="update"
-            android:title="Update tags"
-            android:summary="Last update: -" />
+            android:summary="Last update: -"
+            android:title="Update tags" />
 
     </PreferenceCategory>
 
     <PreferenceCategory android:title="About Application">
 
         <Preference
-            android:title="Source"
-            android:summary="https://yande.re" />
+            android:summary="https://yande.re"
+            android:title="Source" />
 
         <Preference
-            android:title="Author"
-            android:summary="Yuki Sora" />
+            android:summary="Yuki Sora"
+            android:title="Author" />
 
         <Preference
-            android:title="GitHub"
-            android:summary="https://github.com/YukiSora/Yandere" />
+            android:summary="https://github.com/YukiSora/Yandere"
+            android:title="GitHub" />
 
         <Preference
-            android:title="Version"
-            android:summary="1.0" />
+            android:summary="1.0"
+            android:title="Version" />
 
     </PreferenceCategory>
 

@@ -16,8 +16,8 @@
 
         <activity
             android:name=".activities.MainActivity"
-            android:theme="@style/SplashTheme"
             android:screenOrientation="portrait"
+            android:theme="@style/SplashTheme"
             android:windowSoftInputMode="adjustUnspecified">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

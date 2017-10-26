@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <color name="loadingRippleColor">#ff303030</color>
+    <color name="loadingWaveColor">#ff212121</color>
+    <color name="normalColor">#ff303030</color>
+    <color name="animating">#ff212121</color>
+
+</resources>

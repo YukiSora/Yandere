@@ -28,12 +28,12 @@ public class ImageManager {
         return imageManager;
     }
 
-    public void loadImage(Fragment fragment, Call<List<ImageData>> call) {
+    public void loadImage(Fragment fragment, Call<List<ImageData>> call, boolean isRefresh) {
         if (!isDownloading)
-            downloadImageData((PostFragment)fragment, call);
+            downloadImageData((PostFragment)fragment, call, isRefresh);
     }
 
-    private void downloadImageData(final PostFragment fragment, Call<List<ImageData>> call) {
+    private void downloadImageData(final PostFragment fragment, Call<List<ImageData>> call, final boolean isRefresh) {
         isDownloading = true;
 
         call.enqueue(new Callback<List<ImageData>>() {
@@ -57,6 +57,12 @@ public class ImageManager {
                     handler.post(new Runnable() {
                         public void run() {
                             fragment.getAdapter().notifyItemRangeInserted(positionStart, count);
+                            if (isRefresh) {
+                                fragment.getRefreshLayout().finishRefreshing();
+                            }
+                            else {
+                                fragment.getRefreshLayout().finishLoadmore();
+                            }
                         }
                     });
                     isDownloading = false;

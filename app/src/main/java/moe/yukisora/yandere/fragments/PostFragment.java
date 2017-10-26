@@ -1,14 +1,18 @@
 package moe.yukisora.yandere.fragments;
 
 import android.app.Fragment;
-import android.graphics.Color;
 import android.os.Bundle;
-import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import com.lcodecore.tkrefreshlayout.RefreshListenerAdapter;
+import com.lcodecore.tkrefreshlayout.TwinklingRefreshLayout;
+import com.lcodecore.tkrefreshlayout.footer.BallPulseView;
+import com.lcodecore.tkrefreshlayout.header.bezierlayout.BezierLayout;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,7 +21,6 @@ import moe.yukisora.yandere.R;
 import moe.yukisora.yandere.adapters.RecyclerViewAdapter;
 import moe.yukisora.yandere.core.ImageManager;
 import moe.yukisora.yandere.interfaces.GetCallGenerator;
-import moe.yukisora.yandere.interfaces.RecyclerViewOnScrollListener;
 import moe.yukisora.yandere.modles.ImageData;
 import retrofit2.Call;
 
@@ -27,6 +30,7 @@ public class PostFragment extends Fragment {
     private ArrayList<ImageData> imageDatas;
     private Call<List<ImageData>> call;
     private RecyclerViewAdapter adapter;
+    private TwinklingRefreshLayout refreshLayout;
     private GetCallGenerator generator;
     private boolean isScrollable;
     private int page;
@@ -54,6 +58,7 @@ public class PostFragment extends Fragment {
         initFragment();
         initRecyclerView(view);
         loadImage();
+        refreshLayout.startRefresh();
 
         return view;
     }
@@ -72,36 +77,43 @@ public class PostFragment extends Fragment {
         recyclerView.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
         recyclerView.setAdapter(adapter);
 
-        // if not only one page, do load more
-        if (isScrollable) {
-            recyclerView.addOnScrollListener(new RecyclerViewOnScrollListener() {
-                @Override
-                public void onBottom() {
-                    loadImage();
-                }
-            });
-        }
-
-        // SwipeRefreshLayout
-        final SwipeRefreshLayout swipeRefreshLayout = view.findViewById(R.id.swipeRefreshLayout);
-        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+        // RefreshLayout
+        refreshLayout = view.findViewById(R.id.refreshLayout);
+        BezierLayout headerView = new BezierLayout(getActivity());
+        headerView.setRippleColor(ContextCompat.getColor(getActivity(), R.color.loadingRippleColor));
+        headerView.setWaveColor(ContextCompat.getColor(getActivity(), R.color.loadingWaveColor));
+        refreshLayout.setHeaderView(headerView);
+        refreshLayout.setHeaderHeight(80);
+        refreshLayout.setMaxHeadHeight(120);
+        BallPulseView footerView = new BallPulseView(getActivity());
+        footerView.setNormalColor(ContextCompat.getColor(getActivity(), R.color.normalColor));
+        footerView.setAnimatingColor(ContextCompat.getColor(getActivity(), R.color.animating));
+        refreshLayout.setBottomView(footerView);
+        refreshLayout.setBottomHeight(80);
+        refreshLayout.setMaxBottomHeight(120);
+        refreshLayout.setOverScrollRefreshShow(false);
+        refreshLayout.setAutoLoadMore(isScrollable);
+        refreshLayout.setEnableLoadmore(isScrollable);
+        refreshLayout.setOnRefreshListener(new RefreshListenerAdapter() {
             @Override
-            public void onRefresh() {
+            public void onRefresh(TwinklingRefreshLayout refreshLayout) {
                 call.cancel();
                 initFragment();
                 adapter.notifyDataSetChanged();
                 loadImage();
-                swipeRefreshLayout.setRefreshing(false);
+            }
+
+            @Override
+            public void onLoadMore(TwinklingRefreshLayout refreshLayout) {
+                loadImage();
             }
         });
-        swipeRefreshLayout.setColorSchemeColors(Color.RED, Color.GREEN, Color.BLUE, Color.CYAN);
-        swipeRefreshLayout.setProgressBackgroundColorSchemeColor(Color.argb(90, 102, 204, 255));
-        swipeRefreshLayout.setSize(SwipeRefreshLayout.LARGE);
     }
 
     public void loadImage() {
-        call = generator.getCall(page++);
-        ImageManager.getInstance().loadImage(this, call);
+        call = generator.getCall(page);
+        ImageManager.getInstance().loadImage(this, call, page == 1);
+        page++;
     }
 
     public ArrayList<ImageData> getImageDatas() {
@@ -110,6 +122,10 @@ public class PostFragment extends Fragment {
 
     public RecyclerViewAdapter getAdapter() {
         return adapter;
+    }
+
+    public TwinklingRefreshLayout getRefreshLayout() {
+        return refreshLayout;
     }
 
     public void setGenerator(GetCallGenerator generator) {

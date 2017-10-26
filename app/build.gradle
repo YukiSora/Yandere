@@ -28,6 +28,7 @@ dependencies {
 
     compile 'com.github.d-max:spots-dialog:0.7@aar'
     compile "com.google.code.gson:gson:2.8.2"
+    compile 'com.lcodecorex:tkrefreshlayout:1.0.7'
     compile 'com.jakewharton.picasso:picasso2-okhttp3-downloader:1.1.0'
     compile 'com.squareup.picasso:picasso:2.5.2'
     compile 'com.squareup.retrofit2:retrofit:2.3.0'

@@ -1,87 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<android.support.design.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:layout_height="match_parent">
 
     <android.support.v4.view.ViewPager
         android:id="@+id/viewPager"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1">
-    </android.support.v4.view.ViewPager>
+        android:layout_height="match_parent" />
 
-    <LinearLayout
+    <com.roughike.bottombar.BottomBar
+        android:id="@+id/bottomBar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:layout_height="45dp"
+        android:layout_gravity="bottom"
+        app:bb_tabXmlResource="@xml/bottom_bar_tabs"
+        app:bb_activeTabColor="@color/activeTabColor"
+        app:bb_behavior="shy|iconsOnly" />
 
-        <ImageButton
-            android:id="@+id/post"
-            android:layout_width="0dp"
-            android:layout_height="40dp"
-            android:layout_margin="0dp"
-            android:layout_weight="1"
-            android:adjustViewBounds="true"
-            android:background="?android:attr/selectableItemBackground"
-            android:padding="5dp"
-            android:scaleType="centerInside"
-            android:src="@drawable/list_focused"
-            android:textAllCaps="false" />
-
-        <ImageButton
-            android:id="@+id/random"
-            android:layout_width="0dp"
-            android:layout_height="40dp"
-            android:layout_margin="0dp"
-            android:layout_weight="1"
-            android:adjustViewBounds="true"
-            android:background="?android:attr/selectableItemBackground"
-            android:padding="5dp"
-            android:scaleType="centerInside"
-            android:src="@drawable/random"
-            android:textAllCaps="false" />
-
-        <ImageButton
-            android:id="@+id/popular"
-            android:layout_width="0dp"
-            android:layout_height="40dp"
-            android:layout_margin="0dp"
-            android:layout_weight="1"
-            android:adjustViewBounds="true"
-            android:background="?android:attr/selectableItemBackground"
-            android:padding="5dp"
-            android:scaleType="centerInside"
-            android:src="@drawable/rank"
-            android:textAllCaps="false" />
-
-        <ImageButton
-            android:id="@+id/search"
-            android:layout_width="0dp"
-            android:layout_height="40dp"
-            android:layout_margin="0dp"
-            android:layout_weight="1"
-            android:adjustViewBounds="true"
-            android:background="?android:attr/selectableItemBackground"
-            android:padding="5dp"
-            android:scaleType="centerInside"
-            android:src="@drawable/search"
-            android:textAllCaps="false" />
-
-        <ImageButton
-            android:id="@+id/setting"
-            android:layout_width="0dp"
-            android:layout_height="40dp"
-            android:layout_margin="0dp"
-            android:layout_weight="1"
-            android:adjustViewBounds="true"
-            android:background="?android:attr/selectableItemBackground"
-            android:padding="5dp"
-            android:scaleType="centerInside"
-            android:src="@drawable/setting"
-            android:textAllCaps="false" />
-
-    </LinearLayout>
-
-</LinearLayout>
+</android.support.design.widget.CoordinatorLayout>

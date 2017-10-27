@@ -4,11 +4,14 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.IdRes;
 import android.support.v13.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.view.View;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.ImageButton;
+
+import com.roughike.bottombar.BottomBar;
+import com.roughike.bottombar.OnTabReselectListener;
+import com.roughike.bottombar.OnTabSelectListener;
 
 import java.util.List;
 
@@ -36,11 +39,7 @@ public class MainActivity extends Activity {
 
         // configure ViewPager
         final ViewPager viewPager = findViewById(R.id.viewPager);
-        final ImageButton imageButtonPost = findViewById(R.id.post);
-        final ImageButton imageButtonRandom = findViewById(R.id.random);
-        final ImageButton imageButtonPopular = findViewById(R.id.popular);
-        final ImageButton imageButtonSetting = findViewById(R.id.setting);
-        final ImageButton imageButtonSearch = findViewById(R.id.search);
+        final BottomBar bottomBar = findViewById(R.id.bottomBar);
 
         viewPager.setAdapter(new FragmentPagerAdapter(getFragmentManager()) {
             @Override
@@ -99,38 +98,13 @@ public class MainActivity extends Activity {
 
         // dynamic change button image
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-            private int lastPosition;
-            private ImageButton[] imageButtons = new ImageButton[]{
-                    imageButtonPost,
-                    imageButtonRandom,
-                    imageButtonPopular,
-                    imageButtonSearch,
-                    imageButtonSetting
-            };
-            private int[] normalImages = new int[]{
-                    R.drawable.list,
-                    R.drawable.random,
-                    R.drawable.rank,
-                    R.drawable.search,
-                    R.drawable.setting
-            };
-            private int[] focusedImages = new int[]{
-                    R.drawable.list_focused,
-                    R.drawable.random_focused,
-                    R.drawable.rank_focused,
-                    R.drawable.search_focused,
-                    R.drawable.setting_focused
-            };
-
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
             }
 
             @Override
             public void onPageSelected(int position) {
-                imageButtons[lastPosition].setImageResource(normalImages[lastPosition]);
-                imageButtons[position].setImageResource(focusedImages[position]);
-                lastPosition = position;
+                bottomBar.setDefaultTabPosition(position);
 
                 // close soft keyboard
                 InputMethodManager manager = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -142,54 +116,49 @@ public class MainActivity extends Activity {
             }
         });
 
-        // configure Button
-        imageButtonPost.setOnClickListener(new View.OnClickListener() {
+        bottomBar.setOnTabSelectListener(new OnTabSelectListener() {
             @Override
-            public void onClick(View view) {
-                if (viewPager.getCurrentItem() == 0) {
-                    postFragments[0].goToTop();
-                }
-                else {
-                    viewPager.setCurrentItem(0);
+            public void onTabSelected(@IdRes int tabId) {
+                switch (tabId) {
+                    case R.id.list_item:
+                        viewPager.setCurrentItem(0);
+                        break;
+                    case R.id.random_item:
+                        viewPager.setCurrentItem(1);
+                        break;
+                    case R.id.rank_item:
+                        viewPager.setCurrentItem(2);
+                        break;
+                    case R.id.search_item:
+                        viewPager.setCurrentItem(3);
+                        break;
+                    case R.id.setting_item:
+                        viewPager.setCurrentItem(4);
+                        break;
                 }
             }
         });
 
-        imageButtonRandom.setOnClickListener(new View.OnClickListener() {
+        bottomBar.setOnTabReselectListener(new OnTabReselectListener() {
             @Override
-            public void onClick(View view) {
-                if (viewPager.getCurrentItem() == 1) {
-                    postFragments[1].goToTop();
+            public void onTabReSelected(@IdRes int tabId) {
+                switch (tabId) {
+                    case R.id.list_item:
+                        postFragments[0].goToTop();
+                        break;
+                    case R.id.random_item:
+                        postFragments[1].goToTop();
+                        break;
+                    case R.id.rank_item:
+                        postFragments[2].goToTop();
+                        break;
+                    case R.id.search_item:
+                        postFragments[3].goToTop();
+                        break;
+                    case R.id.setting_item:
+                        postFragments[4].goToTop();
+                        break;
                 }
-                else {
-                    viewPager.setCurrentItem(1);
-                }
-            }
-        });
-
-        imageButtonPopular.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (viewPager.getCurrentItem() == 2) {
-                    postFragments[2].goToTop();
-                }
-                else {
-                    viewPager.setCurrentItem(2);
-                }
-            }
-        });
-
-        imageButtonSearch.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                viewPager.setCurrentItem(3);
-            }
-        });
-
-        imageButtonSetting.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                viewPager.setCurrentItem(4);
             }
         });
     }

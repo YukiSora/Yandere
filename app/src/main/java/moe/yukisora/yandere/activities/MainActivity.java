@@ -36,11 +36,10 @@ public class MainActivity extends Activity {
         setContentView(R.layout.activity_main);
 
         postFragments = new PostFragment[3];
-
-        // configure ViewPager
         final ViewPager viewPager = findViewById(R.id.viewPager);
         final BottomBar bottomBar = findViewById(R.id.bottomBar);
 
+        // view pager
         viewPager.setAdapter(new FragmentPagerAdapter(getFragmentManager()) {
             @Override
             public int getCount() {
@@ -94,9 +93,6 @@ public class MainActivity extends Activity {
                 }
             }
         });
-        viewPager.setOffscreenPageLimit(5);
-
-        // dynamic change button image
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -108,7 +104,9 @@ public class MainActivity extends Activity {
 
                 // close soft keyboard
                 InputMethodManager manager = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
-                manager.hideSoftInputFromWindow(findViewById(R.id.searchView).getWindowToken(), 0);
+                if (manager != null) {
+                    manager.hideSoftInputFromWindow(findViewById(R.id.searchView).getWindowToken(), 0);
+                }
             }
 
             @Override
@@ -116,6 +114,7 @@ public class MainActivity extends Activity {
             }
         });
 
+        // bottom bar
         bottomBar.setOnTabSelectListener(new OnTabSelectListener() {
             @Override
             public void onTabSelected(@IdRes int tabId) {
@@ -138,7 +137,6 @@ public class MainActivity extends Activity {
                 }
             }
         });
-
         bottomBar.setOnTabReselectListener(new OnTabReselectListener() {
             @Override
             public void onTabReSelected(@IdRes int tabId) {
@@ -151,13 +149,6 @@ public class MainActivity extends Activity {
                         break;
                     case R.id.rank_item:
                         postFragments[2].goToTop();
-                        break;
-                    case R.id.search_item:
-                        postFragments[3].goToTop();
-                        break;
-                    case R.id.setting_item:
-                        postFragments[4].goToTop();
-                        break;
                 }
             }
         });

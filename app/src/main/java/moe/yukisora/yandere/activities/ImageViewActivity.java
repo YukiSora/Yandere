@@ -11,6 +11,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -34,21 +35,27 @@ public class ImageViewActivity extends Activity {
     private Handler handler;
     private ImageData imageData;
     private ImageView imageView;
+    private boolean isDownloading;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_image_view);
 
-        downloadButton = findViewById(R.id.download);
+        downloadButton = findViewById(R.id.downloadButton);
         downloadManager = (DownloadManager)getSystemService(Context.DOWNLOAD_SERVICE);
         handler = new Handler();
         imageData = (ImageData)getIntent().getSerializableExtra("imageData");
-        imageView = findViewById(R.id.fullSizeImageView);
+        imageView = findViewById(R.id.imageView);
         FlowLayout flowLayout = findViewById(R.id.flowLayout);
 
-        // RelativeLayout
-        findViewById(R.id.fullSizeImageLayout).getLayoutParams().height = Math.round((YandereApplication.getScreenWidth() - (16 + 6 + 10) * (YandereApplication.getDpi() / 160f)) * imageData.sample_height / imageData.sample_width);
+        // image layout
+        RelativeLayout imageLayout = findViewById(R.id.imageLayout);
+        imageLayout.getLayoutParams().height = Math.round((YandereApplication.getScreenWidth() - (16 + 6 + 10) * (YandereApplication.getDpi() / 160f)) * imageData.sample_height / imageData.sample_width);
+
+        // image view
+        imageView.getLayoutParams().width = YandereApplication.getSmallPlaceholderSize() / (int)(YandereApplication.getDpi() / 160f);
+        loadImage(imageData);
 
         // image data
         String imageIdStr = String.format("yande.re Id: %d", imageData.id);
@@ -62,7 +69,7 @@ public class ImageViewActivity extends Activity {
         String sourceStr = String.format("Source: %s", imageData.source);
         ((TextView)findViewById(R.id.source)).setText(sourceStr);
 
-        // tag
+        // tags
         for (String tag : imageData.tags.split(" ")) {
             Chip chip = new Chip(this);
             chip.setPadding(10, 0, 10, 0);
@@ -91,24 +98,26 @@ public class ImageViewActivity extends Activity {
         // download button
         File file = new File(YandereApplication.getDirectory(), String.format("yandere_%s.%s", imageData.id, imageData.file_ext));
         if (file.exists()) {
-            ((ImageView)findViewById(R.id.downloadImage)).setImageResource(R.drawable.done);
+            downloadButton.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_done, 0);
             downloadButton.setEnabled(false);
         }
         else {
             downloadButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    new SaveImageTask().start();
+                    if (!isDownloading) {
+                        isDownloading = true;
+                        new SaveImageTask().start();
+                    }
+                    else {
+                        downloadButton.startAnimation(AnimationUtils.loadAnimation(ImageViewActivity.this, R.anim.shake_anim));
+                    }
                 }
             });
         }
-
-        loadImage(imageData);
     }
 
     private void loadImage(final ImageData imageData) {
-        imageView.getLayoutParams().width = YandereApplication.getSmallPlaceholderSize() / (int)(YandereApplication.getDpi() / 160f);
-
         Picasso.with(this)
                 .load(imageData.sample_url)
                 .placeholder(R.drawable.progress_animation)
@@ -178,7 +187,7 @@ public class ImageViewActivity extends Activity {
                 handler.post(new Runnable() {
                     @Override
                     public void run() {
-                        ((ImageView)findViewById(R.id.downloadImage)).setImageResource(R.drawable.done);
+                        downloadButton.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_done, 0);
                         downloadButton.setText(R.string.download);
                         downloadButton.setEnabled(false);
                         Toast.makeText(getApplicationContext(), "Image is downloaded.", Toast.LENGTH_SHORT).show();

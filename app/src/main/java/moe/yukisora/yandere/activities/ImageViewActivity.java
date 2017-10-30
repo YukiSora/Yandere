@@ -17,6 +17,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.nex3z.flowlayout.FlowLayout;
+import com.robertlevonyan.views.chip.Chip;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
@@ -25,7 +27,6 @@ import java.io.File;
 import moe.yukisora.yandere.R;
 import moe.yukisora.yandere.YandereApplication;
 import moe.yukisora.yandere.modles.ImageData;
-import moe.yukisora.yandere.ui.FlowLayout;
 
 public class ImageViewActivity extends Activity {
     private Button downloadButton;
@@ -63,32 +64,28 @@ public class ImageViewActivity extends Activity {
 
         // tag
         for (String tag : imageData.tags.split(" ")) {
-            TextView textView = new TextView(this);
-
-            textView.setText(tag.replace("_", " "));
-
-            // layout
-            FlowLayout.LayoutParams layoutParams = new FlowLayout.LayoutParams(FlowLayout.LayoutParams.WRAP_CONTENT, FlowLayout.LayoutParams.WRAP_CONTENT);
-            layoutParams.setMargins(10, 5, 10, 5);
-            textView.setLayoutParams(layoutParams);
-
-
-            // color
-            textView.setTextColor(Color.parseColor(getResources().getStringArray(R.array.tagColor)[YandereApplication.getTags().get(tag)]));
-            textView.setBackgroundResource(R.drawable.tag_selector);
-
-            // click
-            textView.setClickable(true);
-            textView.setOnClickListener(new View.OnClickListener() {
+            Chip chip = new Chip(this);
+            chip.setPadding(10, 0, 10, 0);
+            chip.setChipText(tag.replace("_", " "));
+            chip.setStrokeSize(1);
+            if (YandereApplication.getTags().containsKey(tag)) {
+                chip.setTextColor(Color.parseColor(getResources().getStringArray(R.array.tagColor)[YandereApplication.getTags().get(tag)]));
+                chip.setStrokeColor(Color.parseColor(getResources().getStringArray(R.array.tagColor)[YandereApplication.getTags().get(tag)]));
+            }
+            else {
+                Toast.makeText(this, "Tags may be able to update.", Toast.LENGTH_SHORT).show();
+            }
+            chip.setOnClickListener(new View.OnClickListener() {
                 @Override
-                public void onClick(View v) {
+                public void onClick(View view) {
                     Intent intent = new Intent(ImageViewActivity.this, SearchActivity.class);
-                    intent.putExtra(SearchManager.QUERY, ((TextView)v).getText().toString().replace(" ", "_"));
+
+                    intent.putExtra(SearchManager.QUERY, ((Chip)view).getChipText().replace(" ", "_"));
                     ImageViewActivity.this.startActivity(intent);
                 }
             });
 
-            flowLayout.addView(textView);
+            flowLayout.addView(chip);
         }
 
         // download button

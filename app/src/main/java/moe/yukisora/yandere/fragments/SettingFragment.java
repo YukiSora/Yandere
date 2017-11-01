@@ -1,5 +1,6 @@
 package moe.yukisora.yandere.fragments;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
@@ -77,6 +78,7 @@ public class SettingFragment extends PreferenceFragment {
         });
     }
 
+    @SuppressLint("StaticFieldLeak")
     private class UpdateTagsTask extends AsyncTask<Void, Integer, TagsData<HashMap<String, Integer>>> {
         private final int DOWNLOAD_FAILED = 1;
         private final int UP_TO_DATE = 2;

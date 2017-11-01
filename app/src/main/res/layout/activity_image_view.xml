@@ -17,7 +17,6 @@
             android:id="@+id/imageLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="0"
             android:background="#FFFFFF"
             android:orientation="vertical">
 
@@ -34,9 +33,7 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:gravity="bottom"
+            android:layout_height="wrap_content"
             android:orientation="vertical">
 
             <Button
@@ -44,12 +41,12 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
+                android:layout_marginBottom="@dimen/text_margin"
+                android:layout_marginTop="@dimen/text_margin"
                 android:background="?android:attr/selectableItemBackground"
                 android:drawablePadding="6dp"
                 android:drawableRight="@drawable/ic_download"
                 android:padding="12dp"
-                android:layout_marginBottom="@dimen/text_margin"
-                android:layout_marginTop="@dimen/text_margin"
                 android:text="@string/download"
                 android:textAllCaps="false" />
 

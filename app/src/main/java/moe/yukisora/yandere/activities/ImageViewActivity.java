@@ -37,6 +37,7 @@ public class ImageViewActivity extends Activity {
     private Button downloadButton;
     private DownloadManager downloadManager;
     private Handler handler;
+    private ImageData imageData;
     private ImageView imageView;
     private ScheduledFuture scheduledFuture;
     private String filename;
@@ -48,12 +49,16 @@ public class ImageViewActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_image_view);
 
-        final ImageData imageData = (ImageData)getIntent().getSerializableExtra("imageData");
+        imageData = (ImageData)getIntent().getSerializableExtra("imageData");
         filename = String.format("yandere_%s.%s", imageData.id, imageData.file_ext);
 
         downloadManager = (DownloadManager)getSystemService(Context.DOWNLOAD_SERVICE);
         handler = new Handler();
 
+        initView();
+    }
+
+    private void initView() {
         downloadButton = findViewById(R.id.downloadButton);
         FlowLayout flowLayout = findViewById(R.id.flowLayout);
         imageView = findViewById(R.id.imageView);
@@ -94,7 +99,6 @@ public class ImageViewActivity extends Activity {
                 @Override
                 public void onClick(View view) {
                     Intent intent = new Intent(ImageViewActivity.this, SearchActivity.class);
-
                     intent.putExtra(SearchManager.QUERY, ((Chip)view).getChipText().replace(" ", "_"));
                     ImageViewActivity.this.startActivity(intent);
                 }

@@ -2,7 +2,11 @@
 
     <style
         name="AppTheme"
-        parent="Theme.AppCompat.Light.DarkActionBar" />
+        parent="Theme.AppCompat.Light.DarkActionBar">
+
+        <item name="android:windowContentTransitions">true</item>
+
+    </style>
 
     <style
         name="SplashTheme"

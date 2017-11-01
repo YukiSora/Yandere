@@ -84,8 +84,7 @@ public class ImageViewActivity extends Activity {
         imageLayout.getLayoutParams().height = Math.round(YandereApplication.getLargeImageLayoutWidth() * imageData.sample_height / imageData.sample_width);
 
         // image view
-        imageView.getLayoutParams().width = getResources().getDimensionPixelSize(R.dimen.large_loading_size);
-        loadImage(imageData);
+        loadPreviewImage(imageData);
 
         // photo view
         photoView.setScaleLevels(1f, 2f, 5f);
@@ -154,16 +153,29 @@ public class ImageViewActivity extends Activity {
         });
     }
 
-    private void loadImage(final ImageData imageData) {
+    private void loadPreviewImage(final ImageData imageData) {
         Picasso.with(this)
-                .load(imageData.sample_url)
-                .placeholder(R.drawable.animated_loading)
-                .error(R.drawable.ic_refresh)
-                .noFade()
+                .load(imageData.preview_url)
                 .into(imageView, new Callback() {
                     @Override
                     public void onSuccess() {
-                        imageView.setLayoutParams(new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT));
+                        loadImage(imageData);
+                    }
+
+                    @Override
+                    public void onError() {
+                        loadPreviewImage(imageData);
+                    }
+                });
+    }
+
+    private void loadImage(final ImageData imageData) {
+        Picasso.with(this)
+                .load(imageData.sample_url)
+                .placeholder(imageView.getDrawable())
+                .into(imageView, new Callback() {
+                    @Override
+                    public void onSuccess() {
                         imageView.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
@@ -181,12 +193,7 @@ public class ImageViewActivity extends Activity {
 
                     @Override
                     public void onError() {
-                        imageView.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
-                                loadImage(imageData);
-                            }
-                        });
+                        loadImage(imageData);
                     }
                 });
     }

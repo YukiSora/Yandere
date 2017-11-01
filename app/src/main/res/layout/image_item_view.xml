@@ -3,7 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="3dp"
+    android:layout_margin="@dimen/image_margin"
     android:background="#FFFFFF">
 
     <RelativeLayout
@@ -11,7 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:padding="5dp">
+        android:padding="@dimen/image_border">
 
         <ImageView
             android:id="@+id/itemImageView"
@@ -20,6 +20,7 @@
             android:layout_centerInParent="true"
             android:adjustViewBounds="true"
             android:scaleType="fitXY" />
+
     </RelativeLayout>
 
 </FrameLayout>

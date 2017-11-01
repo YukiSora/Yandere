@@ -15,9 +15,9 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:overScrollMode="never"
-            android:paddingLeft="8dp"
-            android:paddingRight="8dp"
-            android:paddingTop="8dp" />
+            android:paddingLeft="@dimen/screen_margin"
+            android:paddingRight="@dimen/screen_margin"
+            android:paddingTop="@dimen/screen_margin" />
 
     </com.lcodecore.tkrefreshlayout.TwinklingRefreshLayout>
 

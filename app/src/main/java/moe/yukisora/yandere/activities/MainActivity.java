@@ -2,12 +2,10 @@ package moe.yukisora.yandere.activities;
 
 import android.app.Activity;
 import android.app.Fragment;
-import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.IdRes;
 import android.support.v13.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.view.inputmethod.InputMethodManager;
 
 import com.roughike.bottombar.BottomBar;
 import com.roughike.bottombar.OnTabReselectListener;
@@ -103,10 +101,10 @@ public class MainActivity extends Activity {
                 bottomBar.setDefaultTabPosition(position);
 
                 // close soft keyboard
-                InputMethodManager manager = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
-                if (manager != null) {
-                    manager.hideSoftInputFromWindow(findViewById(R.id.searchView).getWindowToken(), 0);
-                }
+//                InputMethodManager manager = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+//                if (manager != null) {
+//                    manager.hideSoftInputFromWindow(findViewById(R.id.searchView).getWindowToken(), 0);
+//                }
             }
 
             @Override

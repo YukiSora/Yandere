@@ -63,7 +63,7 @@ public class ImageViewActivity extends Activity {
         imageLayout.getLayoutParams().height = Math.round(YandereApplication.getLargeImageLayoutWidth() * imageData.sample_height / imageData.sample_width);
 
         // image view
-        imageView.getLayoutParams().width = YandereApplication.getSmallPlaceholderSize();
+        imageView.getLayoutParams().width = getResources().getDimensionPixelSize(R.dimen.large_loading_size);
         loadImage(imageData);
 
         // image data
@@ -125,7 +125,7 @@ public class ImageViewActivity extends Activity {
                     scheduledFuture = scheduleTaskExecutor.scheduleAtFixedRate(new SaveImageRunnable(), 100, 100, TimeUnit.MILLISECONDS);
                 }
                 else {
-                    downloadButton.startAnimation(AnimationUtils.loadAnimation(ImageViewActivity.this, R.anim.shake_anim));
+                    downloadButton.startAnimation(AnimationUtils.loadAnimation(ImageViewActivity.this, R.anim.anim_shake));
                 }
             }
         });
@@ -134,8 +134,8 @@ public class ImageViewActivity extends Activity {
     private void loadImage(final ImageData imageData) {
         Picasso.with(this)
                 .load(imageData.sample_url)
-                .placeholder(R.drawable.progress_animation)
-                .error(R.drawable.reload)
+                .placeholder(R.drawable.animated_loading)
+                .error(R.drawable.ic_refresh)
                 .noFade()
                 .into(imageView, new Callback() {
                     @Override

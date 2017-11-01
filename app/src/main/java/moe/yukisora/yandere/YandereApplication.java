@@ -2,7 +2,6 @@ package moe.yukisora.yandere;
 
 import android.app.Application;
 import android.content.SharedPreferences;
-import android.graphics.BitmapFactory;
 import android.os.Environment;
 import android.preference.PreferenceManager;
 
@@ -36,7 +35,6 @@ public class YandereApplication extends Application {
     private static boolean isSafe;
     private static int largeImageLayoutWidth;
     private static int smallImageLayoutWidth;
-    private static int smallPlaceholderSize;
 
     public static File getDirectory() {
         return directory;
@@ -70,10 +68,6 @@ public class YandereApplication extends Application {
         return largeImageLayoutWidth;
     }
 
-    public static int getSmallPlaceholderSize() {
-        return smallPlaceholderSize;
-    }
-
     public static int getTagsVersion() {
         return tagsData.version;
     }
@@ -102,8 +96,6 @@ public class YandereApplication extends Application {
         int imageBorder = getResources().getDimensionPixelSize(R.dimen.image_border);
         smallImageLayoutWidth =screenWidth / 2 - screenMargin - imageMargin * 2 - imageBorder * 2;
         largeImageLayoutWidth = screenWidth - screenMargin * 2 - imageBorder * 2;
-
-        smallPlaceholderSize = BitmapFactory.decodeResource(getResources(), R.drawable.loading).getWidth();
 
         // init tags
         tagsData = new TagsData<>();

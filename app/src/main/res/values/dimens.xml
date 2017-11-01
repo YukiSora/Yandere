@@ -6,5 +6,7 @@
     <dimen name="image_margin">3dp</dimen>
     <dimen name="image_border">5dp</dimen>
     <dimen name="text_margin">5dp</dimen>
+    <dimen name="small_loading_size">48px</dimen>
+    <dimen name="large_loading_size">72px</dimen>
 
 </resources>

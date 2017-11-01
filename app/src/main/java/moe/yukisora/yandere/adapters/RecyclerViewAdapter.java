@@ -14,7 +14,6 @@ import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
 import moe.yukisora.yandere.R;
-import moe.yukisora.yandere.YandereApplication;
 import moe.yukisora.yandere.fragments.PostFragment;
 import moe.yukisora.yandere.modles.ImageData;
 
@@ -35,7 +34,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         ImageData imageData = (fragment.getImageDatas()).get(position);
 
         holder.layout.getLayoutParams().height = imageData.layout_height;
-        holder.imageView.getLayoutParams().width = YandereApplication.getSmallPlaceholderSize();
+        holder.imageView.getLayoutParams().width = fragment.getActivity().getResources().getDimensionPixelSize(R.dimen.small_loading_size);
         loadImage(holder, imageData);
     }
 
@@ -48,8 +47,8 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         Picasso.with(fragment.getActivity())
                 .load(imageData.preview_url)
                 .tag(imageData.id)
-                .placeholder(R.drawable.progress_animation)
-                .error(R.drawable.reload)
+                .placeholder(R.drawable.animated_loading)
+                .error(R.drawable.ic_refresh)
                 .noFade()
                 .into(holder.imageView, new Callback() {
                     @Override

@@ -14,10 +14,12 @@ import android.view.View;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.github.chrisbanes.photoview.PhotoView;
 import com.nex3z.flowlayout.FlowLayout;
 import com.robertlevonyan.views.chip.Chip;
 import com.squareup.picasso.Callback;
@@ -39,6 +41,8 @@ public class ImageViewActivity extends Activity {
     private Handler handler;
     private ImageData imageData;
     private ImageView imageView;
+    private LinearLayout photoLayout;
+    private PhotoView photoView;
     private ScheduledFuture scheduledFuture;
     private String filename;
     private boolean isDownloading;
@@ -58,10 +62,22 @@ public class ImageViewActivity extends Activity {
         initView();
     }
 
+    @Override
+    public void onBackPressed() {
+        if (photoLayout.getVisibility() == View.VISIBLE) {
+            photoLayout.setVisibility(View.INVISIBLE);
+        }
+        else {
+            super.onBackPressed();
+        }
+    }
+
     private void initView() {
         downloadButton = findViewById(R.id.downloadButton);
         FlowLayout flowLayout = findViewById(R.id.flowLayout);
         imageView = findViewById(R.id.imageView);
+        photoLayout = findViewById(R.id.photoLayout);
+        photoView = findViewById(R.id.photoView);
 
         // image layout
         RelativeLayout imageLayout = findViewById(R.id.imageLayout);
@@ -70,6 +86,9 @@ public class ImageViewActivity extends Activity {
         // image view
         imageView.getLayoutParams().width = getResources().getDimensionPixelSize(R.dimen.large_loading_size);
         loadImage(imageData);
+
+        // photo view
+        photoView.setScaleLevels(1f, 2f, 5f);
 
         // image data
         String imageIdStr = String.format("yande.re Id: %d", imageData.id);
@@ -145,7 +164,19 @@ public class ImageViewActivity extends Activity {
                     @Override
                     public void onSuccess() {
                         imageView.setLayoutParams(new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT));
-                        imageView.setOnClickListener(null);
+                        imageView.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                photoView.setImageDrawable(imageView.getDrawable());
+                                photoView.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View view) {
+                                        photoLayout.setVisibility(View.INVISIBLE);
+                                    }
+                                });
+                                photoLayout.setVisibility(View.VISIBLE);
+                            }
+                        });
                     }
 
                     @Override

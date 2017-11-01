@@ -1,108 +1,129 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:animateLayoutChanges="true"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:fillViewport="true"
-    android:overScrollMode="never">
+    android:layout_height="match_parent">
 
-    <LinearLayout
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="@dimen/screen_margin">
-
-        <RelativeLayout
-            android:id="@+id/imageLayout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="#FFFFFF"
-            android:orientation="vertical">
-
-            <ImageView
-                android:id="@+id/imageView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:adjustViewBounds="true"
-                android:padding="@dimen/image_border"
-                android:scaleType="fitXY" />
-
-        </RelativeLayout>
+        android:layout_height="match_parent"
+        android:fillViewport="true"
+        android:overScrollMode="never">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:padding="@dimen/screen_margin">
 
-            <Button
-                android:id="@+id/downloadButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginBottom="@dimen/text_margin"
-                android:layout_marginTop="@dimen/text_margin"
-                android:background="?android:attr/selectableItemBackground"
-                android:drawablePadding="6dp"
-                android:drawableRight="@drawable/ic_download"
-                android:padding="12dp"
-                android:text="@string/download"
-                android:textAllCaps="false" />
-
-            <TextView
-                android:id="@+id/imageId"
+            <RelativeLayout
+                android:id="@+id/imageLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/text_margin"
-                android:layout_marginTop="@dimen/text_margin" />
+                android:background="@android:color/white"
+                android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/imageSize"
+                <ImageView
+                    android:id="@+id/imageView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:adjustViewBounds="true"
+                    android:padding="@dimen/image_border"
+                    android:scaleType="fitXY" />
+
+            </RelativeLayout>
+
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/text_margin"
-                android:layout_marginTop="@dimen/text_margin" />
+                android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/fileSize"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/text_margin"
-                android:layout_marginTop="@dimen/text_margin" />
+                <Button
+                    android:id="@+id/downloadButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:background="?android:attr/selectableItemBackground"
+                    android:drawablePadding="6dp"
+                    android:drawableRight="@drawable/ic_download"
+                    android:padding="12dp"
+                    android:layout_marginBottom="@dimen/text_margin"
+                    android:layout_marginTop="@dimen/text_margin"
+                    android:text="@string/download"
+                    android:textAllCaps="false" />
 
-            <TextView
-                android:id="@+id/author"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/text_margin"
-                android:layout_marginTop="@dimen/text_margin" />
+                <TextView
+                    android:id="@+id/imageId"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/text_margin"
+                    android:layout_marginTop="@dimen/text_margin" />
 
-            <TextView
-                android:id="@+id/source"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/text_margin"
-                android:layout_marginTop="@dimen/text_margin"
-                android:autoLink="web" />
+                <TextView
+                    android:id="@+id/imageSize"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/text_margin"
+                    android:layout_marginTop="@dimen/text_margin" />
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/text_margin"
-                android:layout_marginTop="@dimen/text_margin"
-                android:text="@string/tags" />
+                <TextView
+                    android:id="@+id/fileSize"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/text_margin"
+                    android:layout_marginTop="@dimen/text_margin" />
 
-            <com.nex3z.flowlayout.FlowLayout
-                android:id="@+id/flowLayout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:flChildSpacing="@dimen/text_margin"
-                app:flChildSpacingForLastRow="align"
-                app:flRowSpacing="@dimen/text_margin" />
+                <TextView
+                    android:id="@+id/author"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/text_margin"
+                    android:layout_marginTop="@dimen/text_margin" />
+
+                <TextView
+                    android:id="@+id/source"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/text_margin"
+                    android:layout_marginTop="@dimen/text_margin"
+                    android:autoLink="web" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/text_margin"
+                    android:layout_marginTop="@dimen/text_margin"
+                    android:text="@string/tags" />
+
+                <com.nex3z.flowlayout.FlowLayout
+                    android:id="@+id/flowLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:flChildSpacing="@dimen/text_margin"
+                    app:flChildSpacingForLastRow="align"
+                    app:flRowSpacing="@dimen/text_margin" />
+
+            </LinearLayout>
 
         </LinearLayout>
 
+    </ScrollView>
+
+    <LinearLayout
+        android:id="@+id/photoLayout"
+        android:background="@android:color/black"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="invisible">
+
+        <com.github.chrisbanes.photoview.PhotoView
+            android:id="@+id/photoView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+
     </LinearLayout>
 
-</ScrollView>
+</RelativeLayout>

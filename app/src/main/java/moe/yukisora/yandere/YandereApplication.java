@@ -5,7 +5,6 @@ import android.content.SharedPreferences;
 import android.graphics.BitmapFactory;
 import android.os.Environment;
 import android.preference.PreferenceManager;
-import android.util.DisplayMetrics;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -35,8 +34,8 @@ public class YandereApplication extends Application {
     private static TagsData<HashMap<String, Integer>> tagsData;
     private static boolean enableRating;
     private static boolean isSafe;
-    private static int dpi;
-    private static int screenWidth;
+    private static int largeImageLayoutWidth;
+    private static int smallImageLayoutWidth;
     private static int smallPlaceholderSize;
 
     public static File getDirectory() {
@@ -63,12 +62,12 @@ public class YandereApplication extends Application {
         YandereApplication.isSafe = isSafe;
     }
 
-    public static int getDpi() {
-        return dpi;
+    public static int getSmallImageLayoutWidth() {
+        return smallImageLayoutWidth;
     }
 
-    public static int getScreenWidth() {
-        return screenWidth;
+    public static int getLargeImageLayoutWidth() {
+        return largeImageLayoutWidth;
     }
 
     public static int getSmallPlaceholderSize() {
@@ -84,7 +83,6 @@ public class YandereApplication extends Application {
         super.onCreate();
 
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
-        DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
         Gson gson = new Gson();
 
         // init application directory
@@ -98,8 +96,12 @@ public class YandereApplication extends Application {
 
         isSafe = preferences.getBoolean("isSafe", true);
 
-        dpi = displayMetrics.densityDpi;
-        screenWidth = displayMetrics.widthPixels;
+        int screenWidth = getResources().getDisplayMetrics().widthPixels;
+        int screenMargin = getResources().getDimensionPixelSize(R.dimen.screen_margin);
+        int imageMargin = getResources().getDimensionPixelSize(R.dimen.image_margin);
+        int imageBorder = getResources().getDimensionPixelSize(R.dimen.image_border);
+        smallImageLayoutWidth =screenWidth / 2 - screenMargin - imageMargin * 2 - imageBorder * 2;
+        largeImageLayoutWidth = screenWidth - screenMargin * 2 - imageBorder * 2;
 
         smallPlaceholderSize = BitmapFactory.decodeResource(getResources(), R.drawable.loading).getWidth();
 

@@ -60,10 +60,10 @@ public class ImageViewActivity extends Activity {
 
         // image layout
         RelativeLayout imageLayout = findViewById(R.id.imageLayout);
-        imageLayout.getLayoutParams().height = Math.round((YandereApplication.getScreenWidth() - (16 + 10) * (YandereApplication.getDpi() / 160f)) * imageData.sample_height / imageData.sample_width);
+        imageLayout.getLayoutParams().height = Math.round(YandereApplication.getLargeImageLayoutWidth() * imageData.sample_height / imageData.sample_width);
 
         // image view
-        imageView.getLayoutParams().width = YandereApplication.getSmallPlaceholderSize() / (int)(YandereApplication.getDpi() / 160f);
+        imageView.getLayoutParams().width = YandereApplication.getSmallPlaceholderSize();
         loadImage(imageData);
 
         // image data

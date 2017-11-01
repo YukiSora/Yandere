@@ -22,8 +22,9 @@ public class ImageManager {
     }
 
     public static ImageManager getInstance() {
-        if (imageManager == null)
+        if (imageManager == null) {
             imageManager = new ImageManager();
+        }
 
         return imageManager;
     }
@@ -44,8 +45,8 @@ public class ImageManager {
                     int positionEnd = positionStart;
 
                     for (ImageData imageData : response.body()) {
-                        // calculate ImageView height manually
-                        imageData.layout_height = Math.round((YandereApplication.getScreenWidth() / 2 - (8 + 6 + 10) * (YandereApplication.getDpi() / 160f)) * imageData.actual_preview_height / imageData.actual_preview_width);
+                        // calculate ImageView height
+                        imageData.layout_height = Math.round(YandereApplication.getSmallImageLayoutWidth() * imageData.actual_preview_height / imageData.actual_preview_width);
 
                         if (!YandereApplication.isSafe() || imageData.rating.equalsIgnoreCase("s")) {
                             imageData.list_id = positionEnd++;

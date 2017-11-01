@@ -35,7 +35,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         ImageData imageData = (fragment.getImageDatas()).get(position);
 
         holder.layout.getLayoutParams().height = imageData.layout_height;
-        holder.imageView.getLayoutParams().width = YandereApplication.getSmallPlaceholderSize() / (int)(YandereApplication.getDpi() / 160f);
+        holder.imageView.getLayoutParams().width = YandereApplication.getSmallPlaceholderSize();
         loadImage(holder, imageData);
     }
 

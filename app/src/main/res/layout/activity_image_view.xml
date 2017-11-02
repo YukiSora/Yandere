@@ -35,6 +35,19 @@
                     android:scaleType="fitXY"
                     android:transitionName="image" />
 
+                <fr.castorflex.android.smoothprogressbar.SmoothProgressBar
+                    android:id="@+id/smoothProgressBar"
+                    android:layout_width="match_parent"
+                    android:layout_height="4dp"
+                    android:layout_alignParentBottom="true"
+                    android:background="@color/progressBarBackgroundColor"
+                    android:indeterminate="true"
+                    app:spb_color="@color/progressBarColor"
+                    app:spb_sections_count="6"
+                    app:spb_speed="1.5"
+                    app:spb_stroke_separator_length="32dp"
+                    app:spb_stroke_width="4dp" />
+
             </RelativeLayout>
 
             <LinearLayout

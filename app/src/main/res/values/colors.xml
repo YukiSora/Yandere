@@ -6,5 +6,7 @@
     <color name="normalColor">#FF303030</color>
     <color name="animating">#FF212121</color>
     <color name="activeTabColor">#FFD34836</color>
+    <color name="progressBarColor">#FFA3A3A3</color>
+    <color name="progressBarBackgroundColor">#88FFFFFF</color>
 
 </resources>

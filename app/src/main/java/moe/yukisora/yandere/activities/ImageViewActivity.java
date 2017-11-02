@@ -6,10 +6,15 @@ import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.NonNull;
+import android.support.v4.content.ContextCompat;
+import android.support.v7.graphics.Palette;
 import android.view.View;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
@@ -31,6 +36,7 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
+import fr.castorflex.android.smoothprogressbar.SmoothProgressBar;
 import moe.yukisora.yandere.R;
 import moe.yukisora.yandere.YandereApplication;
 import moe.yukisora.yandere.modles.ImageData;
@@ -44,6 +50,7 @@ public class ImageViewActivity extends Activity {
     private LinearLayout photoLayout;
     private PhotoView photoView;
     private ScheduledFuture scheduledFuture;
+    private SmoothProgressBar smoothProgressBar;
     private String filename;
     private boolean isDownloading;
     private long requestId;
@@ -78,6 +85,7 @@ public class ImageViewActivity extends Activity {
         imageView = findViewById(R.id.imageView);
         photoLayout = findViewById(R.id.photoLayout);
         photoView = findViewById(R.id.photoView);
+        smoothProgressBar = findViewById(R.id.smoothProgressBar);
 
         // image layout
         RelativeLayout imageLayout = findViewById(R.id.imageLayout);
@@ -159,6 +167,14 @@ public class ImageViewActivity extends Activity {
                 .into(imageView, new Callback() {
                     @Override
                     public void onSuccess() {
+                        Bitmap bitmap = ((BitmapDrawable)imageView.getDrawable()).getBitmap();
+                        Palette.from(bitmap).generate(new Palette.PaletteAsyncListener() {
+                            @Override
+                            public void onGenerated(@NonNull Palette palette) {
+                                int vibrant = palette.getVibrantColor(ContextCompat.getColor(ImageViewActivity.this, R.color.progressBarColor));
+                                smoothProgressBar.setSmoothProgressDrawableColor(vibrant);
+                            }
+                        });
                         loadImage(imageData);
                     }
 
@@ -176,6 +192,14 @@ public class ImageViewActivity extends Activity {
                 .into(imageView, new Callback() {
                     @Override
                     public void onSuccess() {
+                        handler.postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                smoothProgressBar.progressiveStop();
+                                smoothProgressBar.setVisibility(View.GONE);
+                            }
+                        }, 500);
+
                         imageView.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {

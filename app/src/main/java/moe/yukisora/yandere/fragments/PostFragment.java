@@ -25,13 +25,13 @@ import moe.yukisora.yandere.modles.ImageData;
 import retrofit2.Call;
 
 public class PostFragment extends Fragment {
-    private RecyclerView recyclerView;
-
     private ArrayList<ImageData> imageDatas;
     private Call<List<ImageData>> call;
-    private RecyclerViewAdapter adapter;
-    private TwinklingRefreshLayout refreshLayout;
     private GetCallGenerator generator;
+    private RecyclerView recyclerView;
+    private RecyclerViewAdapter adapter;
+    private StaggeredGridLayoutManager layoutManager;
+    private TwinklingRefreshLayout refreshLayout;
     private boolean isScrollable;
     private int page;
 
@@ -74,7 +74,8 @@ public class PostFragment extends Fragment {
         adapter = new RecyclerViewAdapter(this);
         recyclerView = view.findViewById(R.id.recyclerView);
         recyclerView.setHasFixedSize(true);
-        recyclerView.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
+        layoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
+        recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapter);
 
         // RefreshLayout
@@ -134,5 +135,16 @@ public class PostFragment extends Fragment {
 
     public void goToTop() {
         recyclerView.smoothScrollToPosition(0);
+    }
+
+    public boolean isAtTop() {
+        int[] position = new int[2];
+        layoutManager.findFirstCompletelyVisibleItemPositions(position);
+
+        return position[0] == 0;
+    }
+
+    public void refresh() {
+        refreshLayout.startRefresh();
     }
 }

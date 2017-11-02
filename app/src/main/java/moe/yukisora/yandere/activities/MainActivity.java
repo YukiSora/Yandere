@@ -140,13 +140,28 @@ public class MainActivity extends Activity {
             public void onTabReSelected(@IdRes int tabId) {
                 switch (tabId) {
                     case R.id.list_item:
-                        postFragments[0].goToTop();
+                        if (postFragments[0].isAtTop()) {
+                            postFragments[0].refresh();
+                        }
+                        else {
+                            postFragments[0].goToTop();
+                        }
                         break;
                     case R.id.random_item:
-                        postFragments[1].goToTop();
+                        if (postFragments[1].isAtTop()) {
+                            postFragments[1].refresh();
+                        }
+                        else {
+                            postFragments[1].goToTop();
+                        }
                         break;
                     case R.id.rank_item:
-                        postFragments[2].goToTop();
+                        if (postFragments[2].isAtTop()) {
+                            postFragments[2].refresh();
+                        }
+                        else {
+                            postFragments[2].goToTop();
+                        }
                 }
             }
         });

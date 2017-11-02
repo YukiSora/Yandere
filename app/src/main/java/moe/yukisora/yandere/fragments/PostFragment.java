@@ -1,5 +1,7 @@
 package moe.yukisora.yandere.fragments;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.app.Fragment;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
@@ -9,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.arlib.floatingsearchview.FloatingSearchView;
 import com.lcodecore.tkrefreshlayout.RefreshListenerAdapter;
 import com.lcodecore.tkrefreshlayout.TwinklingRefreshLayout;
 import com.lcodecore.tkrefreshlayout.footer.BallPulseView;
@@ -70,16 +73,53 @@ public class PostFragment extends Fragment {
     }
 
     private void initRecyclerView(View view) {
-        // RecyclerView
-        adapter = new RecyclerViewAdapter(this);
+        final FloatingSearchView floatingSearchView = view.findViewById(R.id.floatingSearchView);
         recyclerView = view.findViewById(R.id.recyclerView);
+        refreshLayout = view.findViewById(R.id.refreshLayout);
+
+        // recycler view
+        adapter = new RecyclerViewAdapter(this);
         recyclerView.setHasFixedSize(true);
         layoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapter);
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
 
-        // RefreshLayout
-        refreshLayout = view.findViewById(R.id.refreshLayout);
+                if (dy > 0 && floatingSearchView.getTag().equals("hide")) {
+                    floatingSearchView.animate()
+                            .translationY(0)
+                            .alpha(1)
+                            .setDuration(500)
+                            .setListener(new AnimatorListenerAdapter() {
+                                @Override
+                                public void onAnimationEnd(Animator animation) {
+                                    super.onAnimationEnd(animation);
+
+                                    floatingSearchView.setTag("show");
+                                }
+                            });
+                }
+                else if (dy < 0 && floatingSearchView.getTag().equals("show")) {
+                    floatingSearchView.animate()
+                            .translationY(-floatingSearchView.findViewById(R.id.search_query_section).getHeight())
+                            .alpha(0)
+                            .setDuration(500)
+                            .setListener(new AnimatorListenerAdapter() {
+                                @Override
+                                public void onAnimationEnd(Animator animation) {
+                                    super.onAnimationEnd(animation);
+
+                                    floatingSearchView.setTag("hide");
+                                }
+                            });
+                }
+            }
+        });
+
+        // refresh layout
         BezierLayout headerView = new BezierLayout(getActivity());
         headerView.setRippleColor(ContextCompat.getColor(getActivity(), R.color.loadingRippleColor));
         headerView.setWaveColor(ContextCompat.getColor(getActivity(), R.color.loadingWaveColor));

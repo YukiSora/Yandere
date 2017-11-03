@@ -2,10 +2,13 @@ package moe.yukisora.yandere.activities;
 
 import android.app.Activity;
 import android.app.Fragment;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.IdRes;
 import android.support.v13.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 
 import com.roughike.bottombar.BottomBar;
 import com.roughike.bottombar.OnTabReselectListener;
@@ -16,7 +19,6 @@ import java.util.List;
 import moe.yukisora.yandere.R;
 import moe.yukisora.yandere.core.ServiceGenerator;
 import moe.yukisora.yandere.fragments.PostFragment;
-import moe.yukisora.yandere.fragments.SearchFragment;
 import moe.yukisora.yandere.fragments.SettingFragment;
 import moe.yukisora.yandere.interfaces.GetCallGenerator;
 import moe.yukisora.yandere.interfaces.YandereService;
@@ -24,7 +26,7 @@ import moe.yukisora.yandere.modles.ImageData;
 import retrofit2.Call;
 
 public class MainActivity extends Activity {
-    private static final int NUM_ITEMS = 5;
+    private static final int NUM_ITEMS = 4;
     private PostFragment[] postFragments;
 
     @Override
@@ -83,8 +85,6 @@ public class MainActivity extends Activity {
                         });
                         return postFragments[2];
                     case 3:
-                        return SearchFragment.newInstance();
-                    case 4:
                         return SettingFragment.newInstance();
                     default:
                         return null;
@@ -99,12 +99,6 @@ public class MainActivity extends Activity {
             @Override
             public void onPageSelected(int position) {
                 bottomBar.setDefaultTabPosition(position);
-
-                // close soft keyboard
-//                InputMethodManager manager = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
-//                if (manager != null) {
-//                    manager.hideSoftInputFromWindow(findViewById(R.id.searchView).getWindowToken(), 0);
-//                }
             }
 
             @Override
@@ -126,11 +120,8 @@ public class MainActivity extends Activity {
                     case R.id.rank_item:
                         viewPager.setCurrentItem(2);
                         break;
-                    case R.id.search_item:
-                        viewPager.setCurrentItem(3);
-                        break;
                     case R.id.setting_item:
-                        viewPager.setCurrentItem(4);
+                        viewPager.setCurrentItem(3);
                         break;
                 }
             }
@@ -165,5 +156,16 @@ public class MainActivity extends Activity {
                 }
             }
         });
+    }
+
+    @Override
+    protected void onPause() {
+        View view = getCurrentFocus();
+        InputMethodManager inputMethodManager = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+        if (view != null && inputMethodManager != null) {
+            inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        }
+
+        super.onPause();
     }
 }

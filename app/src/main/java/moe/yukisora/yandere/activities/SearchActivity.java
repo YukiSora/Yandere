@@ -2,7 +2,6 @@ package moe.yukisora.yandere.activities;
 
 import android.app.Activity;
 import android.app.FragmentTransaction;
-import android.app.SearchManager;
 import android.os.Bundle;
 
 import java.util.List;
@@ -21,7 +20,7 @@ public class SearchActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
 
-        final String query = getIntent().getStringExtra(SearchManager.QUERY);
+        final String query = getIntent().getStringExtra("query");
 
         // create fragment
         FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();

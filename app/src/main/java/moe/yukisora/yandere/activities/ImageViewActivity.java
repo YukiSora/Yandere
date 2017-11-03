@@ -2,7 +2,6 @@ package moe.yukisora.yandere.activities;
 
 import android.app.Activity;
 import android.app.DownloadManager;
-import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
@@ -126,7 +125,8 @@ public class ImageViewActivity extends Activity {
                 @Override
                 public void onClick(View view) {
                     Intent intent = new Intent(ImageViewActivity.this, SearchActivity.class);
-                    intent.putExtra(SearchManager.QUERY, ((Chip)view).getChipText().replace(" ", "_"));
+                    intent.putExtra("query", ((Chip)view).getChipText().replace(" ", "_"));
+
                     ImageViewActivity.this.startActivity(intent);
                 }
             });

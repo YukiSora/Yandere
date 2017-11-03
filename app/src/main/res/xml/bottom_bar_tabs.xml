@@ -11,9 +11,6 @@
         id="@+id/rank_item"
         icon="@drawable/ic_rank" />
     <tab
-        id="@+id/search_item"
-        icon="@drawable/ic_search" />
-    <tab
         id="@+id/setting_item"
         icon="@drawable/ic_setting" />
 

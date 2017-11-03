@@ -10,6 +10,7 @@ import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 
 import com.arlib.floatingsearchview.FloatingSearchView;
 import com.lcodecore.tkrefreshlayout.RefreshListenerAdapter;
@@ -74,6 +75,7 @@ public class PostFragment extends Fragment {
 
     private void initRecyclerView(View view) {
         final FloatingSearchView floatingSearchView = view.findViewById(R.id.floatingSearchView);
+        final LinearLayout floatingSearchViewBackground = view.findViewById(R.id.floatingSearchViewBackground);
         recyclerView = view.findViewById(R.id.recyclerView);
         refreshLayout = view.findViewById(R.id.refreshLayout);
 
@@ -101,10 +103,15 @@ public class PostFragment extends Fragment {
                                     floatingSearchView.setTag("show");
                                 }
                             });
+                    floatingSearchViewBackground.animate()
+                            .translationY(0)
+                            .alpha(1)
+                            .setDuration(500);
                 }
                 else if (dy < 0 && floatingSearchView.getTag().equals("show")) {
+                    int y = -floatingSearchView.findViewById(R.id.search_query_section).getHeight();
                     floatingSearchView.animate()
-                            .translationY(-floatingSearchView.findViewById(R.id.search_query_section).getHeight())
+                            .translationY(y)
                             .alpha(0)
                             .setDuration(500)
                             .setListener(new AnimatorListenerAdapter() {
@@ -115,6 +122,10 @@ public class PostFragment extends Fragment {
                                     floatingSearchView.setTag("hide");
                                 }
                             });
+                    floatingSearchViewBackground.animate()
+                            .translationY(y)
+                            .alpha(0)
+                            .setDuration(500);
                 }
             }
         });

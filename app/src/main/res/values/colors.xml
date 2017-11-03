@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <color name="windowBackground">#FFE0E0E0</color>
     <color name="loadingRippleColor">#FF303030</color>
     <color name="loadingWaveColor">#FF212121</color>
     <color name="normalColor">#FF303030</color>

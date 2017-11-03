@@ -5,6 +5,7 @@
         parent="Theme.AppCompat.Light.DarkActionBar">
 
         <item name="android:windowContentTransitions">true</item>
+        <item name="android:windowBackground">@color/windowBackground</item>
 
     </style>
 

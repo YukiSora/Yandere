@@ -53,6 +53,7 @@ public class ImageViewActivity extends Activity {
     private SmoothProgressBar smoothProgressBar;
     private String filename;
     private boolean isDownloading;
+    private boolean isShowUpdateTags;
     private long requestId;
 
     @Override
@@ -119,7 +120,7 @@ public class ImageViewActivity extends Activity {
                 chip.setStrokeColor(Color.parseColor(getResources().getStringArray(R.array.tagColor)[YandereApplication.getTags().get(tag)]));
             }
             else {
-                Toast.makeText(this, "Tags may be able to update.", Toast.LENGTH_SHORT).show();
+                isShowUpdateTags = true;
             }
             chip.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -197,6 +198,10 @@ public class ImageViewActivity extends Activity {
                             public void run() {
                                 smoothProgressBar.progressiveStop();
                                 smoothProgressBar.setVisibility(View.GONE);
+
+                                if (isShowUpdateTags) {
+                                    Toast.makeText(ImageViewActivity.this, "Tags may be able to update.", Toast.LENGTH_SHORT).show();
+                                }
                             }
                         }, 500);
 

@@ -96,10 +96,10 @@ public class PostFragment extends Fragment {
             @Override
             public void onSearchTextChanged(String oldQuery, String newQuery) {
                 floatingSearchView.showProgress();
-                tagFilter.filter(newQuery.replace(" ", "_"), new TagFilter.OnFindSuggestionsListener() {
+                tagFilter.getSuggestions(newQuery.replace(" ", "_"), new TagFilter.OnFindSuggestionsListener() {
                     @Override
-                    public void onResults(Object results) {
-                        floatingSearchView.swapSuggestions((ArrayList<TagData>)results);
+                    public void onResults(ArrayList<TagData> results) {
+                        floatingSearchView.swapSuggestions(results);
                         floatingSearchView.hideProgress();
                     }
                 });
@@ -108,18 +108,20 @@ public class PostFragment extends Fragment {
         floatingSearchView.setOnSearchListener(new FloatingSearchView.OnSearchListener() {
             @Override
             public void onSuggestionClicked(SearchSuggestion searchSuggestion) {
-                Intent intent = new Intent(PostFragment.this.getActivity(), SearchActivity.class);
-                intent.putExtra("query", searchSuggestion.getBody());
-
-                PostFragment.this.startActivity(intent);
+                onSearchAction(searchSuggestion.getBody());
             }
 
             @Override
             public void onSearchAction(String currentQuery) {
-                Intent intent = new Intent(PostFragment.this.getActivity(), SearchActivity.class);
-                intent.putExtra("query", currentQuery);
+                if (!currentQuery.equals("")) {
+                    String query = currentQuery.replace(" ", "_");
+                    tagFilter.addHistory(query);
 
-                PostFragment.this.startActivity(intent);
+                    Intent intent = new Intent(PostFragment.this.getActivity(), SearchActivity.class);
+                    intent.putExtra("query", query);
+
+                    PostFragment.this.startActivity(intent);
+                }
             }
         });
         floatingSearchView.setOnFocusChangeListener(new FloatingSearchView.OnFocusChangeListener() {
@@ -127,13 +129,18 @@ public class PostFragment extends Fragment {
 
             @Override
             public void onFocus() {
-                floatingSearchView.setSearchText(query);
+                if (query == null || query.equals("")) {
+                    floatingSearchView.swapSuggestions(tagFilter.getHistory());
+                }
+                else {
+                    floatingSearchView.setSearchText(query);
+                }
             }
 
             @Override
             public void onFocusCleared() {
                 query = floatingSearchView.getQuery();
-                floatingSearchView.setSearchText("");
+                floatingSearchView.clearQuery();
             }
         });
         floatingSearchView.setOnBindSuggestionCallback(new SearchSuggestionsAdapter.OnBindSuggestionCallback() {
@@ -147,6 +154,11 @@ public class PostFragment extends Fragment {
                 textView.setEllipsize(TextUtils.TruncateAt.MARQUEE);
                 textView.setMarqueeRepeatLimit(-1);
                 textView.setSelected(true);
+
+                if (tag.isHistory) {
+                    leftIcon.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.ic_history));
+                    leftIcon.setColorFilter(ContextCompat.getColor(getActivity(), R.color.historyIconColor));
+                }
             }
         });
 

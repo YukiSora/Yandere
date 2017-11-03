@@ -22,7 +22,6 @@ public class SearchActivity extends Activity {
 
         final String query = getIntent().getStringExtra("query");
 
-        // create fragment
         FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
         PostFragment fragment = PostFragment.newInstance(true);
         fragment.setGenerator(new GetCallGenerator() {

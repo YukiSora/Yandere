@@ -27,6 +27,7 @@ import okhttp3.Response;
 public class YandereApplication extends Application {
     public static final String APPLICATION_FOLDER = "Yandere";
     public static final String TAGS_FILENAME = "tags.json";
+    public static final String SEARCH_HISTORY_FILENAME = "search_history.json";
     public static final String HARMONY_FLAG_FILENAME = "yandere_386449.png";
 
     private static File directory;

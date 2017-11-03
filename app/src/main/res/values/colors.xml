@@ -9,5 +9,6 @@
     <color name="activeTabColor">#FFD34836</color>
     <color name="progressBarColor">#FFA3A3A3</color>
     <color name="progressBarBackgroundColor">#88FFFFFF</color>
+    <color name="historyIconColor">#FF808080</color>
 
 </resources>

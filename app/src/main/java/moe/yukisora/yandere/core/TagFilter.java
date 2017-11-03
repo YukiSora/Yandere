@@ -4,6 +4,14 @@ import android.content.Context;
 import android.graphics.Color;
 import android.widget.Filter;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.io.Reader;
 import java.util.ArrayList;
 
 import moe.yukisora.yandere.R;
@@ -11,10 +19,17 @@ import moe.yukisora.yandere.YandereApplication;
 import moe.yukisora.yandere.modles.TagData;
 
 public class TagFilter {
+    private ArrayList<String> history;
+    private Context context;
     private Filter filter;
+    private Gson gson;
     private OnFindSuggestionsListener listener;
 
     public TagFilter(final Context context) {
+        this.context = context;
+
+        history = new ArrayList<>();
+        gson = new Gson();
         filter = new Filter() {
             @Override
             protected FilterResults performFiltering(CharSequence charSequence) {
@@ -24,16 +39,21 @@ public class TagFilter {
                 }
                 String query = charSequence.toString();
 
-                ArrayList<TagData> list = new ArrayList<>();
+                ArrayList<TagData> list;
                 if (!query.equals("")) {
+                    list = new ArrayList<>();
                     for (String tag : YandereApplication.getTags().keySet()) {
                         if (tag.startsWith(query)) {
-                            list.add(new TagData(Color.parseColor(context.getResources().getStringArray(R.array.tagColor)[YandereApplication.getTags().get(tag)]), tag.replace("_", " ")));
+                            int color = Color.parseColor(context.getResources().getStringArray(R.array.tagColor)[YandereApplication.getTags().get(tag)]);
+                            list.add(new TagData(color, tag.replace("_", " ")));
                             if (list.size() == 10) {
                                 break;
                             }
                         }
                     }
+                }
+                else {
+                    list = getHistory();
                 }
 
                 FilterResults results = new FilterResults();
@@ -43,19 +63,50 @@ public class TagFilter {
                 return results;
             }
 
+            @SuppressWarnings("unchecked")
             @Override
             protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
-                listener.onResults(filterResults.values);
+                listener.onResults((ArrayList<TagData>)filterResults.values);
             }
         };
+
+        try (Reader in = new FileReader(new File(context.getFilesDir(), YandereApplication.SEARCH_HISTORY_FILENAME))) {
+            history = gson.fromJson(in, new TypeToken<ArrayList<String>>() {}.getType());
+        } catch (IOException ignore) {
+        }
     }
 
-    public void filter(String query, OnFindSuggestionsListener listener) {
+    public void getSuggestions(String query, OnFindSuggestionsListener listener) {
         this.listener = listener;
+
         filter.filter(query);
     }
 
+    public ArrayList<TagData> getHistory() {
+        ArrayList<TagData> list = new ArrayList<>();
+        for (String tag : history) {
+            int color = Color.parseColor(context.getResources().getStringArray(R.array.tagColor)[YandereApplication.getTags().containsKey(tag) ? YandereApplication.getTags().get(tag) : 0]);
+            list.add(new TagData(color, tag.replace("_", " "), true));
+        }
+
+        return list;
+    }
+
+    public void addHistory(String tag) {
+        if (!history.contains(tag)) {
+            history.add(0, tag);
+            if (history.size() > 5) {
+                history.remove(5);
+            }
+
+            try (OutputStreamWriter out = new OutputStreamWriter(context.openFileOutput(YandereApplication.SEARCH_HISTORY_FILENAME, Context.MODE_PRIVATE))) {
+                gson.toJson(history, out);
+            } catch (IOException ignore) {
+            }
+        }
+    }
+
     public interface OnFindSuggestionsListener {
-        void onResults(Object results);
+        void onResults(ArrayList<TagData> results);
     }
 }

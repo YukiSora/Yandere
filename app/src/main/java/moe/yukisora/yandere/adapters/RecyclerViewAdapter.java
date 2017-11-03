@@ -15,6 +15,7 @@ import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
 import moe.yukisora.yandere.R;
+import moe.yukisora.yandere.activities.ImageViewActivity;
 import moe.yukisora.yandere.fragments.PostFragment;
 import moe.yukisora.yandere.modles.ImageData;
 
@@ -58,7 +59,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                         holder.imageView.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
-                                Intent intent = new Intent("moe.yukisora.yandere.activities.ImageViewActivity");
+                                Intent intent = new Intent(fragment.getActivity(), ImageViewActivity.class);
                                 Bundle bundle = new Bundle();
                                 bundle.putSerializable("imageData", imageData);
                                 intent.putExtras(bundle);

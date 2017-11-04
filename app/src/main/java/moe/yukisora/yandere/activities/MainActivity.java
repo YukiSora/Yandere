@@ -91,6 +91,20 @@ public class MainActivity extends Activity {
                 }
             }
         });
+        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                bottomBar.setDefaultTabPosition(position);
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+            }
+        });
 
         // bottom bar
         bottomBar.setOnTabSelectListener(new OnTabSelectListener() {

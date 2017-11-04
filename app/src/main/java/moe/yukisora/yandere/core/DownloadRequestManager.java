@@ -27,6 +27,9 @@ public class DownloadRequestManager {
     }
 
     public void delete(long requestId) {
-        requestIds.removeAt(requestIds.indexOfValue(requestId));
+        int index = requestIds.indexOfValue(requestId);
+        if (index > 0) {
+            requestIds.removeAt(index);
+        }
     }
 }

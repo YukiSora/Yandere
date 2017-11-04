@@ -72,6 +72,14 @@ public class ImageActivity extends Activity {
     }
 
     @Override
+    protected void onDestroy() {
+        if (scheduledFuture != null) {
+            scheduledFuture.cancel(false);
+        }
+        super.onDestroy();
+    }
+
+    @Override
     public void onBackPressed() {
         if (photoLayout.getVisibility() == View.VISIBLE) {
             photoLayout.setVisibility(View.INVISIBLE);

@@ -186,6 +186,7 @@ public class ImageActivity extends Activity {
                 });
     }
 
+    @SuppressWarnings("ConstantConditions")
     private void loadImage(final ImageData imageData) {
         Picasso.with(this)
                 .load(imageData.sample_url)
@@ -205,10 +206,10 @@ public class ImageActivity extends Activity {
                             }
                         }, 500);
 
+                        photoView.setImageDrawable(imageView.getDrawable().getConstantState().newDrawable().mutate());
                         imageView.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
-                                photoView.setImageDrawable(imageView.getDrawable());
                                 photoView.setOnClickListener(new View.OnClickListener() {
                                     @Override
                                     public void onClick(View view) {

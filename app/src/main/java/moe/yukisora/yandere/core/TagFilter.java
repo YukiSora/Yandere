@@ -11,8 +11,8 @@ import com.google.gson.reflect.TypeToken;
 
 import java.io.File;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
-import java.io.OutputStreamWriter;
 import java.io.Reader;
 import java.util.ArrayList;
 
@@ -113,7 +113,7 @@ public class TagFilter {
             new AsyncTask<Void, Void, Void>() {
                 @Override
                 protected Void doInBackground(Void... voids) {
-                    try (OutputStreamWriter out = new OutputStreamWriter(context.openFileOutput(YandereApplication.SEARCH_HISTORY_FILENAME, Context.MODE_PRIVATE))) {
+                    try (FileWriter out = new FileWriter(new File(context.getFilesDir(), YandereApplication.SEARCH_HISTORY_FILENAME))) {
                         gson.toJson(history, out);
                     } catch (IOException ignore) {
                     }

@@ -26,19 +26,24 @@ import okhttp3.Response;
 
 public class YandereApplication extends Application {
     public static final String APPLICATION_FOLDER = "Yandere";
-    public static final String TAGS_FILENAME = "tags.json";
-    public static final String SEARCH_HISTORY_FILENAME = "search_history.json";
     public static final String HARMONY_FLAG_FILENAME = "yandere_386449.png";
+    public static final String SEARCH_HISTORY_FILENAME = "search_history.json";
+    public static final String TAGS_FILENAME = "tags.json";
 
-    private static File directory;
+    private static File externalDirectory;
+    private static File internalDirectory;
     private static TagsData<HashMap<String, Integer>> tagsData;
     private static boolean enableRating;
     private static boolean isSafe;
     private static int largeImageLayoutWidth;
     private static int smallImageLayoutWidth;
 
-    public static File getDirectory() {
-        return directory;
+    public static File getExternalDirectory() {
+        return externalDirectory;
+    }
+
+    public static File getInternalDirectory() {
+        return internalDirectory;
     }
 
     public static HashMap<String, Integer> getTags() {
@@ -80,16 +85,18 @@ public class YandereApplication extends Application {
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
         Gson gson = new Gson();
 
-        // init application directory
-        directory = new File(Environment.getExternalStorageDirectory(), APPLICATION_FOLDER);
-        if (!directory.exists()) {
-            directory.mkdir();
+        // init application externalDirectory
+        externalDirectory = new File(Environment.getExternalStorageDirectory(), APPLICATION_FOLDER);
+        if (!externalDirectory.exists()) {
+            externalDirectory.mkdir();
         }
 
         // init variables
-        enableRating = new File(directory, HARMONY_FLAG_FILENAME).exists();
+        enableRating = new File(externalDirectory, HARMONY_FLAG_FILENAME).exists();
 
         isSafe = preferences.getBoolean("isSafe", true);
+
+        internalDirectory = getFilesDir();
 
         int screenWidth = getResources().getDisplayMetrics().widthPixels;
         int screenMargin = getResources().getDimensionPixelSize(R.dimen.screen_margin);

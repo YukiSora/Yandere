@@ -146,7 +146,7 @@ public class ImageActivity extends Activity {
 
         // download button
         long requestId = DownloadRequestManager.getInstance().get(imageData.id);
-        File file = new File(YandereApplication.getDirectory(), filename);
+        File file = new File(YandereApplication.getExternalDirectory(), filename);
         if (requestId != 0) {
             isDownloading = true;
             scheduledFuture = scheduleTaskExecutor.scheduleAtFixedRate(new SaveImageRunnable(requestId), 0, 100, TimeUnit.MILLISECONDS);

@@ -1,7 +1,6 @@
 package moe.yukisora.yandere.fragments;
 
 import android.annotation.SuppressLint;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
@@ -14,8 +13,9 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 
+import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
-import java.io.OutputStreamWriter;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -143,7 +143,7 @@ public class SettingFragment extends PreferenceFragment {
 
                     // save
                     publishProgress(START_SAVING);
-                    try (OutputStreamWriter out = new OutputStreamWriter(getActivity().openFileOutput(YandereApplication.TAGS_FILENAME, Context.MODE_PRIVATE))) {
+                    try (FileWriter out = new FileWriter(new File(getActivity().getFilesDir(), YandereApplication.TAGS_FILENAME))) {
                         new Gson().toJson(tagsData, out);
                     } catch (IOException e) {
                         publishProgress(SAVE_FAILED);

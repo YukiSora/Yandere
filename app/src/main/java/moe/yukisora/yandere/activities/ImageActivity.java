@@ -38,6 +38,7 @@ import java.util.concurrent.TimeUnit;
 import fr.castorflex.android.smoothprogressbar.SmoothProgressBar;
 import moe.yukisora.yandere.R;
 import moe.yukisora.yandere.YandereApplication;
+import moe.yukisora.yandere.core.DownloadRequestManager;
 import moe.yukisora.yandere.modles.ImageData;
 
 public class ImageActivity extends Activity {
@@ -48,12 +49,12 @@ public class ImageActivity extends Activity {
     private ImageView imageView;
     private LinearLayout photoLayout;
     private PhotoView photoView;
+    private ScheduledExecutorService scheduleTaskExecutor;
     private ScheduledFuture scheduledFuture;
     private SmoothProgressBar smoothProgressBar;
     private String filename;
     private boolean isDownloading;
     private boolean isShowUpdateTags;
-    private long requestId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,6 +64,7 @@ public class ImageActivity extends Activity {
         imageData = (ImageData)getIntent().getSerializableExtra("imageData");
         filename = String.format("yandere_%s.%s", imageData.id, imageData.file_ext);
 
+        scheduleTaskExecutor = Executors.newScheduledThreadPool(5);
         downloadManager = (DownloadManager)getSystemService(Context.DOWNLOAD_SERVICE);
         handler = new Handler();
 
@@ -135,8 +137,13 @@ public class ImageActivity extends Activity {
         }
 
         // download button
+        long requestId = DownloadRequestManager.getInstance().get(imageData.id);
         File file = new File(YandereApplication.getDirectory(), filename);
-        if (file.exists()) {
+        if (requestId != 0) {
+            isDownloading = true;
+            scheduledFuture = scheduleTaskExecutor.scheduleAtFixedRate(new SaveImageRunnable(requestId), 0, 100, TimeUnit.MILLISECONDS);
+        }
+        else if (file.exists()) {
             downloadButton.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_done, 0);
             downloadButton.setEnabled(false);
         }
@@ -149,11 +156,12 @@ public class ImageActivity extends Activity {
                     // start a request
                     DownloadManager.Request request = new DownloadManager.Request(Uri.parse(imageData.file_url));
                     request.setDestinationInExternalPublicDir(YandereApplication.APPLICATION_FOLDER, filename);
-                    requestId = downloadManager.enqueue(request);
+                    request.allowScanningByMediaScanner();
+                    request.setTitle(filename);
+                    long requestId = downloadManager.enqueue(request);
+                    DownloadRequestManager.getInstance().put(imageData.id, requestId);
 
-                    // download progress schedule
-                    ScheduledExecutorService scheduleTaskExecutor = Executors.newScheduledThreadPool(1);
-                    scheduledFuture = scheduleTaskExecutor.scheduleAtFixedRate(new SaveImageRunnable(), 100, 100, TimeUnit.MILLISECONDS);
+                    scheduledFuture = scheduleTaskExecutor.scheduleAtFixedRate(new SaveImageRunnable(requestId), 100, 100, TimeUnit.MILLISECONDS);
                 }
                 else {
                     downloadButton.startAnimation(AnimationUtils.loadAnimation(ImageActivity.this, R.anim.anim_shake));
@@ -229,6 +237,12 @@ public class ImageActivity extends Activity {
     }
 
     private class SaveImageRunnable implements Runnable {
+        private long requestId;
+
+        SaveImageRunnable(long requestId) {
+            this.requestId = requestId;
+        }
+
         @Override
         public void run() {
             try (Cursor cursor = downloadManager.query(new DownloadManager.Query().setFilterById(requestId))) {
@@ -242,12 +256,8 @@ public class ImageActivity extends Activity {
                             downloadButton.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_done, 0);
                             downloadButton.setText(R.string.download);
                             downloadButton.setEnabled(false);
-                            Toast.makeText(getApplicationContext(), "Image download successful.", Toast.LENGTH_SHORT).show();
-
-                            // display in photo gallery
-                            sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE).setData(Uri.fromFile(new File(YandereApplication.getDirectory(), filename))));
-
                             isDownloading = false;
+                            DownloadRequestManager.getInstance().delete(requestId);
                         }
                     });
                     scheduledFuture.cancel(false);
@@ -256,11 +266,12 @@ public class ImageActivity extends Activity {
                     handler.post(new Runnable() {
                         @Override
                         public void run() {
-                            Toast.makeText(getApplicationContext(), "Image download failed.", Toast.LENGTH_SHORT).show();
-
+                            downloadButton.setText(R.string.download);
                             isDownloading = false;
+                            DownloadRequestManager.getInstance().delete(requestId);
                         }
                     });
+                    scheduledFuture.cancel(false);
                 }
                 else {
                     int bytesDownloaded = cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_BYTES_DOWNLOADED_SO_FAR));

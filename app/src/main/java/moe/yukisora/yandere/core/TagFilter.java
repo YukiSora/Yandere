@@ -1,7 +1,9 @@
 package moe.yukisora.yandere.core;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Color;
+import android.os.AsyncTask;
 import android.widget.Filter;
 
 import com.google.gson.Gson;
@@ -25,6 +27,7 @@ public class TagFilter {
     private Gson gson;
     private OnFindSuggestionsListener listener;
 
+    @SuppressLint("StaticFieldLeak")
     public TagFilter(final Context context) {
         this.context = context;
 
@@ -70,10 +73,17 @@ public class TagFilter {
             }
         };
 
-        try (Reader in = new FileReader(new File(context.getFilesDir(), YandereApplication.SEARCH_HISTORY_FILENAME))) {
-            history = gson.fromJson(in, new TypeToken<ArrayList<String>>() {}.getType());
-        } catch (IOException ignore) {
-        }
+        new AsyncTask<Void, Void, Void>() {
+            @Override
+            protected Void doInBackground(Void... voids) {
+                try (Reader in = new FileReader(new File(context.getFilesDir(), YandereApplication.SEARCH_HISTORY_FILENAME))) {
+                    history = gson.fromJson(in, new TypeToken<ArrayList<String>>() {}.getType());
+                } catch (IOException ignore) {
+                }
+
+                return null;
+            }
+        }.execute();
     }
 
     public void getSuggestions(String query, OnFindSuggestionsListener listener) {
@@ -92,6 +102,7 @@ public class TagFilter {
         return list;
     }
 
+    @SuppressLint("StaticFieldLeak")
     public void addHistory(String tag) {
         if (!history.contains(tag)) {
             history.add(0, tag);
@@ -99,10 +110,17 @@ public class TagFilter {
                 history.remove(5);
             }
 
-            try (OutputStreamWriter out = new OutputStreamWriter(context.openFileOutput(YandereApplication.SEARCH_HISTORY_FILENAME, Context.MODE_PRIVATE))) {
-                gson.toJson(history, out);
-            } catch (IOException ignore) {
-            }
+            new AsyncTask<Void, Void, Void>() {
+                @Override
+                protected Void doInBackground(Void... voids) {
+                    try (OutputStreamWriter out = new OutputStreamWriter(context.openFileOutput(YandereApplication.SEARCH_HISTORY_FILENAME, Context.MODE_PRIVATE))) {
+                        gson.toJson(history, out);
+                    } catch (IOException ignore) {
+                    }
+
+                    return null;
+                }
+            }.execute();
         }
     }
 

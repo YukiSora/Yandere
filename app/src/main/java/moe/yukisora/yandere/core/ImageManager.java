@@ -6,7 +6,7 @@ import android.os.Handler;
 import java.util.List;
 
 import moe.yukisora.yandere.YandereApplication;
-import moe.yukisora.yandere.fragments.PostFragment;
+import moe.yukisora.yandere.fragments.ListFragment;
 import moe.yukisora.yandere.modles.ImageData;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -31,10 +31,10 @@ public class ImageManager {
 
     public void loadImage(Fragment fragment, Call<List<ImageData>> call, boolean isRefresh) {
         if (!isDownloading)
-            downloadImageData((PostFragment)fragment, call, isRefresh);
+            downloadImageData((ListFragment)fragment, call, isRefresh);
     }
 
-    private void downloadImageData(final PostFragment fragment, Call<List<ImageData>> call, final boolean isRefresh) {
+    private void downloadImageData(final ListFragment fragment, Call<List<ImageData>> call, final boolean isRefresh) {
         isDownloading = true;
 
         call.enqueue(new Callback<List<ImageData>>() {
@@ -59,10 +59,10 @@ public class ImageManager {
                         public void run() {
                             fragment.getAdapter().notifyItemRangeInserted(positionStart, count);
                             if (isRefresh) {
-                                fragment.getRefreshLayout().finishRefreshing();
+                                fragment.finishRefreshing();
                             }
                             else {
-                                fragment.getRefreshLayout().finishLoadmore();
+                                fragment.finishLoadMore();
                             }
                         }
                     });

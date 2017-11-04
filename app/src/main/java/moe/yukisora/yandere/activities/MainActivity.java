@@ -18,7 +18,7 @@ import java.util.List;
 
 import moe.yukisora.yandere.R;
 import moe.yukisora.yandere.core.ServiceGenerator;
-import moe.yukisora.yandere.fragments.PostFragment;
+import moe.yukisora.yandere.fragments.ListFragment;
 import moe.yukisora.yandere.fragments.SettingFragment;
 import moe.yukisora.yandere.interfaces.GetCallGenerator;
 import moe.yukisora.yandere.interfaces.YandereService;
@@ -27,7 +27,7 @@ import retrofit2.Call;
 
 public class MainActivity extends Activity {
     private static final int NUM_ITEMS = 4;
-    private PostFragment[] postFragments;
+    private ListFragment[] listFragments;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,7 +35,7 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        postFragments = new PostFragment[3];
+        listFragments = new ListFragment[3];
         final ViewPager viewPager = findViewById(R.id.viewPager);
         final BottomBar bottomBar = findViewById(R.id.bottomBar);
 
@@ -50,8 +50,8 @@ public class MainActivity extends Activity {
             public Fragment getItem(int position) {
                 switch (position) {
                     case 0:
-                        postFragments[0] = PostFragment.newInstance(true);
-                        postFragments[0].setGenerator(new GetCallGenerator() {
+                        listFragments[0] = ListFragment.newInstance(ListFragment.LOAD | ListFragment.SEARCH);
+                        listFragments[0].setGenerator(new GetCallGenerator() {
                             @Override
                             public Call<List<ImageData>> getCall(int page) {
                                 YandereService service = ServiceGenerator.generate(YandereService.class);
@@ -59,10 +59,10 @@ public class MainActivity extends Activity {
                                 return service.getPosts(page, null);
                             }
                         });
-                        return postFragments[0];
+                        return listFragments[0];
                     case 1:
-                        postFragments[1] = PostFragment.newInstance(true);
-                        postFragments[1].setGenerator(new GetCallGenerator() {
+                        listFragments[1] = ListFragment.newInstance(ListFragment.LOAD | ListFragment.SEARCH);
+                        listFragments[1].setGenerator(new GetCallGenerator() {
                             private String tags = "order:random";
 
                             @Override
@@ -72,10 +72,10 @@ public class MainActivity extends Activity {
                                 return service.getPosts(page, tags);
                             }
                         });
-                        return postFragments[1];
+                        return listFragments[1];
                     case 2:
-                        postFragments[2] = PostFragment.newInstance(false);
-                        postFragments[2].setGenerator(new GetCallGenerator() {
+                        listFragments[2] = ListFragment.newInstance(ListFragment.NONE);
+                        listFragments[2].setGenerator(new GetCallGenerator() {
                             @Override
                             public Call<List<ImageData>> getCall(int page) {
                                 YandereService service = ServiceGenerator.generate(YandereService.class);
@@ -83,26 +83,12 @@ public class MainActivity extends Activity {
                                 return service.getPopulars(page);
                             }
                         });
-                        return postFragments[2];
+                        return listFragments[2];
                     case 3:
                         return SettingFragment.newInstance();
                     default:
                         return null;
                 }
-            }
-        });
-        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-            @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-            }
-
-            @Override
-            public void onPageSelected(int position) {
-                bottomBar.setDefaultTabPosition(position);
-            }
-
-            @Override
-            public void onPageScrollStateChanged(int state) {
             }
         });
 
@@ -131,28 +117,29 @@ public class MainActivity extends Activity {
             public void onTabReSelected(@IdRes int tabId) {
                 switch (tabId) {
                     case R.id.list_item:
-                        if (postFragments[0].isAtTop()) {
-                            postFragments[0].refresh();
+                        if (listFragments[0].isAtTop()) {
+                            listFragments[0].refresh();
                         }
                         else {
-                            postFragments[0].goToTop();
+                            listFragments[0].goToTop();
                         }
                         break;
                     case R.id.random_item:
-                        if (postFragments[1].isAtTop()) {
-                            postFragments[1].refresh();
+                        if (listFragments[1].isAtTop()) {
+                            listFragments[1].refresh();
                         }
                         else {
-                            postFragments[1].goToTop();
+                            listFragments[1].goToTop();
                         }
                         break;
                     case R.id.rank_item:
-                        if (postFragments[2].isAtTop()) {
-                            postFragments[2].refresh();
+                        if (listFragments[2].isAtTop()) {
+                            listFragments[2].refresh();
                         }
                         else {
-                            postFragments[2].goToTop();
+                            listFragments[2].goToTop();
                         }
+                        break;
                 }
             }
         });

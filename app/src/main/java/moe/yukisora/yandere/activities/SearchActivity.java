@@ -8,7 +8,7 @@ import java.util.List;
 
 import moe.yukisora.yandere.R;
 import moe.yukisora.yandere.core.ServiceGenerator;
-import moe.yukisora.yandere.fragments.PostFragment;
+import moe.yukisora.yandere.fragments.ListFragment;
 import moe.yukisora.yandere.interfaces.GetCallGenerator;
 import moe.yukisora.yandere.interfaces.YandereService;
 import moe.yukisora.yandere.modles.ImageData;
@@ -23,7 +23,7 @@ public class SearchActivity extends Activity {
         final String query = getIntent().getStringExtra("query");
 
         FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
-        PostFragment fragment = PostFragment.newInstance(true);
+        ListFragment fragment = ListFragment.newInstance(ListFragment.LOAD);
         fragment.setGenerator(new GetCallGenerator() {
             private String tags = query;
 

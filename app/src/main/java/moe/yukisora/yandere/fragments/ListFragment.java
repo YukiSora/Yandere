@@ -29,7 +29,7 @@ import java.util.List;
 
 import moe.yukisora.yandere.R;
 import moe.yukisora.yandere.activities.SearchActivity;
-import moe.yukisora.yandere.adapters.RecyclerViewAdapter;
+import moe.yukisora.yandere.adapters.ListRecyclerViewAdapter;
 import moe.yukisora.yandere.core.ImageManager;
 import moe.yukisora.yandere.core.TagFilter;
 import moe.yukisora.yandere.interfaces.GetCallGenerator;
@@ -37,23 +37,27 @@ import moe.yukisora.yandere.modles.ImageData;
 import moe.yukisora.yandere.modles.TagData;
 import retrofit2.Call;
 
-public class PostFragment extends Fragment {
+public class ListFragment extends Fragment {
+    public static final int NONE = 0;
+    public static final int LOAD = 1;
+    public static final int SEARCH = 2;
     private ArrayList<ImageData> imageDatas;
     private Call<List<ImageData>> call;
     private FloatingSearchView floatingSearchView;
     private GetCallGenerator generator;
     private RecyclerView recyclerView;
-    private RecyclerViewAdapter adapter;
+    private ListRecyclerViewAdapter adapter;
     private StaggeredGridLayoutManager layoutManager;
     private TagFilter tagFilter;
     private TwinklingRefreshLayout refreshLayout;
-    private boolean isScrollable;
+    private boolean isLoadable;
+    private boolean isSearchable;
     private int page;
 
-    public static PostFragment newInstance(boolean isScrollable) {
+    public static ListFragment newInstance(int type) {
         Bundle args = new Bundle();
-        PostFragment fragment = new PostFragment();
-        args.putBoolean("isScrollable", isScrollable);
+        ListFragment fragment = new ListFragment();
+        args.putInt("type", type);
         fragment.setArguments(args);
 
         return fragment;
@@ -63,35 +67,46 @@ public class PostFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        isScrollable = getArguments().getBoolean("isScrollable");
-        tagFilter = new TagFilter(getActivity());
+        int type = getArguments().getInt("type");
+        isLoadable = (type & LOAD) == LOAD;
+        isSearchable = (type & SEARCH) == SEARCH;
+
+        if (isSearchable) {
+            tagFilter = new TagFilter(getActivity());
+        }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_post, container, false);
+        View view = inflater.inflate(R.layout.fragment_list, container, false);
 
-        initFragment();
-        initRecyclerView(view);
-        loadImage();
+        initPage();
+        initView(view);
         refreshLayout.startRefresh();
 
         return view;
     }
 
-    private void initFragment() {
+    private void initPage() {
         imageDatas = new ArrayList<>();
         page = 1;
         ImageManager.getInstance().setDownloading(false);
+        if (adapter != null) {
+            adapter.notifyDataSetChanged();
+        }
     }
 
-    private void initRecyclerView(View view) {
+    private void initView(View view) {
         floatingSearchView = view.findViewById(R.id.floatingSearchView);
         final LinearLayout floatingSearchViewBackground = view.findViewById(R.id.floatingSearchViewBackground);
         recyclerView = view.findViewById(R.id.recyclerView);
         refreshLayout = view.findViewById(R.id.refreshLayout);
 
         // floating search view
+        if (!isSearchable) {
+            floatingSearchView.setVisibility(View.GONE);
+            floatingSearchViewBackground.setVisibility(View.GONE);
+        }
         floatingSearchView.setOnQueryChangeListener(new FloatingSearchView.OnQueryChangeListener() {
             @Override
             public void onSearchTextChanged(String oldQuery, String newQuery) {
@@ -117,10 +132,10 @@ public class PostFragment extends Fragment {
                     String query = currentQuery.replace(" ", "_");
                     tagFilter.addHistory(query);
 
-                    Intent intent = new Intent(PostFragment.this.getActivity(), SearchActivity.class);
+                    Intent intent = new Intent(ListFragment.this.getActivity(), SearchActivity.class);
                     intent.putExtra("query", query);
 
-                    PostFragment.this.startActivity(intent);
+                    ListFragment.this.startActivity(intent);
                 }
             }
         });
@@ -163,10 +178,10 @@ public class PostFragment extends Fragment {
         });
 
         // recycler view
-        adapter = new RecyclerViewAdapter(this);
         recyclerView.setHasFixedSize(true);
         layoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(layoutManager);
+        adapter = new ListRecyclerViewAdapter(this);
         recyclerView.setAdapter(adapter);
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
@@ -224,17 +239,18 @@ public class PostFragment extends Fragment {
         footerView.setNormalColor(ContextCompat.getColor(getActivity(), R.color.normalColor));
         footerView.setAnimatingColor(ContextCompat.getColor(getActivity(), R.color.animating));
         refreshLayout.setBottomView(footerView);
-        refreshLayout.setBottomHeight(80);
-        refreshLayout.setMaxBottomHeight(120);
+        refreshLayout.setBottomHeight(40);
+        refreshLayout.setMaxBottomHeight(240);
         refreshLayout.setOverScrollRefreshShow(false);
-        refreshLayout.setAutoLoadMore(isScrollable);
-        refreshLayout.setEnableLoadmore(isScrollable);
+        refreshLayout.setAutoLoadMore(isLoadable);
+        refreshLayout.setEnableLoadmore(isLoadable);
         refreshLayout.setOnRefreshListener(new RefreshListenerAdapter() {
             @Override
             public void onRefresh(TwinklingRefreshLayout refreshLayout) {
-                call.cancel();
-                initFragment();
-                adapter.notifyDataSetChanged();
+                if (call != null) {
+                    call.cancel();
+                }
+                initPage();
                 loadImage();
             }
 
@@ -255,16 +271,20 @@ public class PostFragment extends Fragment {
         return imageDatas;
     }
 
-    public RecyclerViewAdapter getAdapter() {
+    public ListRecyclerViewAdapter getAdapter() {
         return adapter;
-    }
-
-    public TwinklingRefreshLayout getRefreshLayout() {
-        return refreshLayout;
     }
 
     public void setGenerator(GetCallGenerator generator) {
         this.generator = generator;
+    }
+
+    public void finishRefreshing() {
+        refreshLayout.finishRefreshing();
+    }
+
+    public void finishLoadMore() {
+        refreshLayout.finishLoadmore();
     }
 
     public void goToTop() {

@@ -31,7 +31,7 @@
         </activity>
 
         <activity
-            android:name=".activities.ImageViewActivity"
+            android:name=".activities.ImageActivity"
             android:screenOrientation="portrait" />
 
         <activity

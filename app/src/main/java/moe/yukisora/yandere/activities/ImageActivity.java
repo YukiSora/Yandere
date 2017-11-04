@@ -40,7 +40,7 @@ import moe.yukisora.yandere.R;
 import moe.yukisora.yandere.YandereApplication;
 import moe.yukisora.yandere.modles.ImageData;
 
-public class ImageViewActivity extends Activity {
+public class ImageActivity extends Activity {
     private Button downloadButton;
     private DownloadManager downloadManager;
     private Handler handler;
@@ -58,7 +58,7 @@ public class ImageViewActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_image_view);
+        setContentView(R.layout.activity_image);
 
         imageData = (ImageData)getIntent().getSerializableExtra("imageData");
         filename = String.format("yandere_%s.%s", imageData.id, imageData.file_ext);
@@ -124,10 +124,10 @@ public class ImageViewActivity extends Activity {
             chip.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Intent intent = new Intent(ImageViewActivity.this, SearchActivity.class);
+                    Intent intent = new Intent(ImageActivity.this, SearchActivity.class);
                     intent.putExtra("query", ((Chip)view).getChipText().replace(" ", "_"));
 
-                    ImageViewActivity.this.startActivity(intent);
+                    startActivity(intent);
                 }
             });
 
@@ -156,7 +156,7 @@ public class ImageViewActivity extends Activity {
                     scheduledFuture = scheduleTaskExecutor.scheduleAtFixedRate(new SaveImageRunnable(), 100, 100, TimeUnit.MILLISECONDS);
                 }
                 else {
-                    downloadButton.startAnimation(AnimationUtils.loadAnimation(ImageViewActivity.this, R.anim.anim_shake));
+                    downloadButton.startAnimation(AnimationUtils.loadAnimation(ImageActivity.this, R.anim.anim_shake));
                 }
             }
         });
@@ -172,7 +172,7 @@ public class ImageViewActivity extends Activity {
                         Palette.from(bitmap).generate(new Palette.PaletteAsyncListener() {
                             @Override
                             public void onGenerated(@NonNull Palette palette) {
-                                int vibrant = palette.getVibrantColor(ContextCompat.getColor(ImageViewActivity.this, R.color.progressBarColor));
+                                int vibrant = palette.getVibrantColor(ContextCompat.getColor(ImageActivity.this, R.color.progressBarColor));
                                 smoothProgressBar.setSmoothProgressDrawableColor(vibrant);
                             }
                         });
@@ -200,7 +200,7 @@ public class ImageViewActivity extends Activity {
                                 smoothProgressBar.setVisibility(View.GONE);
 
                                 if (isShowUpdateTags) {
-                                    Toast.makeText(ImageViewActivity.this, "Tags may be able to update.", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(ImageActivity.this, "Tags may be able to update.", Toast.LENGTH_SHORT).show();
                                 }
                             }
                         }, 500);

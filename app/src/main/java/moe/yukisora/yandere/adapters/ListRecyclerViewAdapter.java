@@ -86,7 +86,7 @@ public class ListRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.V
 
                         @Override
                         public void onError() {
-                            imageView.setOnClickListener(new View.OnClickListener() {
+                            layout.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View view) {
                                     loadImage(imageData);

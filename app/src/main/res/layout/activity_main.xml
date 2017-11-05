@@ -13,7 +13,7 @@
     <com.roughike.bottombar.BottomBar
         android:id="@+id/bottomBar"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/bottom_bar_height"
+        android:layout_height="@dimen/bar_height"
         android:layout_gravity="bottom"
         app:bb_tabXmlResource="@xml/bottom_bar_tabs"
         app:bb_activeTabColor="@color/activeTabColor"

@@ -19,6 +19,7 @@ import java.util.List;
 import moe.yukisora.yandere.R;
 import moe.yukisora.yandere.core.ServiceGenerator;
 import moe.yukisora.yandere.fragments.ListFragment;
+import moe.yukisora.yandere.fragments.RankFragment;
 import moe.yukisora.yandere.fragments.SettingFragment;
 import moe.yukisora.yandere.interfaces.GetCallGenerator;
 import moe.yukisora.yandere.interfaces.YandereService;
@@ -26,8 +27,9 @@ import moe.yukisora.yandere.modles.ImageData;
 import retrofit2.Call;
 
 public class MainActivity extends Activity {
-    private static final int NUM_ITEMS = 4;
+    private static final int ITEM_COUNT = 4;
     private ListFragment[] listFragments;
+    private RankFragment rankFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,7 +37,7 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        listFragments = new ListFragment[3];
+        listFragments = new ListFragment[2];
         final ViewPager viewPager = findViewById(R.id.viewPager);
         final BottomBar bottomBar = findViewById(R.id.bottomBar);
 
@@ -43,7 +45,7 @@ public class MainActivity extends Activity {
         viewPager.setAdapter(new FragmentPagerAdapter(getFragmentManager()) {
             @Override
             public int getCount() {
-                return NUM_ITEMS;
+                return ITEM_COUNT;
             }
 
             @Override
@@ -74,16 +76,8 @@ public class MainActivity extends Activity {
                         });
                         return listFragments[1];
                     case 2:
-                        listFragments[2] = ListFragment.newInstance(ListFragment.NONE);
-                        listFragments[2].setGenerator(new GetCallGenerator() {
-                            @Override
-                            public Call<List<ImageData>> getCall(int page) {
-                                YandereService service = ServiceGenerator.generate(YandereService.class);
-
-                                return service.getPopulars(page);
-                            }
-                        });
-                        return listFragments[2];
+                        rankFragment = RankFragment.newInstance();
+                        return rankFragment;
                     case 3:
                         return SettingFragment.newInstance();
                     default:
@@ -105,6 +99,7 @@ public class MainActivity extends Activity {
             public void onPageScrollStateChanged(int state) {
             }
         });
+        viewPager.setOffscreenPageLimit(ITEM_COUNT);
 
         // bottom bar
         bottomBar.setOnTabSelectListener(new OnTabSelectListener() {
@@ -147,12 +142,7 @@ public class MainActivity extends Activity {
                         }
                         break;
                     case R.id.rank_item:
-                        if (listFragments[2].isAtTop()) {
-                            listFragments[2].refresh();
-                        }
-                        else {
-                            listFragments[2].goToTop();
-                        }
+                        rankFragment.onTabReSelected();
                         break;
                 }
             }

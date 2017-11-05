@@ -17,4 +17,14 @@
 
     </style>
 
+    <style
+        name="TabLayoutTheme"
+        parent="Widget.Design.TabLayout">
+
+        <item name="tabIndicatorColor">@color/activeTabColor</item>
+        <item name="tabBackground">@android:color/white</item>
+        <item name="tabSelectedTextColor">@color/activeTabColor</item>
+
+    </style>
+
 </resources>

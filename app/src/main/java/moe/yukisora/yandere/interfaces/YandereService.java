@@ -13,7 +13,7 @@ public interface YandereService {
     Call<List<ImageData>> getPosts(@Query("page") int page, @Query("tags") String tags);
 
     @GET("post/popular_recent.json?limit=20")
-    Call<List<ImageData>> getPopulars(@Query("page") int page);
+    Call<List<ImageData>> getPopulars(@Query("page") int page, @Query("period") String period);
 
     @GET("tag/summary.json")
     Call<TagsData<String>> getTags();

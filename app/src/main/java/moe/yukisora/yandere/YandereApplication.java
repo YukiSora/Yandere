@@ -17,6 +17,7 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.util.HashMap;
 
+import moe.yukisora.yandere.core.DownloadRequestManager;
 import moe.yukisora.yandere.modles.TagsData;
 import okhttp3.Cache;
 import okhttp3.Interceptor;
@@ -26,6 +27,7 @@ import okhttp3.Response;
 
 public class YandereApplication extends Application {
     public static final String APPLICATION_FOLDER = "Yandere";
+    public static final String DOWNLOAD_REQUESTS_FILENAME = "download_requests.json";
     public static final String HARMONY_FLAG_FILENAME = "yandere_386449.png";
     public static final String SEARCH_HISTORY_FILENAME = "search_history.json";
     public static final String TAGS_FILENAME = "tags.json";
@@ -90,6 +92,9 @@ public class YandereApplication extends Application {
         if (!externalDirectory.exists()) {
             externalDirectory.mkdir();
         }
+
+        // init download request
+        DownloadRequestManager.getInstance().fromJson(this);
 
         // init variables
         enableRating = new File(externalDirectory, HARMONY_FLAG_FILENAME).exists();

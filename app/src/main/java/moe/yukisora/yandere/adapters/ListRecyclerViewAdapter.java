@@ -68,6 +68,7 @@ public class ListRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.V
                     .into(imageView, new Callback() {
                         @Override
                         public void onSuccess() {
+                            layout.setOnClickListener(null);
                             imageView.setLayoutParams(new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT));
                             imageView.setOnClickListener(new View.OnClickListener() {
                                 @Override
@@ -87,6 +88,12 @@ public class ListRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.V
                         @Override
                         public void onError() {
                             layout.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View view) {
+                                    loadImage(imageData);
+                                }
+                            });
+                            imageView.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View view) {
                                     loadImage(imageData);

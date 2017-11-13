@@ -32,8 +32,8 @@ import moe.yukisora.yandere.modles.ImageData;
 import retrofit2.Call;
 
 public class MainActivity extends Activity {
-    private static final int ITEM_COUNT = 4;
-    private ListFragment[] listFragments;
+    private static final int ITEM_COUNT = 3;
+    private ListFragment listFragment;
     private RankFragment rankFragment;
     private RelativeLayout progressBar;
     private SensorManager sensorManager;
@@ -45,11 +45,6 @@ public class MainActivity extends Activity {
         setTheme(R.style.AppTheme);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        listFragments = new ListFragment[2];
-        final ViewPager viewPager = findViewById(R.id.viewPager);
-        final BottomBar bottomBar = findViewById(R.id.bottomBar);
-        progressBar = findViewById(R.id.progressBar);
 
         sensorManager = (SensorManager)getSystemService(SENSOR_SERVICE);
         shakeDetectorListener = new ShakeDetectorListener(this, new ShakeDetectorListener.ShakeDetectorCallback() {
@@ -65,120 +60,7 @@ public class MainActivity extends Activity {
         });
         shakeDetector = new ShakeDetector(shakeDetectorListener);
 
-        // view pager
-        viewPager.setAdapter(new FragmentPagerAdapter(getFragmentManager()) {
-            @Override
-            public int getCount() {
-                return ITEM_COUNT;
-            }
-
-            @Override
-            public Fragment getItem(int position) {
-                switch (position) {
-                    case 0:
-                        listFragments[0] = ListFragment.newInstance(ListFragment.LOAD | ListFragment.SEARCH);
-                        listFragments[0].setGenerator(new GetCallGenerator() {
-                            @Override
-                            public Call<List<ImageData>> getCall(int page) {
-                                YandereService service = ServiceGenerator.generate(YandereService.class);
-
-                                return service.getPosts(page, null);
-                            }
-                        });
-                        return listFragments[0];
-                    case 1:
-                        listFragments[1] = ListFragment.newInstance(ListFragment.LOAD | ListFragment.SEARCH);
-                        listFragments[1].setGenerator(new GetCallGenerator() {
-                            private String tags = "order:random";
-
-                            @Override
-                            public Call<List<ImageData>> getCall(int page) {
-                                YandereService service = ServiceGenerator.generate(YandereService.class);
-
-                                return service.getPosts(page, tags);
-                            }
-                        });
-                        return listFragments[1];
-                    case 2:
-                        rankFragment = RankFragment.newInstance();
-                        return rankFragment;
-                    case 3:
-                        return SettingFragment.newInstance();
-                    default:
-                        return null;
-                }
-            }
-        });
-        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-            @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-            }
-
-            @Override
-            public void onPageSelected(int position) {
-                bottomBar.setDefaultTabPosition(position);
-            }
-
-            @Override
-            public void onPageScrollStateChanged(int state) {
-            }
-        });
-        viewPager.setOffscreenPageLimit(ITEM_COUNT);
-
-        // bottom bar
-        bottomBar.setOnTabSelectListener(new OnTabSelectListener() {
-            @Override
-            public void onTabSelected(@IdRes int tabId) {
-                switch (tabId) {
-                    case R.id.list_item:
-                        viewPager.setCurrentItem(0);
-                        break;
-                    case R.id.random_item:
-                        viewPager.setCurrentItem(1);
-                        break;
-                    case R.id.rank_item:
-                        viewPager.setCurrentItem(2);
-                        break;
-                    case R.id.setting_item:
-                        viewPager.setCurrentItem(3);
-                        break;
-                }
-            }
-        });
-        bottomBar.setOnTabReselectListener(new OnTabReselectListener() {
-            @Override
-            public void onTabReSelected(@IdRes int tabId) {
-                switch (tabId) {
-                    case R.id.list_item:
-                        if (listFragments[0].isAtTop()) {
-                            listFragments[0].refresh();
-                        }
-                        else {
-                            listFragments[0].goToTop();
-                        }
-                        break;
-                    case R.id.random_item:
-                        if (listFragments[1].isAtTop()) {
-                            listFragments[1].refresh();
-                        }
-                        else {
-                            listFragments[1].goToTop();
-                        }
-                        break;
-                    case R.id.rank_item:
-                        rankFragment.onTabReSelected();
-                        break;
-                }
-            }
-        });
-
-        // progress bar
-        progressBar.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View view, MotionEvent motionEvent) {
-                return true;
-            }
-        });
+        initView();
     }
 
     @Override
@@ -213,5 +95,102 @@ public class MainActivity extends Activity {
         else {
             super.onBackPressed();
         }
+    }
+
+    private void initView() {
+        final ViewPager viewPager = findViewById(R.id.viewPager);
+        final BottomBar bottomBar = findViewById(R.id.bottomBar);
+        progressBar = findViewById(R.id.progressBar);
+
+        // view pager
+        viewPager.setAdapter(new FragmentPagerAdapter(getFragmentManager()) {
+            @Override
+            public int getCount() {
+                return ITEM_COUNT;
+            }
+
+            @Override
+            public Fragment getItem(int position) {
+                switch (position) {
+                    case 0:
+                        listFragment = ListFragment.newInstance(ListFragment.LOAD | ListFragment.SEARCH);
+                        listFragment.setGenerator(new GetCallGenerator() {
+                            @Override
+                            public Call<List<ImageData>> getCall(int page) {
+                                YandereService service = ServiceGenerator.generate(YandereService.class);
+
+                                return service.getPosts(page, null);
+                            }
+                        });
+                        return listFragment;
+                    case 1:
+                        rankFragment = RankFragment.newInstance();
+                        return rankFragment;
+                    case 2:
+                        return SettingFragment.newInstance();
+                    default:
+                        return null;
+                }
+            }
+        });
+        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                bottomBar.setDefaultTabPosition(position);
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+            }
+        });
+        viewPager.setOffscreenPageLimit(ITEM_COUNT);
+
+        // bottom bar
+        bottomBar.setOnTabSelectListener(new OnTabSelectListener() {
+            @Override
+            public void onTabSelected(@IdRes int tabId) {
+                switch (tabId) {
+                    case R.id.list_item:
+                        viewPager.setCurrentItem(0);
+                        break;
+                    case R.id.rank_item:
+                        viewPager.setCurrentItem(1);
+                        break;
+                    case R.id.setting_item:
+                        viewPager.setCurrentItem(2);
+                        break;
+                }
+            }
+        });
+        bottomBar.setOnTabReselectListener(new OnTabReselectListener() {
+            @Override
+            public void onTabReSelected(@IdRes int tabId) {
+                switch (tabId) {
+                    case R.id.list_item:
+                        if (listFragment.isAtTop()) {
+                            listFragment.refresh();
+                        }
+                        else {
+                            listFragment.goToTop();
+                        }
+                        break;
+                    case R.id.rank_item:
+                        rankFragment.onTabReSelected();
+                        break;
+                }
+            }
+        });
+
+        // progress bar
+        progressBar.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                return true;
+            }
+        });
     }
 }

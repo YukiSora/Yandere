@@ -19,4 +19,22 @@
         app:bb_activeTabColor="@color/activeTabColor"
         app:bb_behavior="shy|iconsOnly" />
 
+    <RelativeLayout
+        android:id="@+id/progressBar"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/progressBarBackgroundColorDark"
+        android:visibility="gone">
+
+        <ProgressBar
+            android:indeterminate="true"
+            android:indeterminateTintMode="src_atop"
+            android:indeterminateTint="@color/progressBarRedColor"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:layout_width="50dp"
+            android:layout_height="50dp" />
+
+    </RelativeLayout>
+
 </android.support.design.widget.CoordinatorLayout>

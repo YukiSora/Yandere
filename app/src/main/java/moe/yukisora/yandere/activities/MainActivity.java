@@ -3,21 +3,26 @@ package moe.yukisora.yandere.activities;
 import android.app.Activity;
 import android.app.Fragment;
 import android.content.Context;
+import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.support.annotation.IdRes;
 import android.support.v13.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.RelativeLayout;
 
 import com.roughike.bottombar.BottomBar;
 import com.roughike.bottombar.OnTabReselectListener;
 import com.roughike.bottombar.OnTabSelectListener;
+import com.squareup.seismic.ShakeDetector;
 
 import java.util.List;
 
 import moe.yukisora.yandere.R;
 import moe.yukisora.yandere.core.ServiceGenerator;
+import moe.yukisora.yandere.core.ShakeDetectorListener;
 import moe.yukisora.yandere.fragments.ListFragment;
 import moe.yukisora.yandere.fragments.RankFragment;
 import moe.yukisora.yandere.fragments.SettingFragment;
@@ -30,6 +35,10 @@ public class MainActivity extends Activity {
     private static final int ITEM_COUNT = 4;
     private ListFragment[] listFragments;
     private RankFragment rankFragment;
+    private RelativeLayout progressBar;
+    private SensorManager sensorManager;
+    private ShakeDetector shakeDetector;
+    private ShakeDetectorListener shakeDetectorListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +49,21 @@ public class MainActivity extends Activity {
         listFragments = new ListFragment[2];
         final ViewPager viewPager = findViewById(R.id.viewPager);
         final BottomBar bottomBar = findViewById(R.id.bottomBar);
+        progressBar = findViewById(R.id.progressBar);
+
+        sensorManager = (SensorManager)getSystemService(SENSOR_SERVICE);
+        shakeDetectorListener = new ShakeDetectorListener(this, new ShakeDetectorListener.ShakeDetectorCallback() {
+            @Override
+            public void onStart() {
+                progressBar.setVisibility(View.VISIBLE);
+            }
+
+            @Override
+            public void onFinish() {
+                progressBar.setVisibility(View.GONE);
+            }
+        });
+        shakeDetector = new ShakeDetector(shakeDetectorListener);
 
         // view pager
         viewPager.setAdapter(new FragmentPagerAdapter(getFragmentManager()) {
@@ -147,6 +171,20 @@ public class MainActivity extends Activity {
                 }
             }
         });
+
+        // progress bar
+        progressBar.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                return true;
+            }
+        });
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        shakeDetector.start(sensorManager);
     }
 
     @Override
@@ -158,5 +196,22 @@ public class MainActivity extends Activity {
         }
 
         super.onPause();
+    }
+
+    @Override
+    protected void onStop() {
+        shakeDetector.stop();
+        super.onStop();
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (progressBar.getVisibility() == View.VISIBLE) {
+            progressBar.setVisibility(View.GONE);
+            shakeDetectorListener.stopLoading();
+        }
+        else {
+            super.onBackPressed();
+        }
     }
 }

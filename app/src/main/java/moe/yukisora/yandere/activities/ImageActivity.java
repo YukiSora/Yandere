@@ -8,12 +8,14 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
+import android.hardware.SensorManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.graphics.Palette;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
@@ -28,6 +30,7 @@ import com.nex3z.flowlayout.FlowLayout;
 import com.robertlevonyan.views.chip.Chip;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
+import com.squareup.seismic.ShakeDetector;
 
 import java.io.File;
 import java.util.concurrent.Executors;
@@ -39,9 +42,12 @@ import fr.castorflex.android.smoothprogressbar.SmoothProgressBar;
 import moe.yukisora.yandere.R;
 import moe.yukisora.yandere.YandereApplication;
 import moe.yukisora.yandere.core.DownloadRequestManager;
+import moe.yukisora.yandere.core.ShakeDetectorListener;
 import moe.yukisora.yandere.modles.ImageData;
 
 public class ImageActivity extends Activity {
+    public static final int NONE = 0;
+    public static final int RANDOM = 1;
     private Button downloadButton;
     private DownloadManager downloadManager;
     private Handler handler;
@@ -49,11 +55,16 @@ public class ImageActivity extends Activity {
     private ImageView imageView;
     private LinearLayout photoLayout;
     private PhotoView photoView;
+    private RelativeLayout progressBar;
     private ScheduledExecutorService scheduleTaskExecutor;
     private ScheduledFuture scheduledFuture;
+    private SensorManager sensorManager;
+    private ShakeDetector shakeDetector;
+    private ShakeDetectorListener shakeDetectorListener;
     private SmoothProgressBar smoothProgressBar;
     private String filename;
     private boolean isDownloading;
+    private boolean isRandomizable;
     private boolean isShowUpdateTags;
 
     @Override
@@ -61,14 +72,44 @@ public class ImageActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_image);
 
+        int type = getIntent().getIntExtra("type", NONE);
+        isRandomizable = (type & RANDOM) == RANDOM;
         imageData = (ImageData)getIntent().getSerializableExtra("imageData");
         filename = String.format("yandere_%s.%s", imageData.id, imageData.file_ext);
 
-        scheduleTaskExecutor = Executors.newScheduledThreadPool(5);
         downloadManager = (DownloadManager)getSystemService(Context.DOWNLOAD_SERVICE);
         handler = new Handler();
+        sensorManager = (SensorManager)getSystemService(SENSOR_SERVICE);
+        shakeDetectorListener = new ShakeDetectorListener(this, new ShakeDetectorListener.ShakeDetectorCallback() {
+            @Override
+            public void onStart() {
+                progressBar.setVisibility(View.VISIBLE);
+            }
+
+            @Override
+            public void onFinish() {
+                progressBar.setVisibility(View.GONE);
+                finish();
+            }
+        });
+        shakeDetector = new ShakeDetector(shakeDetectorListener);
+        scheduleTaskExecutor = Executors.newScheduledThreadPool(5);
 
         initView();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        if (isRandomizable) {
+            shakeDetector.start(sensorManager);
+        }
+    }
+
+    @Override
+    protected void onStop() {
+        shakeDetector.stop();
+        super.onStop();
     }
 
     @Override
@@ -81,7 +122,11 @@ public class ImageActivity extends Activity {
 
     @Override
     public void onBackPressed() {
-        if (photoLayout.getVisibility() == View.VISIBLE) {
+        if (progressBar.getVisibility() == View.VISIBLE) {
+            progressBar.setVisibility(View.GONE);
+            shakeDetectorListener.stopLoading();
+        }
+        else if (photoLayout.getVisibility() == View.VISIBLE) {
             photoLayout.setVisibility(View.INVISIBLE);
         }
         else {
@@ -95,6 +140,7 @@ public class ImageActivity extends Activity {
         imageView = findViewById(R.id.imageView);
         photoLayout = findViewById(R.id.photoLayout);
         photoView = findViewById(R.id.photoView);
+        progressBar = findViewById(R.id.progressBar);
         smoothProgressBar = findViewById(R.id.smoothProgressBar);
 
         // image layout
@@ -174,6 +220,14 @@ public class ImageActivity extends Activity {
                 else {
                     downloadButton.startAnimation(AnimationUtils.loadAnimation(ImageActivity.this, R.anim.anim_shake));
                 }
+            }
+        });
+
+        // progress bar
+        progressBar.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                return true;
             }
         });
     }

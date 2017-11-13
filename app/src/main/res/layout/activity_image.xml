@@ -40,7 +40,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="4dp"
                     android:layout_alignParentBottom="true"
-                    android:background="@color/progressBarBackgroundColor"
+                    android:background="@color/progressBarBackgroundColorLight"
                     android:indeterminate="true"
                     app:spb_color="@color/progressBarColor"
                     app:spb_sections_count="6"
@@ -139,5 +139,23 @@
             android:layout_height="match_parent" />
 
     </LinearLayout>
+
+    <RelativeLayout
+        android:id="@+id/progressBar"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/progressBarBackgroundColorDark"
+        android:visibility="gone">
+
+        <ProgressBar
+            android:indeterminate="true"
+            android:indeterminateTintMode="src_atop"
+            android:indeterminateTint="@color/progressBarRedColor"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:layout_width="50dp"
+            android:layout_height="50dp" />
+
+    </RelativeLayout>
 
 </RelativeLayout>

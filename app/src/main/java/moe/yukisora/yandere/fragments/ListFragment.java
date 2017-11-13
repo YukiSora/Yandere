@@ -316,7 +316,7 @@ public class ListFragment extends Fragment {
                                 else {
                                     if (type == TYPE_REFRESH) {
                                         refreshLayout.finishRefreshing();
-                                        if (count < 5) {
+                                        if (count == 0) {
                                             loadImage(TYPE_NONE);
                                         }
                                     }

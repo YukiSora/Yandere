@@ -11,7 +11,6 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -55,10 +54,11 @@ public class ListFragment extends Fragment {
     private FloatingSearchView floatingSearchView;
     private CallGenerator generator;
     private Handler handler;
-    private RecyclerView recyclerView;
     private ListRecyclerViewAdapter adapter;
+    private RecyclerView recyclerView;
     private StaggeredGridLayoutManager layoutManager;
     private TagFilter tagFilter;
+    private TextView notFound;
     private TwinklingRefreshLayout refreshLayout;
     private boolean isLoadable;
     private boolean isLoading;
@@ -109,6 +109,9 @@ public class ListFragment extends Fragment {
         if (adapter != null) {
             adapter.notifyDataSetChanged();
         }
+        if (notFound != null) {
+            notFound.setVisibility(View.GONE);
+        }
     }
 
     private void initView(View view) {
@@ -116,6 +119,7 @@ public class ListFragment extends Fragment {
         final LinearLayout floatingSearchViewBackground = view.findViewById(R.id.floatingSearchViewBackground);
         recyclerView = view.findViewById(R.id.recyclerView);
         refreshLayout = view.findViewById(R.id.refreshLayout);
+        notFound = view.findViewById(R.id.notFound);
 
         // floating search view
         if (!isSearchable) {
@@ -300,19 +304,25 @@ public class ListFragment extends Fragment {
                             public void run() {
                                 page++;
                                 isLoading = false;
-                                if (type == TYPE_REFRESH) {
-                                    refreshLayout.finishRefreshing();
-                                    if (count < 5) {
-                                        loadImage(TYPE_NONE);
-                                    }
-                                }
-                                else if (type == TYPE_LOAD) {
-                                    refreshLayout.finishLoadmore();
-                                }
                                 if (response.body().size() == 0) {
                                     isLoadable = false;
                                     refreshLayout.setAutoLoadMore(isLoadable);
                                     refreshLayout.setEnableLoadmore(isLoadable);
+                                    if (type == TYPE_REFRESH) {
+                                        notFound.setVisibility(View.VISIBLE);
+                                        refreshLayout.finishRefreshing();
+                                    }
+                                }
+                                else {
+                                    if (type == TYPE_REFRESH) {
+                                        refreshLayout.finishRefreshing();
+                                        if (count < 5) {
+                                            loadImage(TYPE_NONE);
+                                        }
+                                    }
+                                    else if (type == TYPE_LOAD) {
+                                        refreshLayout.finishLoadmore();
+                                    }
                                 }
                                 adapter.notifyItemRangeInserted(positionStart, count);
                             }

@@ -11,7 +11,6 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -47,8 +46,9 @@ public class ListFragment extends Fragment {
     public static final int NONE = 0;
     public static final int LOAD = 1;
     public static final int SEARCH = 2;
-    private static final int START_REFRESH = 0;
-    private static final int START_LOAD = 1;
+    private static final int TYPE_NONE = 0;
+    private static final int TYPE_REFRESH = 1;
+    private static final int TYPE_LOAD = 2;
     private ArrayList<ImageData> imageDatas;
     private Call<List<ImageData>> call;
     private FloatingSearchView floatingSearchView;
@@ -102,6 +102,9 @@ public class ListFragment extends Fragment {
         imageDatas = new ArrayList<>();
         page = 1;
         isLoading = false;
+        if (call != null) {
+            call.cancel();
+        }
         if (adapter != null) {
             adapter.notifyDataSetChanged();
         }
@@ -258,16 +261,13 @@ public class ListFragment extends Fragment {
         refreshLayout.setOnRefreshListener(new RefreshListenerAdapter() {
             @Override
             public void onRefresh(TwinklingRefreshLayout refreshLayout) {
-                if (call != null) {
-                    call.cancel();
-                }
                 initPage();
-                loadImage(START_REFRESH);
+                loadImage(TYPE_REFRESH);
             }
 
             @Override
             public void onLoadMore(TwinklingRefreshLayout refreshLayout) {
-                loadImage(START_LOAD);
+                loadImage(TYPE_LOAD);
             }
         });
     }
@@ -297,17 +297,20 @@ public class ListFragment extends Fragment {
 
                         handler.post(new Runnable() {
                             public void run() {
-                                adapter.notifyItemRangeInserted(positionStart, count);
-                                if (type == START_REFRESH) {
+                                page++;
+                                isLoading = false;
+                                if (type == TYPE_REFRESH) {
                                     refreshLayout.finishRefreshing();
+                                    if (count < 5) {
+                                        loadImage(TYPE_NONE);
+                                    }
                                 }
-                                else if (type == START_LOAD) {
+                                else if (type == TYPE_LOAD) {
                                     refreshLayout.finishLoadmore();
                                 }
+                                adapter.notifyItemRangeInserted(positionStart, count);
                             }
                         });
-                        page++;
-                        isLoading = false;
                     }
                 }
 
@@ -315,11 +318,11 @@ public class ListFragment extends Fragment {
                 public void onFailure(@NonNull Call<List<ImageData>> call, @NonNull Throwable throwable) {
                     handler.post(new Runnable() {
                         public void run() {
-                            if (type == START_REFRESH) {
+                            if (type == TYPE_REFRESH) {
                                 refreshLayout.finishRefreshing();
                                 Toast.makeText(getActivity(), "Refresh failed", Toast.LENGTH_SHORT).show();
                             }
-                            else if (type == START_LOAD) {
+                            else if (type == TYPE_LOAD) {
                                 refreshLayout.finishLoadmore();
                                 Toast.makeText(getActivity(), "Load failed", Toast.LENGTH_SHORT).show();
                             }
@@ -327,6 +330,11 @@ public class ListFragment extends Fragment {
                     });
                 }
             });
+        }
+        else {
+            if (type == TYPE_LOAD) {
+                refreshLayout.finishLoadmore();
+            }
         }
     }
 

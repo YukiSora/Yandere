@@ -8,6 +8,7 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.GradientDrawable;
 import android.hardware.SensorManager;
 import android.net.Uri;
 import android.os.Bundle;
@@ -15,6 +16,7 @@ import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.graphics.Palette;
+import android.text.TextUtils;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.AnimationUtils;
@@ -27,7 +29,6 @@ import android.widget.Toast;
 
 import com.github.chrisbanes.photoview.PhotoView;
 import com.nex3z.flowlayout.FlowLayout;
-import com.robertlevonyan.views.chip.Chip;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 import com.squareup.seismic.ShakeDetector;
@@ -167,27 +168,37 @@ public class ImageActivity extends Activity {
 
         // tags
         for (String tag : imageData.tags.split(" ")) {
-            Chip chip = new Chip(this);
-            chip.setChipText(tag.replace("_", " "));
-            chip.setStrokeSize(1);
+            TextView textView = new TextView(this);
+            textView.setPadding(15, 5, 15, 5);
+            textView.setText(tag.replace("_", " "));
+            int color = Color.parseColor("#000000");
             if (YandereApplication.getTags().containsKey(tag)) {
-                chip.setTextColor(Color.parseColor(getResources().getStringArray(R.array.tagColor)[YandereApplication.getTags().get(tag)]));
-                chip.setStrokeColor(Color.parseColor(getResources().getStringArray(R.array.tagColor)[YandereApplication.getTags().get(tag)]));
+                color = Color.parseColor(getResources().getStringArray(R.array.tagColor)[YandereApplication.getTags().get(tag)]);
             }
             else {
                 isShowUpdateTags = true;
             }
-            chip.setOnClickListener(new View.OnClickListener() {
+            textView.setTextColor(color);
+            GradientDrawable drawable = new GradientDrawable();
+            drawable.setShape(GradientDrawable.RECTANGLE);
+            drawable.setCornerRadii(new float[]{100, 100, 100, 100, 100, 100, 100, 100});
+            drawable.setStroke(2, color);
+            textView.setBackground(drawable);
+            textView.setSingleLine(true);
+            textView.setEllipsize(TextUtils.TruncateAt.MARQUEE);
+            textView.setMarqueeRepeatLimit(-1);
+            textView.setSelected(true);
+            textView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     Intent intent = new Intent(ImageActivity.this, SearchActivity.class);
-                    intent.putExtra("query", ((Chip)view).getChipText().replace(" ", "_"));
+                    intent.putExtra("query", ((TextView)view).getText().toString().replace(" ", "_"));
 
                     startActivity(intent);
                 }
             });
 
-            flowLayout.addView(chip);
+            flowLayout.addView(textView);
         }
 
         // download button

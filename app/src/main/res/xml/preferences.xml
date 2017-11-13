@@ -27,6 +27,11 @@
             android:title="Source" />
 
         <Preference
+            android:key="license"
+            android:summary="Open source licenses"
+            android:title="Licenses" />
+
+        <Preference
             android:summary="Yuki Sora"
             android:title="Author" />
 
@@ -35,7 +40,7 @@
             android:title="GitHub" />
 
         <Preference
-            android:summary="1.0"
+            android:summary="2.0"
             android:title="Version" />
 
     </PreferenceCategory>

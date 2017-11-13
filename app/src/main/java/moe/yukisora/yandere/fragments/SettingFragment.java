@@ -1,6 +1,7 @@
 package moe.yukisora.yandere.fragments;
 
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
@@ -9,6 +10,13 @@ import android.preference.Preference;
 import android.preference.PreferenceCategory;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
+import android.support.annotation.Nullable;
+import android.text.Html;
+import android.text.method.LinkMovementMethod;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
@@ -76,6 +84,32 @@ public class SettingFragment extends PreferenceFragment {
                 return true;
             }
         });
+
+        findPreference("license").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            @Override
+            public boolean onPreferenceClick(Preference preference) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                builder.setTitle("Licenses");
+                builder.setMessage(Html.fromHtml(getResources().getString(R.string.licenses)));
+                AlertDialog alert = builder.create();
+                alert.show();
+                ((TextView)alert.findViewById(android.R.id.message)).setTextSize(10);
+                ((TextView)alert.findViewById(android.R.id.message)).setMovementMethod(LinkMovementMethod.getInstance());
+
+                return true;
+            }
+        });
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        View view =  super.onCreateView(inflater, container, savedInstanceState);
+
+        if (view != null) {
+            view.setPadding(0, 0, 0, getResources().getDimensionPixelSize(R.dimen.bar_height));
+        }
+
+        return view;
     }
 
     @SuppressLint("StaticFieldLeak")

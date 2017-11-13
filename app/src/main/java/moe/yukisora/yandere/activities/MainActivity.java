@@ -26,7 +26,7 @@ import moe.yukisora.yandere.core.ShakeDetectorListener;
 import moe.yukisora.yandere.fragments.ListFragment;
 import moe.yukisora.yandere.fragments.RankFragment;
 import moe.yukisora.yandere.fragments.SettingFragment;
-import moe.yukisora.yandere.interfaces.GetCallGenerator;
+import moe.yukisora.yandere.interfaces.CallGenerator;
 import moe.yukisora.yandere.interfaces.YandereService;
 import moe.yukisora.yandere.modles.ImageData;
 import retrofit2.Call;
@@ -114,9 +114,9 @@ public class MainActivity extends Activity {
                 switch (position) {
                     case 0:
                         listFragment = ListFragment.newInstance(ListFragment.LOAD | ListFragment.SEARCH);
-                        listFragment.setGenerator(new GetCallGenerator() {
+                        listFragment.setGenerator(new CallGenerator() {
                             @Override
-                            public Call<List<ImageData>> getCall(int page) {
+                            public Call<List<ImageData>> generateCall(int page) {
                                 YandereService service = ServiceGenerator.generate(YandereService.class);
 
                                 return service.getPosts(page, null);

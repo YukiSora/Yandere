@@ -14,7 +14,7 @@ import java.util.List;
 
 import moe.yukisora.yandere.R;
 import moe.yukisora.yandere.core.ServiceGenerator;
-import moe.yukisora.yandere.interfaces.GetCallGenerator;
+import moe.yukisora.yandere.interfaces.CallGenerator;
 import moe.yukisora.yandere.interfaces.YandereService;
 import moe.yukisora.yandere.modles.ImageData;
 import retrofit2.Call;
@@ -59,9 +59,9 @@ public class RankFragment extends Fragment {
                 switch (position) {
                     case 0:
                         listFragments[0] = ListFragment.newInstance(ListFragment.NONE);
-                        listFragments[0].setGenerator(new GetCallGenerator() {
+                        listFragments[0].setGenerator(new CallGenerator() {
                             @Override
-                            public Call<List<ImageData>> getCall(int page) {
+                            public Call<List<ImageData>> generateCall(int page) {
                                 YandereService service = ServiceGenerator.generate(YandereService.class);
 
                                 return service.getPopulars(page, "1d");
@@ -70,9 +70,9 @@ public class RankFragment extends Fragment {
                         return listFragments[0];
                     case 1:
                         listFragments[1] = ListFragment.newInstance(ListFragment.NONE);
-                        listFragments[1].setGenerator(new GetCallGenerator() {
+                        listFragments[1].setGenerator(new CallGenerator() {
                             @Override
-                            public Call<List<ImageData>> getCall(int page) {
+                            public Call<List<ImageData>> generateCall(int page) {
                                 YandereService service = ServiceGenerator.generate(YandereService.class);
 
                                 return service.getPopulars(page, "1w");
@@ -81,9 +81,9 @@ public class RankFragment extends Fragment {
                         return listFragments[1];
                     case 2:
                         listFragments[2] = ListFragment.newInstance(ListFragment.NONE);
-                        listFragments[2].setGenerator(new GetCallGenerator() {
+                        listFragments[2].setGenerator(new CallGenerator() {
                             @Override
-                            public Call<List<ImageData>> getCall(int page) {
+                            public Call<List<ImageData>> generateCall(int page) {
                                 YandereService service = ServiceGenerator.generate(YandereService.class);
 
                                 return service.getPopulars(page, "1m");

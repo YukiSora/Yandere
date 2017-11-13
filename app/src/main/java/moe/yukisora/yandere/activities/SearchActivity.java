@@ -9,7 +9,7 @@ import java.util.List;
 import moe.yukisora.yandere.R;
 import moe.yukisora.yandere.core.ServiceGenerator;
 import moe.yukisora.yandere.fragments.ListFragment;
-import moe.yukisora.yandere.interfaces.GetCallGenerator;
+import moe.yukisora.yandere.interfaces.CallGenerator;
 import moe.yukisora.yandere.interfaces.YandereService;
 import moe.yukisora.yandere.modles.ImageData;
 import retrofit2.Call;
@@ -24,11 +24,11 @@ public class SearchActivity extends Activity {
 
         FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
         ListFragment fragment = ListFragment.newInstance(ListFragment.LOAD);
-        fragment.setGenerator(new GetCallGenerator() {
+        fragment.setGenerator(new CallGenerator() {
             private String tags = query;
 
             @Override
-            public Call<List<ImageData>> getCall(int page) {
+            public Call<List<ImageData>> generateCall(int page) {
                 YandereService service = ServiceGenerator.generate(YandereService.class);
 
                 return service.getPosts(page, tags);

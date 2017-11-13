@@ -6,6 +6,6 @@ import java.util.List;
 import moe.yukisora.yandere.modles.ImageData;
 import retrofit2.Call;
 
-public interface GetCallGenerator extends Serializable {
-    Call<List<ImageData>> getCall(int page);
+public interface CallGenerator extends Serializable {
+    Call<List<ImageData>> generateCall(int page);
 }

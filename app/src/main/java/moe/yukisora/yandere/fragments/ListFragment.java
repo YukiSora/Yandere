@@ -11,6 +11,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -279,7 +280,7 @@ public class ListFragment extends Fragment {
             isLoading = true;
             call.enqueue(new Callback<List<ImageData>>() {
                 @Override
-                public void onResponse(@NonNull Call<List<ImageData>> call, @NonNull Response<List<ImageData>> response) {
+                public void onResponse(@NonNull Call<List<ImageData>> call, @NonNull final Response<List<ImageData>> response) {
                     if (response.isSuccessful() && response.body() != null) {
                         final int positionStart = imageDatas.size();
                         int positionEnd = positionStart;
@@ -307,6 +308,11 @@ public class ListFragment extends Fragment {
                                 }
                                 else if (type == TYPE_LOAD) {
                                     refreshLayout.finishLoadmore();
+                                }
+                                if (response.body().size() == 0) {
+                                    isLoadable = false;
+                                    refreshLayout.setAutoLoadMore(isLoadable);
+                                    refreshLayout.setEnableLoadmore(isLoadable);
                                 }
                                 adapter.notifyItemRangeInserted(positionStart, count);
                             }

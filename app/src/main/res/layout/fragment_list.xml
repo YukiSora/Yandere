@@ -7,7 +7,7 @@
 
     <TextView
         android:id="@+id/notFound"
-        android:text="No image found!"
+        android:text="@string/no_image_found"
         android:textSize="20sp"
         android:gravity="center_vertical|center_horizontal"
         android:visibility="gone"

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="search_hint">搜索标签</string>
+    <string name="load_failed">加载失败</string>
+    <string name="no_image_found">找不到图片</string>
+    <string name="daily">每日</string>
+    <string name="weekly">每周</string>
+    <string name="monthly">每月</string>
+    <string name="download">下载</string>
+    <string name="yandere_id">yande.re Id：</string>
+    <string name="image_author">作者：</string>
+    <string name="image_size">图片大小：</string>
+    <string name="file_size">文件大小：</string>
+    <string name="image_source">图片源：</string>
+    <string name="tags">标签：</string>
+    <string name="tags_may_be_able_to_update">标签可以更新</string>
+    <string name="setting">设置</string>
+    <string name="image_rating">图片分级</string>
+    <string name="normal">普通</string>
+    <string name="update_tags">更新标签</string>
+    <string name="last_update_none">最后更新：-</string>
+    <string name="last_update">最后更新：</string>
+    <string name="downloading">下载中…</string>
+    <string name="download_failed">下载失败</string>
+    <string name="tags_are_up_to_date">标签已经是最新的</string>
+    <string name="parsing">解析中…</string>
+    <string name="saving">储存中…</string>
+    <string name="save_failed">储存失败</string>
+    <string name="update_successful">更新成功</string>
+    <string name="update_cancelled">更新取消</string>
+    <string name="about">关于</string>
+    <string name="licenses">许可证</string>
+    <string name="open_source_licenses">开源许可证</string>
+    <string name="source">数据源</string>
+    <string name="author">作者</string>
+    <string name="version">版本</string>
+
+
+</resources>

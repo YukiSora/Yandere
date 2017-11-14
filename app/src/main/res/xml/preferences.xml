@@ -3,45 +3,45 @@
 
     <PreferenceCategory
         android:key="setting"
-        android:title="Setting">
+        android:title="@string/setting">
 
         <CheckBoxPreference
             android:defaultValue="true"
             android:key="isSafe"
             android:persistent="true"
-            android:summaryOff="R-18 Image"
-            android:summaryOn="Safe Image"
-            android:title="Image Rating" />
+            android:summaryOff="@string/r18"
+            android:summaryOn="@string/normal"
+            android:title="@string/image_rating" />
 
         <Preference
             android:key="update"
-            android:summary="Last update: -"
-            android:title="Update tags" />
+            android:summary="@string/last_update_none"
+            android:title="@string/update_tags" />
 
     </PreferenceCategory>
 
-    <PreferenceCategory android:title="About Application">
+    <PreferenceCategory android:title="@string/about">
 
         <Preference
             android:summary="https://yande.re"
-            android:title="Source" />
+            android:title="@string/source" />
 
         <Preference
             android:key="license"
-            android:summary="Open source licenses"
-            android:title="Licenses" />
+            android:summary="@string/open_source_licenses"
+            android:title="@string/licenses" />
 
         <Preference
             android:summary="Yuki Sora"
-            android:title="Author" />
+            android:title="@string/author" />
 
         <Preference
             android:summary="https://github.com/YukiSora/Yandere"
-            android:title="GitHub" />
+            android:title="@string/github" />
 
         <Preference
             android:summary="2.0"
-            android:title="Version" />
+            android:title="@string/version" />
 
     </PreferenceCategory>
 

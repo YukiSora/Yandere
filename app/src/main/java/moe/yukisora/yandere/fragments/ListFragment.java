@@ -336,12 +336,11 @@ public class ListFragment extends Fragment {
                         public void run() {
                             if (type == TYPE_REFRESH) {
                                 refreshLayout.finishRefreshing();
-                                Toast.makeText(getActivity(), "Refresh failed", Toast.LENGTH_SHORT).show();
                             }
                             else if (type == TYPE_LOAD) {
                                 refreshLayout.finishLoadmore();
-                                Toast.makeText(getActivity(), "Load failed", Toast.LENGTH_SHORT).show();
                             }
+                            Toast.makeText(getActivity(), getString(R.string.load_failed), Toast.LENGTH_SHORT).show();
                         }
                     });
                 }

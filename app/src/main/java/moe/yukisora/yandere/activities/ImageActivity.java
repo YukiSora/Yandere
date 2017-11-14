@@ -155,15 +155,15 @@ public class ImageActivity extends Activity {
         photoView.setScaleLevels(1f, 2f, 5f);
 
         // image data
-        String imageIdStr = String.format("yande.re Id: %d", imageData.id);
+        String imageIdStr = String.format(getString(R.string.yandere_id) + "%d", imageData.id);
         ((TextView)findViewById(R.id.imageId)).setText(imageIdStr);
-        String authorStr = String.format("Author: %s", imageData.author);
+        String authorStr = String.format(getString(R.string.image_author) + "%s", imageData.author);
         ((TextView)findViewById(R.id.author)).setText(authorStr);
-        String imageSizeStr = String.format("Image Size: %d x %d", imageData.width, imageData.height);
+        String imageSizeStr = String.format(getString(R.string.image_size) + "%d x %d", imageData.width, imageData.height);
         ((TextView)findViewById(R.id.imageSize)).setText(imageSizeStr);
-        String fileSizeStr = String.format("File Size: %.2fkb", imageData.file_size / 1024f);
+        String fileSizeStr = String.format(getString(R.string.file_size) + "%.2fkb", imageData.file_size / 1024f);
         ((TextView)findViewById(R.id.fileSize)).setText(fileSizeStr);
-        String sourceStr = String.format("Source: %s", imageData.source);
+        String sourceStr = String.format(getString(R.string.image_source) + "%s", imageData.source);
         ((TextView)findViewById(R.id.source)).setText(sourceStr);
 
         // tags
@@ -282,7 +282,7 @@ public class ImageActivity extends Activity {
                                 smoothProgressBar.setVisibility(View.GONE);
 
                                 if (isShowUpdateTags) {
-                                    Toast.makeText(ImageActivity.this, "Tags may be able to update.", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(ImageActivity.this, getString(R.string.tags_may_be_able_to_update), Toast.LENGTH_SHORT).show();
                                 }
                             }
                         }, 500);

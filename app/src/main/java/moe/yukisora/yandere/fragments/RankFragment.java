@@ -100,11 +100,11 @@ public class RankFragment extends Fragment {
             public CharSequence getPageTitle(int position) {
                 switch (position) {
                     case 0:
-                        return "Daily";
+                        return getString(R.string.daily);
                     case 1:
-                        return "Weekly";
+                        return getString(R.string.weekly);
                     case 2:
-                        return "Monthly";
+                        return getString(R.string.monthly);
                     default:
                         return super.getPageTitle(position);
                 }

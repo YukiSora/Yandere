@@ -74,7 +74,7 @@ public class SettingFragment extends PreferenceFragment {
         }
 
         // update
-        String lastUpdate = preferences.getString("lastUpdate", "Last update: -");
+        String lastUpdate = preferences.getString("lastUpdate", getString(R.string.last_update_none));
         updatePreference.setSummary(lastUpdate);
         updatePreference.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
@@ -89,8 +89,8 @@ public class SettingFragment extends PreferenceFragment {
             @Override
             public boolean onPreferenceClick(Preference preference) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                builder.setTitle("Licenses");
-                builder.setMessage(Html.fromHtml(getResources().getString(R.string.licenses)));
+                builder.setTitle(getString(R.string.licenses));
+                builder.setMessage(Html.fromHtml(getResources().getString(R.string.license_list)));
                 AlertDialog alert = builder.create();
                 alert.show();
                 ((TextView)alert.findViewById(android.R.id.message)).setTextSize(10);
@@ -123,7 +123,7 @@ public class SettingFragment extends PreferenceFragment {
 
         @Override
         protected void onPreExecute() {
-            dialog = new SpotsDialog(getActivity(), "Downloading...");
+            dialog = new SpotsDialog(getActivity(), getString(R.string.downloading));
             dialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
                 @Override
                 public void onCancel(DialogInterface dialog) {
@@ -195,19 +195,19 @@ public class SettingFragment extends PreferenceFragment {
         protected void onProgressUpdate(Integer... values) {
             switch (values[0]) {
                 case DOWNLOAD_FAILED:
-                    Toast.makeText(SettingFragment.this.getActivity(), "Download failed", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(SettingFragment.this.getActivity(), getString(R.string.download_failed), Toast.LENGTH_SHORT).show();
                     break;
                 case UP_TO_DATE:
-                    Toast.makeText(SettingFragment.this.getActivity(), "Tags are up to date", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(SettingFragment.this.getActivity(), getString(R.string.tags_may_be_able_to_update), Toast.LENGTH_SHORT).show();
                     break;
                 case START_PARSING:
-                    dialog.setMessage("Parsing...");
+                    dialog.setMessage(getString(R.string.parsing));
                     break;
                 case START_SAVING:
-                    dialog.setMessage("Saving...");
+                    dialog.setMessage(getString(R.string.saving));
                     break;
                 case SAVE_FAILED:
-                    Toast.makeText(SettingFragment.this.getActivity(), "Save failed", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(SettingFragment.this.getActivity(), getString(R.string.save_failed), Toast.LENGTH_SHORT).show();
                     break;
             }
         }
@@ -219,18 +219,18 @@ public class SettingFragment extends PreferenceFragment {
 
                 String date = SimpleDateFormat.getDateTimeInstance().format(Calendar.getInstance().getTime());
                 SharedPreferences.Editor editor = preferences.edit();
-                editor.putString("lastUpdate", "Last update: " + date);
+                editor.putString("lastUpdate", getString(R.string.last_update) + date);
                 editor.apply();
-                updatePreference.setSummary("Last update: " + date);
+                updatePreference.setSummary(getString(R.string.last_update) + date);
 
-                Toast.makeText(SettingFragment.this.getActivity(), "Update successful", Toast.LENGTH_SHORT).show();
+                Toast.makeText(SettingFragment.this.getActivity(), getString(R.string.update_successful), Toast.LENGTH_SHORT).show();
             }
             dialog.dismiss();
         }
 
         @Override
         protected void onCancelled() {
-            Toast.makeText(SettingFragment.this.getActivity(), "Update cancelled", Toast.LENGTH_SHORT).show();
+            Toast.makeText(SettingFragment.this.getActivity(), getString(R.string.update_cancelled), Toast.LENGTH_SHORT).show();
         }
     }
 }

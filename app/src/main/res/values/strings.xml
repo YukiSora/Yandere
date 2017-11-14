@@ -1,15 +1,45 @@
 <resources>
 
     <string name="app_name">Yande.re</string>
-    <string name="post">New</string>
-    <string name="random">Random</string>
-    <string name="popular">Popular</string>
-    <string name="setting">Setting</string>
-    <string name="download">Download</string>
-    <string name="search_hint">Search Tag</string>
-    <string name="tags">Tags:</string>
 
-    <string name="licenses"><![CDATA[
+    <string name="search_hint">Search Tag</string>
+    <string name="load_failed">Load failed</string>
+    <string name="no_image_found">No image found</string>
+    <string name="daily">Daily</string>
+    <string name="weekly">Weekly</string>
+    <string name="monthly">Monthly</string>
+    <string name="download">Download</string>
+    <string name="yandere_id">yande.re Id: </string>
+    <string name="image_author">Author: </string>
+    <string name="image_size">Image Size: </string>
+    <string name="file_size">File Size: </string>
+    <string name="image_source">Source: </string>
+    <string name="tags">Tags:</string>
+    <string name="tags_may_be_able_to_update">Tags may be able to update</string>
+    <string name="setting">Setting</string>
+    <string name="image_rating">Image Rating</string>
+    <string name="normal_image">Normal</string>
+    <string name="r18">R-18</string>
+    <string name="update_tags">Update tags</string>
+    <string name="last_update_none">Last update: -</string>
+    <string name="last_update">Last update: </string>
+    <string name="downloading">Downloading…</string>
+    <string name="download_failed">Download failed</string>
+    <string name="tags_are_up_to_date">Tags are up to date</string>
+    <string name="parsing">Parsing…</string>
+    <string name="saving">Saving…</string>
+    <string name="save_failed">Save failed</string>
+    <string name="update_successful">Update successful</string>
+    <string name="update_cancelled">Update cancelled</string>
+    <string name="about">About</string>
+    <string name="source">Source</string>
+    <string name="licenses">Licenses</string>
+    <string name="open_source_licenses">Open source licenses</string>
+    <string name="author">Author</string>
+    <string name="github">GitHub</string>
+    <string name="version">Version</string>
+
+    <string name="license_list"><![CDATA[
         <h3><a href="https://github.com/roughike/BottomBar">Bottom Bar</a></h3>
         <p>BottomBar library for Android
         Copyright © 2016 Iiro Krankka (http://github.com/roughike).
